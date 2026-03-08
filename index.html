@@ -3,118 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Epic One Piece Edition</title>
+    <title>Rayleigh Workout - Final Stable</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --glass: rgba(10, 15, 25, 0.9);
-            --primary: #00ffaa; 
-            --zoro-aura: #00ff88;
-            --shanks-aura: #ff1100;
-            --luffy-aura: #ffffff;
-            --luffy-gold: #ffaa00;
+            --bg: #050505;
+            --card-bg: rgba(20, 20, 25, 0.98);
+            --primary: #00ffaa;
+            --zoro-color: #00ff88;
+            --shanks-color: #ff1100;
+            --luffy-color: #ffffff;
+            --luffy-gold: #ffcc00;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            color: #f8fafc;
-            margin: 0; padding-bottom: 120px;
-            overflow-x: hidden;
+            color: #fff;
+            margin: 0; padding-bottom: 100px;
         }
 
-        #haki-flash-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; opacity: 0; transition: opacity 0.1s ease-out;
+        .header-nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
         }
 
-        header { padding: 30px 20px 10px; max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .week-selector { background: #111; border: 1px solid #333; color: var(--primary); padding: 8px; border-radius: 6px; font-weight: 700; font-size: 0.7rem; }
+        header { padding: 20px; max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        
+        nav { display: flex; gap: 10px; padding: 10px; max-width: 600px; margin: 0 auto; justify-content: space-around; }
 
-        nav { display: flex; gap: 10px; padding: 15px; overflow-x: auto; max-width: 600px; margin: 0 auto; justify-content: space-around; scrollbar-width: none; }
-        .nav-item { background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-item {
+            background: transparent; border: none; display: flex; flex-direction: column; 
+            align-items: center; gap: 8px; cursor: pointer; transition: 0.3s;
+        }
 
         .char-box {
-            width: 75px; height: 100px; border-radius: 12px;
+            width: 70px; height: 90px; border-radius: 12px;
             border: 2px solid #222; background: #0a0a0a;
-            overflow: hidden; position: relative;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; transition: 0.4s;
+            display: flex; align-items: center; justify-content: center;
         }
-        
-        .char-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(0.6); transition: 0.4s; }
 
-        .nav-item.active .char-box { transform: scale(1.15) translateY(-10px); border-color: #fff; }
-        .nav-item.active .char-img { filter: grayscale(0%) brightness(1.1); }
+        .nav-item.active .char-box { transform: scale(1.1); border-color: #fff; }
+        .zoro.active .char-box { border-color: var(--zoro-color); box-shadow: 0 0 15px var(--zoro-color); }
+        .shanks.active .char-box { border-color: var(--shanks-color); box-shadow: 0 0 15px var(--shanks-color); }
+        .luffy.active .char-box { border-color: var(--luffy-gold); box-shadow: 0 0 15px var(--luffy-gold); }
 
-        .zoro.active .char-box { border-color: var(--zoro-aura); box-shadow: 0 0 25px var(--zoro-aura); }
-        .shanks.active .char-box { border-color: var(--shanks-aura); box-shadow: 0 0 25px var(--shanks-aura); }
-        .luffy.active .char-box { border-color: var(--luffy-gold); box-shadow: 0 0 25px var(--luffy-gold); }
-
-        .day-label { font-size: 0.75rem; font-weight: 800; color: #444; text-transform: uppercase; }
+        .day-label { font-size: 0.7rem; font-weight: 800; color: #444; }
         .nav-item.active .day-label { color: #fff; }
 
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .day-section { display: none; }
-        .active-day { display: block; animation: fadeIn 0.4s ease; }
+        .active-day { display: block; }
 
-        .card { background: var(--glass); border-radius: 12px; padding: 22px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .luffy-mode .card { animation: rubber 4s infinite alternate; }
-        @keyframes rubber { 0% { border-radius: 12px; } 100% { border-radius: 30px; } }
-
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.95rem; text-transform: uppercase; color: #fff; }
-
-        .timer-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; cursor: pointer; }
-
-        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
-        .input-box { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #222; padding: 6px 0; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.2rem; outline: none; text-align: right; }
-        .input-box span { font-size: 0.6rem; color: #555; font-weight: 800; }
-
-        #timer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 10000; }
-        #timer-val { font-size: 8rem; font-weight: 200; color: var(--primary); }
+        .card { 
+            background: var(--card-bg); border-radius: 16px; padding: 20px; 
+            margin-bottom: 15px; border: 1px solid #1a1a1a; 
+        }
         
-        .haki-lightning-svg { position: absolute; top: 50%; left: 50%; width: 180%; height: 180%; transform: translate(-50%, -50%); pointer-events: none; z-index: 1000; }
+        .luffy-mode .card { animation: gear5 3s infinite alternate ease-in-out; }
+        @keyframes gear5 { 0% { transform: scale(1); } 100% { transform: scale(1.02); border-color: #fff; } }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { margin: 0; font-size: 0.9rem; color: #ddd; text-transform: uppercase; }
+
+        .timer-btn { 
+            background: transparent; color: var(--primary); border: 1px solid var(--primary); 
+            padding: 6px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; cursor: pointer;
+        }
+
+        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+        .input-box { display: flex; align-items: center; gap: 5px; border-bottom: 1px solid #222; padding: 5px 0; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.1rem; outline: none; text-align: right; }
+        .input-box span { font-size: 0.5rem; color: #555; font-weight: 800; }
+
+        #timer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 10000;
+        }
+        #timer-display { font-size: 6rem; color: var(--primary); }
+
+        /* Haki Lightning solo attorno al bordo */
+        .haki-lightning-svg { 
+            position: absolute; top: -10px; left: -10px; width: calc(100% + 20px); height: calc(100% + 20px); 
+            pointer-events: none; z-index: 10; 
+        }
     </style>
 </head>
 <body>
 
-<div id="haki-flash-overlay"></div>
-<div id="timer-overlay" onclick="this.style.display='none'"><div id="timer-val">00:00</div></div>
+<div id="timer-overlay" onclick="closeTimer()"><div id="timer-display">00:00</div></div>
 
-<header>
-    <div style="font-weight: 800; letter-spacing: 3px; font-size: 0.8rem; opacity: 0.5;">RAYLEIGH LEGACY</div>
-    <select class="week-selector" id="weekSelect"></select>
-</header>
+<div class="header-nav">
+    <header>
+        <div style="font-weight: 800; letter-spacing: 2px; font-size: 0.7rem; opacity: 0.4;">RAYLEIGH LEGACY 6.0</div>
+    </header>
 
-<nav>
-    <button onclick="switchDay('lun', 'zoro')" id="n-lun" class="nav-item active zoro">
-        <div class="char-box"><img class="char-img" src="http://googleusercontent.com/image_collection/image_retrieval/15458567920559559793_0"></div>
-        <span class="day-label">Lun</span>
-    </button>
-    <button onclick="switchDay('mar', 'shanks')" id="n-mar" class="nav-item shanks">
-        <div class="char-box"><img class="char-img" src="http://googleusercontent.com/image_collection/image_retrieval/4175722752367232745_0"></div>
-        <span class="day-label">Mar</span>
-    </button>
-    <button onclick="switchDay('mer', 'luffy')" id="n-mer" class="nav-item luffy">
-        <div class="char-box"><img class="char-img" src="http://googleusercontent.com/image_collection/image_retrieval/14470430499782985342_1"></div>
-        <span class="day-label">Mer</span>
-    </button>
-    <button onclick="switchDay('gio', 'zoro')" id="n-gio" class="nav-item zoro">
-        <div class="char-box"><img class="char-img" src="http://googleusercontent.com/image_collection/image_retrieval/15458567920559559793_1"></div>
-        <span class="day-label">Gio</span>
-    </button>
-    <button onclick="switchDay('ven', 'shanks')" id="n-ven" class="nav-item shanks">
-        <div class="char-box"><img class="char-img" src="http://googleusercontent.com/image_collection/image_retrieval/4175722752367232745_3"></div>
-        <span class="day-label">Ven</span>
-    </button>
-</nav>
+    <nav>
+        <button onclick="switchDay('lun', 'zoro')" id="n-lun" class="nav-item active zoro">
+            <div class="char-box">
+                <svg viewBox="0 0 100 120" width="50"><path d="M20 100 L80 20 M35 100 L95 20 M5 100 L65 20" stroke="var(--zoro-color)" stroke-width="5" fill="none" opacity="0.8"/></svg>
+            </div>
+            <span class="day-label">LUN</span>
+        </button>
+        <button onclick="switchDay('mar', 'shanks')" id="n-mar" class="nav-item shanks">
+            <div class="char-box">
+                <svg viewBox="0 0 100 120" width="50"><path d="M40 30 Q 50 10, 60 30 M45 40 L45 80" stroke="var(--shanks-color)" stroke-width="4" fill="none"/><path d="M30 35 L40 55 M50 35 L50 55 M70 35 L60 55" stroke="var(--shanks-color)" stroke-width="2" fill="none"/></svg>
+            </div>
+            <span class="day-label">MAR</span>
+        </button>
+        <button onclick="switchDay('mer', 'luffy')" id="n-mer" class="nav-item luffy">
+            <div class="char-box">
+                <svg viewBox="0 0 100 120" width="55">
+                    <ellipse cx="50" cy="70" rx="30" ry="8" fill="none" stroke="var(--luffy-gold)" stroke-width="3"/>
+                    <path d="M30 68 Q50 40 70 68" fill="none" stroke="var(--luffy-gold)" stroke-width="3"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="5,3"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="5s" repeatCount="indefinite"/></circle>
+                </svg>
+            </div>
+            <span class="day-label">MER</span>
+        </button>
+        <button onclick="switchDay('gio', 'zoro')" id="n-gio" class="nav-item zoro">
+            <div class="char-box">
+                <svg viewBox="0 0 100 120" width="50"><path d="M20 100 L80 20 M35 100 L95 20 M5 100 L65 20" stroke="var(--zoro-color)" stroke-width="5" fill="none" opacity="0.8"/></svg>
+            </div>
+            <span class="day-label">GIO</span>
+        </button>
+        <button onclick="switchDay('ven', 'shanks')" id="n-ven" class="nav-item shanks">
+            <div class="char-box">
+                <svg viewBox="0 0 100 120" width="50"><path d="M40 30 Q 50 10, 60 30 M45 40 L45 80" stroke="var(--shanks-color)" stroke-width="4" fill="none"/></svg>
+            </div>
+            <span class="day-label">VEN</span>
+        </button>
+    </nav>
+</div>
 
 <div class="container" id="mainContainer"></div>
 
 <script>
-// (Logica JS identica alla precedente con fix per addominali/cardio)
 const workout = {
     lun: { char: 'zoro', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}] },
     mar: { char: 'shanks', ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}] },
@@ -128,61 +156,61 @@ function init() {
     for(let day in workout) {
         let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''} ${workout[day].char}-mode">`;
         workout[day].ex.forEach(e => section += createCard(e.n, e.s, e.r));
-        section += `<div style="margin:20px 0; font-weight:800; font-size:0.7rem; color:#444;">FINISHER</div>`;
-        section += createCard("Addome Core", 3, 60);
-        section += createCard("Cardio LISS", 1, 900);
+        section += `<div style="margin: 25px 0 10px; font-weight: 800; font-size: 0.6rem; color: #444; letter-spacing: 2px;">DAILY FINISHER</div>`;
+        section += createCard("Addominali Core", 3, 60);
+        section += createCard("Cardio LISS (15 Min)", 1, 900);
         main.innerHTML += section + `</div>`;
     }
 }
 
-function createCard(n, s, r) {
-    let h = `<div class="card"><div class="card-header"><h3>${n}</h3><button class="timer-btn" onclick="startTimer(${r})">${r<61?r+'s':(r/60)+'m'}</button></div>`;
-    for(let i=0; i<s; i++) h += `<div class="inputs"><div class="input-box"><input type="number" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" placeholder="0"><span>REPS</span></div></div>`;
-    return h + `</div>`;
+function createCard(title, sets, rest) {
+    let tLabel = rest >= 60 ? Math.floor(rest/60) + 'm' : rest + 's';
+    let html = `<div class="card"><div class="card-header"><h3>${title}</h3><button class="timer-btn" onclick="startTimer(${rest})">${tLabel}</button></div>`;
+    for(let i=0; i<sets; i++) {
+        html += `<div class="inputs"><div class="input-box"><input type="number" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" placeholder="0"><span>REPS</span></div></div>`;
+    }
+    return html + `</div>`;
 }
 
-function startTimer(s) {
-    const ov = document.getElementById('timer-overlay');
-    const val = document.getElementById('timer-val');
-    ov.style.display = 'flex';
-    let t = s;
-    const interval = setInterval(() => {
-        let m = Math.floor(t/60); let sec = t%60;
-        val.innerText = `${m}:${sec<10?'0'+sec:sec}`;
-        if(t-- <= 0) { clearInterval(interval); ov.style.display = 'none'; }
+function startTimer(sec) {
+    const overlay = document.getElementById('timer-overlay');
+    const display = document.getElementById('timer-display');
+    overlay.style.display = 'flex';
+    let t = sec;
+    window.currentT = setInterval(() => {
+        let m = Math.floor(t/60); let s = t%60;
+        display.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+        if(t-- <= 0) closeTimer();
     }, 1000);
-    ov.onclick = () => { clearInterval(interval); ov.style.display='none'; };
 }
 
-function triggerHaki(c) {
-    const f = document.getElementById('haki-flash-overlay');
-    const clrs = {zoro:'rgba(0,255,136,0.4)', shanks:'rgba(255,17,0,0.4)', luffy:'rgba(255,255,255,0.5)'};
-    f.style.backgroundColor = clrs[c]; f.style.opacity = "1";
-    setTimeout(() => f.style.opacity = "0", 150);
+function closeTimer() {
+    clearInterval(window.currentT);
+    document.getElementById('timer-overlay').style.display = 'none';
 }
 
 function createLightning(target, char) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "haki-lightning-svg");
-    svg.setAttribute("viewBox", "0 0 200 200");
+    svg.setAttribute("viewBox", "0 0 100 100");
     let color = char === 'zoro' ? '#00ff88' : (char === 'shanks' ? '#ff0000' : '#ffffff');
     let p = "";
-    for(let i=0; i<5; i++) {
-        let x=100, y=100; let d=`M 100 100 `;
-        for(let j=0; j<3; j++) { x+=(Math.random()-0.5)*120; y+=(Math.random()-0.5)*120; d+=`L ${x} ${y} `; }
-        p += `<path d="${d}" stroke="black" stroke-width="4" fill="none"/><path d="${d}" stroke="${color}" stroke-width="1.5" fill="none"/>`;
+    for(let i=0; i<3; i++) {
+        let d = `M ${Math.random()*100} 0 L ${Math.random()*100} 100 M 0 ${Math.random()*100} L 100 ${Math.random()*100}`;
+        p += `<path d="${d}" stroke="${color}" stroke-width="1" fill="none" opacity="0.6"/>`;
     }
-    svg.innerHTML = p; target.appendChild(svg);
+    svg.innerHTML = p;
+    target.appendChild(svg);
     setTimeout(() => svg.remove(), 400);
 }
 
-function switchDay(d, c) {
-    triggerHaki(c);
-    createLightning(document.getElementById('n-'+d).querySelector('.char-box'), c);
+function switchDay(day, char) {
+    createLightning(document.getElementById('n-'+day).querySelector('.char-box'), char);
     document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active-day'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(d).classList.add('active-day');
-    document.getElementById('n-'+d).classList.add('active');
+    document.getElementById(day).classList.add('active-day');
+    document.getElementById('n-'+day).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 window.onload = init;

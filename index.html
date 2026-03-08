@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Evolution - Elite Training Log</title>
+    <title>Aura Evolution - 16 Weeks Elite Log</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
@@ -20,119 +20,116 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(122, 92, 255, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
+                radial-gradient(circle at 10% 10%, rgba(122, 92, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.08) 0%, transparent 40%);
             background-attachment: fixed;
             color: var(--text);
             margin: 0; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header & Settimana */
         header { 
-            padding: 40px 20px 20px; 
+            padding: 30px 20px 10px; 
             max-width: 700px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
         }
-        h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -2px; margin: 0; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .week-selector {
             background: var(--surface);
             border: 1px solid rgba(255,255,255,0.1);
-            color: white; padding: 12px 18px; border-radius: 16px;
-            font-weight: 700; outline: none; cursor: pointer; font-family: inherit;
+            color: white; padding: 10px 14px; border-radius: 14px;
+            font-weight: 700; outline: none; cursor: pointer; font-family: inherit; font-size: 0.8rem;
         }
 
-        /* Navigazione Giorni (CARATTERI GRANDI) */
+        /* Navigazione Giorni (CARATTERI RIDOTTI) */
         nav {
-            display: flex; gap: 25px; padding: 15px 20px; overflow-x: auto;
+            display: flex; gap: 18px; padding: 10px 20px; overflow-x: auto;
             max-width: 700px; margin: 0 auto; scrollbar-width: none;
         }
         nav::-webkit-scrollbar { display: none; }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.3s;
-            padding: 5px 0; letter-spacing: -1px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+            padding: 5px 0; letter-spacing: 0.5px; text-transform: uppercase;
         }
-        nav button.active { color: var(--primary); transform: scale(1.1); }
+        nav button.active { color: var(--primary); }
 
-        /* Container & Cards */
-        .container { padding: 20px; max-width: 700px; margin: 0 auto; }
-        .day-section { display: none; animation: slideUp 0.5s ease; }
+        .container { padding: 15px; max-width: 700px; margin: 0 auto; }
+        .day-section { display: none; animation: fadeIn 0.4s ease; }
         .active-day { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .card {
             background: var(--surface);
             backdrop-filter: blur(20px);
-            border-radius: 28px; padding: 25px; margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { margin: 0; font-size: 1.05rem; font-weight: 600; color: #fff; }
         
         .timer-btn {
-            background: var(--primary); color: #000; border: none;
-            padding: 6px 14px; border-radius: 100px; font-weight: 800; font-size: 0.7rem; cursor: pointer;
+            background: rgba(0, 210, 255, 0.1); color: var(--primary); border: 1px solid var(--primary);
+            padding: 5px 10px; border-radius: 100px; font-weight: 800; font-size: 0.65rem; cursor: pointer;
         }
 
-        /* Input Grid Kg/Reps */
-        .series-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
+        .series-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
         .serie-box {
-            background: rgba(0,0,0,0.2); border-radius: 18px; padding: 12px;
-            border: 1px solid rgba(255,255,255,0.04); text-align: center;
+            background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;
+            border: 1px solid rgba(255,255,255,0.03); text-align: center;
         }
-        .serie-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: 700; }
-        .inputs { display: flex; justify-content: center; gap: 8px; align-items: center; }
+        .serie-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; display: block; font-weight: 700; }
+        .inputs { display: flex; justify-content: center; gap: 6px; align-items: center; }
         .inputs input {
-            width: 45px; background: transparent; border: none; color: white;
-            font-weight: 800; font-size: 1.1rem; text-align: center; outline: none;
+            width: 38px; background: transparent; border: none; color: white;
+            font-weight: 800; font-size: 1rem; text-align: center; outline: none;
         }
         .inputs span { color: rgba(255,255,255,0.15); font-weight: 300; }
 
-        /* Grafici */
-        .chart-container { height: 130px; margin-top: 25px; opacity: 0.8; }
+        .chart-container { height: 110px; margin-top: 20px; }
 
-        /* Timer Overlay */
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5, 7, 10, 0.98); display: none; flex-direction: column;
             align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px);
         }
-        #timer-val { font-size: 7rem; font-weight: 900; color: var(--primary); letter-spacing: -4px; }
+        #timer-val { font-size: 6rem; font-weight: 900; color: var(--primary); letter-spacing: -3px; }
     </style>
 </head>
 <body>
 
 <div id="timer-overlay" onclick="closeTimer()">
-    <div style="color:var(--primary); letter-spacing: 3px; font-weight: 700; margin-bottom: 10px;">RECOVERY</div>
     <div id="timer-val">00:00</div>
-    <div style="color:var(--text-dim); margin-top: 20px;">Tocca per saltare</div>
+    <div style="color:var(--text-dim); font-size: 0.8rem; margin-top: 10px; letter-spacing: 2px;">TOCCA PER SALTARE</div>
 </div>
 
 <header>
     <h1>Aura Evolution</h1>
     <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
-        <option value="1">WEEK 1</option>
-        <option value="2">WEEK 2</option>
-        <option value="3">WEEK 3</option>
-        <option value="4">WEEK 4</option>
-    </select>
+        </select>
 </header>
 
 <nav id="dayNav">
-    <button onclick="switchDay('lun')" id="n-lun" class="active">LUNEDÌ</button>
-    <button onclick="switchDay('mar')" id="n-mar">MARTEDÌ</button>
-    <button onclick="switchDay('mer')" id="n-mer">MERCOLEDÌ</button>
-    <button onclick="switchDay('gio')" id="n-gio">GIOVEDÌ</button>
-    <button onclick="switchDay('ven')" id="n-ven">VENERDÌ</button>
+    <button onclick="switchDay('lun')" id="n-lun" class="active">Lun</button>
+    <button onclick="switchDay('mar')" id="n-mar">Mar</button>
+    <button onclick="switchDay('mer')" id="n-mer">Mer</button>
+    <button onclick="switchDay('gio')" id="n-gio">Gio</button>
+    <button onclick="switchDay('ven')" id="n-ven">Ven</button>
 </nav>
 
-<div class="container" id="mainContainer">
-    </div>
+<div class="container" id="mainContainer"></div>
 
 <script>
-// Database Esercizi (Ottimizzati per te)
+// Genera le 16 settimane nel selettore
+const weekSelect = document.getElementById('weekSelect');
+for (let i = 1; i <= 16; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.innerHTML = `SETTIMANA ${i}`;
+    weekSelect.appendChild(opt);
+}
+
 const workout = {
     lun: { title: "Push Alpha • Petto & Spalle", ex: [
         {n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press Macchina", s:3, r:60}, 
@@ -167,15 +164,13 @@ function init() {
     const main = document.getElementById('mainContainer');
     for(let day in workout) {
         let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''}">`;
-        section += `<p style="color:var(--text-dim); font-weight:700; margin-bottom:20px;">${workout[day].title}</p>`;
-        
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
             section += `
             <div class="card">
                 <div class="card-header">
                     <h3>${e.n}</h3>
-                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}S REC</button>
+                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}s</button>
                 </div>
                 <div class="series-grid">
                     ${Array.from({length:e.s}).map((_, s) => `
@@ -183,7 +178,7 @@ function init() {
                             <span class="serie-label">SET ${s+1}</span>
                             <div class="inputs">
                                 <input type="number" placeholder="KG" id="${id}_w${s}" onchange="saveData('${id}')">
-                                <span>|</span>
+                                <span>/</span>
                                 <input type="number" placeholder="RE" id="${id}_r${s}" onchange="saveData('${id}')">
                             </div>
                         </div>
@@ -203,13 +198,11 @@ function saveData(exId) {
     const day = exId.split('_')[0];
     const idx = exId.split('_')[1];
     const sets = workout[day].ex[idx].s;
-    
     let dataEntry = { w: [], r: [] };
     for(let i=0; i<sets; i++) {
         dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
         dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
     }
-    
     localStorage.setItem(`Aura_W${week}_${exId}`, JSON.stringify(dataEntry));
     updateSingleChart(exId);
 }
@@ -237,33 +230,33 @@ function loadWeekData() {
 
 function updateSingleChart(exId) {
     const historyVol = [];
-    for(let w=1; w<=4; w++) {
+    const labels = [];
+    for(let w=1; w<=16; w++) {
         const d = JSON.parse(localStorage.getItem(`Aura_W${w}_${exId}`));
         let vol = 0;
         if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         historyVol.push(vol);
+        labels.push(`S${w}`);
     }
-    
     const ctx = document.getElementById(`c_${exId}`);
     if(!ctx) return;
-    
     if(charts[exId]) charts[exId].destroy();
     charts[exId] = new Chart(ctx.getContext('2d'), {
         type: 'line',
         data: {
-            labels: ['W1', 'W2', 'W3', 'W4'],
+            labels: labels,
             datasets: [{
                 data: historyVol,
                 borderColor: '#00d2ff',
                 backgroundColor: 'rgba(0, 210, 255, 0.05)',
-                fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#00d2ff'
+                fill: true, tension: 0.3, borderWidth: 2, pointRadius: 2, pointBackgroundColor: '#00d2ff'
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: { 
-                x: { grid: { display: false }, ticks: { color: '#475569', font: { weight: 'bold' } } }, 
+                x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 8 } } }, 
                 y: { display: false } 
             }
         }
@@ -279,7 +272,7 @@ function startTimer(s) {
     tInterval = setInterval(() => {
         let m = Math.floor(time/60); let sec = time%60;
         val.innerText = `${m}:${sec<10?'0':''}${sec}`;
-        if(time <= 0) { clearInterval(tInterval); val.innerText = "GO!"; }
+        if(time <= 0) { clearInterval(tInterval); val.innerText = "VIA!"; }
         time--;
     }, 1000);
 }

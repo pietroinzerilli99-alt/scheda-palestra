@@ -1,21 +1,125 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="it">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #ffffff; -webkit-text-stroke: #ffffff}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scheda Palestra</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  color: #333;
+}
+header {
+  background: #0077cc;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+header h1 {
+  font-size: 1.8rem;
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+nav button {
+  margin: 0.3rem;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  flex: 1 1 18%;
+}
+nav button.active {
+  border: 2px solid #fff;
+}
+.day {
+  display: none;
+  background: white;
+  padding: 1rem;
+  margin: 0 1rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+.day h2 {
+  margin-top: 0;
+}
+ul {
+  padding-left: 1.2rem;
+}
+li {
+  margin: 0.5rem 0;
+}
+.push { border-left: 4px solid #ff6347; }
+.pull { border-left: 4px solid #32cd32; }
+.gambe { border-left: 4px solid #1e90ff; }
+.cardio {
+  font-style: italic;
+  color: #555;
+}
+.note {
+  margin-top: 1rem;
+  background: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+textarea {
+  width: 100%;
+  height: 80px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1">Lunedì<br>
-Martedì<br>
-Mercoledì<br>
-Giovedì<br>
-Venerdì</span></p>
+
+<header>
+  <h1>Scheda Palestra</h1>
+  <p>Allenamenti, cardio e recupero</p>
+</header>
+
+<nav>
+<button onclick="showDay('lun')" id="btn-lun" style="background:#ff6347;">Lunedì</button>
+<button onclick="showDay('mar')" id="btn-mar" style="background:#32cd32;">Martedì</button>
+<button onclick="showDay('mer')" id="btn-mer" style="background:#1e90ff;">Mercoledì</button>
+<button onclick="showDay('gio')" id="btn-gio" style="background:#ff6347;">Giovedì</button>
+<button onclick="showDay('ven')" id="btn-ven" style="background:#32cd32;">Venerdì</button>
+</nav>
+
+<div id="lun" class="day push">
+<h2>Lunedì – PUSH</h2>
+<ul>
+  <li>Panca inclinata manubri 4×8–10 (Rec: 90–120s)</li>
+  <li>Croci cavi alto 3×12–15 (Rec: 60–90s)</li>
+  <li>Alzate laterali 4×12–15 (Rec: 60s)</li>
+  <li>Dips inclinati 3×8–10 (Rec: 90s)</li>
+  <li>Pushdown tricipiti 3×10–12 (Rec: 60s)</li>
+  <li>Face pull 3×15 (Rec: 60s)</li>
+  <li class="cardio">Cardio: camminata inclinata 10 min</li>
+</ul>
+<div class="note"><textarea placeholder="Note personali"></textarea></div>
+</div>
+
+<!-- (simile per martedì, mercoledì ecc.) -->
+
+<script>
+function showDay(day) {
+  const days = ['lun','mar','mer','gio','ven'];
+  days.forEach(d => document.getElementById(d).style.display = 'none');
+  document.getElementById(day).style.display = 'block';
+  days.forEach(d => document.getElementById('btn-' + d).classList.remove('active'));
+  document.getElementById('btn-' + day).classList.add('active');
+}
+// Mostra Lunedì di default
+showDay('lun');
+</script>
+
 </body>
 </html>

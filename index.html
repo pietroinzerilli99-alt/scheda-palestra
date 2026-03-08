@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OGNI SINGOLO GIORNO - Haki Unleashed</title>
+    <title>OGNI SINGOLO GIORNO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -19,77 +19,67 @@
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 80px;
-            overflow-x: hidden; transition: transform 0.1s;
+            overflow-x: hidden;
         }
 
-        /* ANIMAZIONE TREMORE */
+        /* TREMORE LOCALIZZATO (NAV ESCLUSA) */
         @keyframes quake {
             0% { transform: translate(0,0); }
-            10% { transform: translate(-2px, 2px); }
-            20% { transform: translate(2px, -2px); }
-            30% { transform: translate(-3px, 0px); }
-            40% { transform: translate(3px, 2px); }
-            50% { transform: translate(-1px, -1px); }
-            60% { transform: translate(2px, 2px); }
-            70% { transform: translate(-2px, 1px); }
-            80% { transform: translate(2px, 1px); }
-            90% { transform: translate(-2px, -2px); }
+            20% { transform: translate(-4px, 4px); }
+            40% { transform: translate(4px, -3px); }
+            60% { transform: translate(-4px, -4px); }
+            80% { transform: translate(4px, 3px); }
             100% { transform: translate(0,0); }
         }
-
-        .quake-soft { animation: quake 0.4s infinite; }
-        .quake-hard { animation: quake 0.15s infinite; }
+        .quake-active { animation: quake 0.1s infinite; }
 
         header { padding: 30px 20px; text-align: center; }
-        .main-title { font-weight: 900; letter-spacing: 12px; font-size: 1.1rem; color: #fff; margin-bottom: 20px; text-transform: uppercase; }
+        .main-title { font-weight: 900; letter-spacing: 10px; font-size: 1.1rem; color: #fff; text-transform: uppercase; margin-bottom: 15px; }
         
         .week-select {
             background: #111; border: 1px solid #333; color: var(--primary);
             padding: 12px; border-radius: 12px; font-weight: 800; width: 90%;
-            font-size: 0.9rem; letter-spacing: 1px; outline: none;
+            font-size: 0.9rem; outline: none; appearance: none; text-align: center;
         }
 
         nav { 
             display: flex; gap: 15px; padding: 20px; overflow-x: auto;
-            scroll-snap-type: x mandatory; position: sticky; top: 0; z-index: 1000; 
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a;
+            position: sticky; top: 0; z-index: 1000; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a;
         }
         nav::-webkit-scrollbar { display: none; }
 
-        .nav-item { scroll-snap-align: center; flex: 0 0 auto; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .char-frame { width: 70px; height: 95px; border-radius: 15px; border: 2px solid #1a1a1a; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; transition: 0.3s; }
+        .nav-item { flex: 0 0 auto; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .char-frame { width: 70px; height: 95px; border-radius: 15px; border: 2px solid #1a1a1a; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; }
         .nav-item.active .char-frame { border-color: #fff; transform: scale(1.05); }
 
-        /* FULMINI */
-        .haki-fx-layer { position: absolute; inset: -60px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
-        .bolt { position: absolute; background: currentColor; width: 3px; box-shadow: 0 0 15px currentColor; animation: bolt-strike 0.5s ease-out forwards; }
-        @keyframes bolt-strike {
-            0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; }
-            100% { transform: rotate(var(--r)) scaleY(4) translateY(-80px); opacity: 0; }
-        }
+        /* FULMINI SVG A ZIG-ZAG */
+        .haki-svg-container { position: absolute; inset: -60px; pointer-events: none; z-index: 20; width: 190px; height: 215px; }
+        .lightning-path { fill: none; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 12px currentColor); animation: flash 0.5s ease-out forwards; }
+        @keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
 
-        /* CARDS */
+        #shake-wrapper { transition: transform 0.1s; }
+
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; }
         .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: #fff; }
 
-        .set-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
-        .set-label { font-size: 0.6rem; color: #444; font-weight: 800; width: 15px; }
-        .input-box { flex: 1; background: #151518; border-radius: 10px; padding: 8px; display: flex; align-items: center; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 700; }
-        .input-box span { font-size: 0.5rem; color: #555; margin-left: 5px; font-weight: 800; }
-
-        .chart-box { height: 90px; margin-top: 15px; border-top: 1px solid #1a1a1a; padding-top: 15px; }
+        .set-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+        .input-box { flex: 1; background: #151518; border-radius: 12px; padding: 10px; display: flex; align-items: center; border: 1px solid #222; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 700; font-size: 1.1rem; }
+        .input-box span { font-size: 0.6rem; color: #444; margin-left: 5px; font-weight: 800; }
         
-        .quote-box { padding: 40px 20px; text-align: center; border-top: 1px solid #111; min-height: 120px; }
-        #quote-text { font-style: italic; font-size: 1rem; color: #888; line-height: 1.6; }
-        #quote-author { display: block; margin-top: 10px; font-weight: 800; font-size: 0.7rem; color: var(--primary); letter-spacing: 3px; }
+        .chart-box { height: 100px; margin-top: 20px; border-top: 1px solid #1a1a1a; padding-top: 15px; }
+        
+        .quote-box { padding: 50px 30px; text-align: center; border-top: 1px solid #111; min-height: 150px; }
+        #quote-text { font-style: italic; font-size: 1.1rem; color: #aaa; line-height: 1.6; transition: 0.3s; }
+        #quote-author { display: block; margin-top: 15px; font-weight: 800; font-size: 0.75rem; color: var(--primary); letter-spacing: 4px; text-transform: uppercase; }
 
         #timer-ov { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
         #timer-val { font-size: 10rem; font-weight: 800; color: var(--primary); }
     </style>
 </head>
-<body id="main-body">
+<body>
 
 <div id="timer-ov" onclick="this.style.display='none'"><div id="timer-val">00</div></div>
 
@@ -100,68 +90,69 @@
 
 <nav id="navbar"></nav>
 
-<div class="container" id="workout-area"></div>
-
-<div class="quote-box">
-    <p id="quote-text"></p>
-    <span id="quote-author"></span>
+<div id="shake-wrapper">
+    <div class="container" id="workout-area"></div>
+    <div class="quote-box">
+        <p id="quote-text"></p>
+        <span id="quote-author"></span>
+    </div>
 </div>
 
 <script>
 const quotesDatabase = {
     zoro: [
-        "Settimana 1: Se non riesci neanche a proteggere il tuo capitano, la tua ambizione è inutile.",
-        "Settimana 2: Il dolore è mio compagno di viaggio.",
-        "Settimana 3: Solo chi ha sofferto può diventare veramente forte.",
-        "Settimana 4: Non perderò mai più!",
+        "Settimana 1: Se non riesci a proteggere il tuo capitano, la tua ambizione è nulla.",
+        "Settimana 2: Il dolore è mio compagno, la spada la mia voce.",
+        "Settimana 3: Solo chi ha superato l'inferno può tagliare l'acciaio.",
+        "Settimana 4: Non perderò mai più, fino a quando non sarò diventato il migliore.",
         "Settimana 5: Le ferite sulla schiena sono il disonore di uno spadaccino.",
-        "Settimana 6: Diventerò il più grande spadaccino del mondo!",
-        "Settimana 7: Hai mai visto una belva feroce di cui puoi fidarti?",
+        "Settimana 6: Se morirò qui, allora significa che non potevo andare oltre.",
+        "Settimana 7: Hai mai visto una belva feroce di cui puoi fidarti? Io no.",
         "Settimana 8: Un graffio sulla spada è un graffio sull'anima.",
-        "Settimana 9: Per superare il limite, devi prima trovarlo.",
-        "Settimana 10: Non sono io a cercare guai, sono loro a cercare me.",
-        "Settimana 11: Se muoio qui, non ero destinato a nulla di più.",
-        "Settimana 12: La pazienza è la lama più affilata.",
-        "Settimana 13: Il destino è qualcosa da forgiare con l'acciaio.",
-        "Settimana 14: Non ho bisogno di un motivo per allenarmi.",
-        "Settimana 15: Ogni taglio mi rende più saggio.",
-        "Settimana 16: Ora sono io l'inferno."
+        "Settimana 9: Per superare il limite, devi prima trovarlo e distruggerlo.",
+        "Settimana 10: Non sono i muscoli, è la volontà che muove la lama.",
+        "Settimana 11: Il destino è qualcosa che forgi col tuo sudore.",
+        "Settimana 12: La pazienza è la lama più affilata nel fodero.",
+        "Settimana 13: Non ho bisogno di fortuna, ho il mio allenamento.",
+        "Settimana 14: Ogni goccia di sudore è un passo verso il titolo.",
+        "Settimana 15: Il mondo tremerà quando sguainerò la mia determinazione.",
+        "Settimana 16: Ora sono io l'inferno. Preparatevi."
     ],
     shanks: [
-        "Settimana 1: Scommetto sul futuro.",
-        "Settimana 2: Una ferita al braccio non è nulla rispetto all'onore.",
-        "Settimana 3: La rabbia non ti renderà più forte, la calma sì.",
-        "Settimana 4: Sono venuto a fermare questa guerra.",
-        "Settimana 5: Un vero re non ha bisogno di gridare.",
-        "Settimana 6: L'Haki del Conquistatore è la forza della volontà.",
+        "Settimana 1: Scommetto questo braccio sulla nuova era.",
+        "Settimana 2: La rabbia non ti renderà più forte, la calma sì.",
+        "Settimana 3: Sono venuto a porre fine a questa guerra.",
+        "Settimana 4: Un vero re non ha bisogno di gridare per farsi obbedire.",
+        "Settimana 5: Il rispetto si guadagna con le azioni, non con le parole.",
+        "Settimana 6: L'Haki del Conquistatore è la forza della pura volontà.",
         "Settimana 7: Rispetta i tuoi nemici, ma non temerli mai.",
-        "Settimana 8: Il mare non perdona i deboli.",
-        "Settimana 9: Proteggi ciò che ami con tutto te stesso.",
-        "Settimana 10: La nuova era sta arrivando.",
+        "Settimana 8: Il mare non perdona i deboli di cuore.",
+        "Settimana 9: Proteggi ciò che ami con ogni fibra del tuo essere.",
+        "Settimana 10: La nuova era non aspetta chi resta indietro.",
         "Settimana 11: Il coraggio è saper quando rinfoderare la spada.",
-        "Settimana 12: La tua ambizione deve scuotere i cieli.",
-        "Settimana 13: Sii il fulmine nel bel mezzo della tempesta.",
-        "Settimana 14: Il rispetto si guadagna sul campo.",
-        "Settimana 15: Guarda sempre oltre l'orizzonte.",
-        "Settimana 16: Il mondo è pronto per te?"
+        "Settimana 12: La tua ambizione deve essere in grado di scuotere i cieli.",
+        "Settimana 13: Sii il fulmine calmo nel mezzo della tempesta.",
+        "Settimana 14: Guarda sempre oltre l'orizzonte, è lì che risiede il domani.",
+        "Settimana 15: Non fermarti finché il mondo non conoscerà il tuo nome.",
+        "Settimana 16: Il futuro appartiene a chi ha il coraggio di scommetterci."
     ],
     luffy: [
-        "Settimana 1: Diventerò il Re dei Pirati!",
+        "Settimana 1: Diventerò il Re dei Pirati! Costi quel che costi!",
         "Settimana 2: Se non rischio la vita, non posso creare un futuro.",
-        "Settimana 3: Ho fame di potere e di carne!",
-        "Settimana 4: Non permetterò a nessuno di fermarmi.",
-        "Settimana 5: I miei compagni sono la mia forza.",
-        "Settimana 6: Gear Second! La mia velocità supera il limite.",
-        "Settimana 7: Non voglio conquistare nulla, voglio essere libero.",
-        "Settimana 8: Finché avrò respiro, combatterò.",
-        "Settimana 9: Supererò ogni ostacolo sulla mia strada.",
-        "Settimana 10: La mia determinazione è più dura dell'acciaio.",
-        "Settimana 11: Gear Fourth! Sentirai il peso dei miei sogni.",
-        "Settimana 12: Non c'è limite a quello che posso fare.",
-        "Settimana 13: La libertà è la vera ricchezza.",
-        "Settimana 14: Riderò in faccia al destino.",
-        "Settimana 15: Il mio Haki avvolgerà il mondo.",
-        "Settimana 16: Gear Fifth! Questo è il mio apice!"
+        "Settimana 3: Ho fame di potere e non mi fermerò davanti a nulla.",
+        "Settimana 4: Non permetterò a nessuno di spegnere il mio sogno.",
+        "Settimana 5: I miei compagni sono la mia forza, la mia volontà il motore.",
+        "Settimana 6: Gear Second! La mia velocità ha appena superato il limite.",
+        "Settimana 7: Non voglio conquistare nulla, voglio solo essere libero.",
+        "Settimana 8: Finché avrò un battito nel petto, io combatterò.",
+        "Settimana 9: Supererò ogni ostacolo, non importa quanto sia grande.",
+        "Settimana 10: La mia determinazione è più dura di qualsiasi diamante.",
+        "Settimana 11: Gear Fourth! Sentirai il peso schiacciante dei miei sogni.",
+        "Settimana 12: Non esiste limite a ciò che un uomo libero può fare.",
+        "Settimana 13: La libertà è l'unica cosa per cui valga la pena lottare.",
+        "Settimana 14: Riderò in faccia al destino finché non si arrenderà.",
+        "Settimana 15: Il mio Haki avvolgerà il mondo intero.",
+        "Settimana 16: Gear Fifth! Questo è il mio apice assoluto! Nika è qui!"
     ]
 };
 
@@ -185,8 +176,8 @@ function init() {
     for(let day in workoutData) {
         nav.innerHTML += `
             <button onclick="setDay('${day}')" id="btn-${day}" class="nav-item ${day==='lun'?'active':''}">
-                <div class="char-frame" id="frame-${day}"><span style="font-size:1.8rem">${workoutData[day].icon}</span></div>
-                <span style="font-size:0.6rem; font-weight:800; color:#444">${day.toUpperCase()}</span>
+                <div class="char-frame" id="frame-${day}"><span style="font-size:2rem">${workoutData[day].icon}</span></div>
+                <span style="font-size:0.65rem; font-weight:800; color:#555">${day.toUpperCase()}</span>
             </button>`;
     }
     setDay('lun');
@@ -201,67 +192,73 @@ function setDay(day) {
 }
 
 function triggerHaki(day) {
-    const body = document.getElementById('main-body');
+    const wrapper = document.getElementById('shake-wrapper');
     const frame = document.getElementById('frame-'+day);
     const char = workoutData[day].char;
     const color = workoutData[day].color;
-    
-    // TREMORE
-    const intensity = char === 'luffy' ? 'quake-hard' : 'quake-soft';
-    const duration = char === 'luffy' ? 1200 : 500;
-    
-    body.classList.add(intensity);
-    setTimeout(() => body.classList.remove(intensity), duration);
 
-    // FULMINI
-    const fx = document.createElement('div');
-    fx.className = 'haki-fx-layer';
-    frame.appendChild(fx);
+    // TREMORE SELETTIVO
+    wrapper.classList.add('quake-active');
+    setTimeout(() => wrapper.classList.remove('quake-active'), char === 'luffy' ? 1500 : 600);
 
-    const bolts = char === 'luffy' ? 25 : 12;
-    for(let i=0; i<bolts; i++) {
-        const b = document.createElement('div');
-        b.className = 'bolt';
-        b.style.color = color;
-        b.style.setProperty('--r', `${Math.random() * 360}deg`);
-        b.style.height = (char === 'luffy' ? 100 : 60) + 'px';
-        fx.appendChild(b);
+    // FULMINI SVG ZIG-ZAG
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "haki-svg-container");
+    frame.appendChild(svg);
+
+    const boltCount = char === 'luffy' ? 14 : 7;
+    for(let i=0; i<boltCount; i++) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "lightning-path");
+        path.setAttribute("stroke", color);
+        
+        let x = 95, y = 107;
+        let d = `M ${x} ${y} `;
+        const segments = char === 'luffy' ? 7 : 4;
+        for(let j=0; j<segments; j++) {
+            x += (Math.random() - 0.5) * 120;
+            y += (Math.random() - 0.5) * 120;
+            d += `L ${x} ${y} `;
+        }
+        path.setAttribute("d", d);
+        svg.appendChild(path);
     }
-    setTimeout(() => fx.remove(), 800);
+    setTimeout(() => svg.remove(), 700);
 }
 
 function renderWorkout() {
     const area = document.getElementById('workout-area');
-    const weekIdx = parseInt(document.getElementById('weekSelector').value) - 1;
+    const week = document.getElementById('weekSelector').value;
     area.innerHTML = '';
     
     workoutData[currentDay].ex.forEach((ex, idx) => area.appendChild(createCard(ex.n, ex.s, ex.r, idx)));
     
-    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:4px; margin:30px 0;">DAILY FINISHER</div>`;
+    area.innerHTML += `<div style="text-align:center; color:#1a1a1a; font-size:0.6rem; letter-spacing:5px; margin:40px 0; font-weight:900;">DAILY FINISHER</div>`;
     area.appendChild(createCard("Addominali Core", 3, 60, 'abs'));
     area.appendChild(createCard("Cardio LISS", 1, 900, 'cardio'));
 
-    // Aggiorna Citazione
+    // AGGIORNA CITAZIONE DINAMICA
     const char = workoutData[currentDay].char;
-    document.getElementById('quote-text').innerText = quotesDatabase[char][weekIdx];
-    document.getElementById('quote-author').innerText = char.toUpperCase();
+    document.getElementById('quote-text').innerText = quotesDatabase[char][week-1];
+    document.getElementById('quote-author').innerText = char;
 }
 
 function createCard(title, sets, rest, id) {
     const week = document.getElementById('weekSelector').value;
     const card = document.createElement('div');
     card.className = 'card';
-    let html = `<div class="card-header"><h3>${title}</h3><button class="timer-btn" style="background:none; border:1px solid var(--primary); color:var(--primary); font-size:0.6rem; border-radius:5px;" onclick="runTimer(${rest})">${rest}s</button></div>`;
+    let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3>${title}</h3><button onclick="runTimer(${rest})" style="background:none; border:1px solid var(--primary); color:var(--primary); font-size:0.6rem; border-radius:6px; padding:4px 8px; cursor:pointer;">${rest}s</button></div>`;
     
     for(let i=1; i<=sets; i++) {
         const key = `w${week}-${currentDay}-${id}-s${i}`;
         const saved = JSON.parse(localStorage.getItem(key)) || {kg: '', reps: ''};
         html += `<div class="set-row">
-            <div class="set-label">${i}</div>
-            <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveData('${id}', ${i}, 'kg', this.value)" placeholder="0"><span>KG</span></div>
-            <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData('${id}', ${i}, 'reps', this.value)" placeholder="0"><span>REPS</span></div>
+            <div style="font-size:0.6rem; width:15px; font-weight:800; color:#333;">${i}</div>
+            <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveData('${id}', ${i}, 'kg', this.value)"><span>KG</span></div>
+            <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData('${id}', ${i}, 'reps', this.value)"><span>REPS</span></div>
         </div>`;
     }
+    // GRAFICO SOTTO LE SERIE
     html += `<div class="chart-box"><canvas id="chart-${id}"></canvas></div>`;
     card.innerHTML = html;
     setTimeout(() => drawChart(id), 50);
@@ -285,13 +282,24 @@ function drawChart(id) {
         pts.push(d && d.kg ? parseFloat(d.kg) : 0);
     }
     if(window['c'+id]) window['c'+id].destroy();
-    window['c'+id] = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: Array.from({length: 16}, (_, i) => i + 1),
-            datasets: [{ data: pts, borderColor: workoutData[currentDay].color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: false }]
-        },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+    window['c'+id] = new Chart(ctx, { 
+        type: 'line', 
+        data: { 
+            labels: Array.from({length:16}, (_,i)=>i+1), 
+            datasets: [{ 
+                data: pts, 
+                borderColor: workoutData[currentDay].color, 
+                borderWidth: 2, 
+                tension: 0.4, 
+                pointRadius: 0, 
+                fill: false 
+            }] 
+        }, 
+        options: { 
+            maintainAspectRatio: false, 
+            plugins: { legend: { display: false } }, 
+            scales: { x: { display: false }, y: { display: false } } 
+        } 
     });
 }
 
@@ -299,9 +307,9 @@ function runTimer(s) {
     const ov = document.getElementById('timer-ov');
     ov.style.display = 'flex';
     let t = s;
-    const iv = setInterval(() => {
-        document.getElementById('timer-val').innerText = t;
-        if(t-- <= 0) { clearInterval(iv); ov.style.display = 'none'; }
+    const iv = setInterval(() => { 
+        document.getElementById('timer-val').innerText = t; 
+        if(t-- <= 0) { clearInterval(iv); ov.style.display = 'none'; } 
     }, 1000);
 }
 

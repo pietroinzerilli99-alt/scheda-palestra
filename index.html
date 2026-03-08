@@ -3,376 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Training Log</title>
+    <title>Gym Track Pro - 2026 Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-body: #121212;
-            --bg-card: #1e1e1e;
-            --primary: #007aff;
-            --push: #ff4757;
-            --pull: #2ed573;
-            --legs: #ffa502;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --bg: #0a0f1a;
+            --card: #161e2d;
+            --primary: #38bdf8;
+            --accent: #f472b6;
+            --success: #22c55e;
+            --text: #f8fafc;
+            --border: #2d3748;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
+            padding-bottom: 50px;
         }
 
-        header {
-            padding: 2rem 1rem;
+        /* Top Bar & Timer */
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 15, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
             text-align: center;
-            background: linear-gradient(180deg, #1a1a1a 0%, var(--bg-body) 100%);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
+        #timer-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: none;
+            font-variant-numeric: tabular-nums;
         }
 
-        /* Navigazione */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        /* Navigation */
         nav {
             display: flex;
             overflow-x: auto;
-            padding: 10px;
             gap: 10px;
-            sticky: top;
-            background: var(--bg-body);
-            scrollbar-width: none; /* Nasconde scrollbar su Firefox */
+            padding: 15px;
+            scrollbar-width: none;
         }
-
-        nav::-webkit-scrollbar { display: none; } /* Nasconde scrollbar su Chrome/Safari */
+        nav::-webkit-scrollbar { display: none; }
 
         nav button {
-            flex: 0 0 auto;
-            padding: 12px 20px;
-            border: none;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: #94a3b8;
+            padding: 10px 20px;
             border-radius: 12px;
-            background: var(--bg-card);
-            color: var(--text-dim);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
         nav button.active {
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
-        /* Contenitore */
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        /* Exercise Cards */
+        .container { padding: 0 15px; }
+        .day-section { display: none; animation: slideUp 0.4s ease; }
+        .active-day { display: block; }
 
-        .day-section {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .day-title {
-            font-size: 1.4rem;
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            border: 1px solid var(--border);
         }
 
-        /* Lista Esercizi */
-        .exercise-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
+        .card-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            border-left: 4px solid transparent;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .push-border { border-left-color: var(--push); }
-        .pull-border { border-left-color: var(--pull); }
-        .legs-border { border-left-color: var(--legs); }
-
-        .ex-info { flex-grow: 1; }
-        .ex-name { display: block; font-weight: 600; font-size: 1.1rem; }
-        .ex-details { color: var(--text-dim); font-size: 0.9rem; }
+        .card-header h3 { margin: 0; font-size: 1.1rem; }
         
-        .rec-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.05);
-            padding: 2px 8px;
-            border-radius: 6px;
-            margin-top: 4px;
+        .rec-btn {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 15px;
             font-size: 0.8rem;
+            font-weight: bold;
         }
 
-        /* Checkbox */
-        .check-container {
-            margin-left: 15px;
+        /* Grid per le Serie */
+        .series-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            accent-color: var(--primary);
-        }
-
-        /* Note Area */
-        .notes-area {
-            margin-top: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 12px;
-            color: white;
-            font-family: inherit;
-            resize: vertical;
-            box-sizing: border-box;
-        }
-
-        .cardio-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed #444;
-            padding: 10px;
+        .serie-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 10px;
+            padding: 8px;
             text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-dim);
+        }
+
+        .serie-box label { display: block; font-size: 0.7rem; color: #64748b; margin-bottom: 4px; }
+        
+        .serie-box input {
+            width: 80%;
+            background: transparent;
+            border: none;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Mini Chart */
+        .chart-wrap {
+            height: 120px;
+            margin-top: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Gym Tracker Pro</h1>
-</header>
-
-<nav id="dayNav">
-    <button onclick="showDay('lun', this)" class="active">LUN</button>
-    <button onclick="showDay('mar', this)">MAR</button>
-    <button onclick="showDay('mer', this)">MER</button>
-    <button onclick="showDay('gio', this)">GIO</button>
-    <button onclick="showDay('ven', this)">VEN</button>
-</nav>
-
-<div class="container">
-    <div id="lun" class="day-section" style="display: block;">
-        <div class="day-title"><span style="color:var(--push)">●</span> Lunedì - Push</div>
-        <div class="exercise-card push-border">
-            <div class="ex-info">
-                <span class="ex-name">Panca inclinata manubri</span>
-                <span class="ex-details">4 × 8-10</span>
-                <div class="rec-tag">Rec: 90s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info">
-                <span class="ex-name">Croci ai cavi</span>
-                <span class="ex-details">3 × 12</span>
-                <div class="rec-tag">Rec: 60s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info">
-                <span class="ex-name">Alzate laterali</span>
-                <span class="ex-details">4 × 12</span>
-                <div class="rec-tag">Rec: 60s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info">
-                <span class="ex-name">Dips</span>
-                <span class="ex-details">3 × 8</span>
-                <div class="rec-tag">Rec: 90s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info">
-                <span class="ex-name">Pushdown tricipiti</span>
-                <span class="ex-details">3 × 10</span>
-                <div class="rec-tag">Rec: 60s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <p class="cardio-box">🏃 Cardio: 10 min camminata inclinata</p>
-        <textarea id="note-lun" placeholder="Carichi di oggi e sensazioni..."></textarea>
-    </div>
-
-    <div id="mar" class="day-section">
-        <div class="day-title"><span style="color:var(--pull)">●</span> Martedì - Pull</div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info">
-                <span class="ex-name">Trazioni zavorrate</span>
-                <span class="ex-details">5 × 4-6</span>
-                <div class="rec-tag">Rec: 120s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info">
-                <span class="ex-name">Rematore manubrio</span>
-                <span class="ex-details">4 × 8</span>
-                <div class="rec-tag">Rec: 90s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info">
-                <span class="ex-name">Lat machine</span>
-                <span class="ex-details">3 × 10</span>
-                <div class="rec-tag">Rec: 90s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info">
-                <span class="ex-name">Curl panca inclinata</span>
-                <span class="ex-details">3 × 10</span>
-                <div class="rec-tag">Rec: 60s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info">
-                <span class="ex-name">Curl martello</span>
-                <span class="ex-details">3 × 10</span>
-                <div class="rec-tag">Rec: 60s</div>
-            </div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <p class="cardio-box">🏃 Cardio: 10 min camminata inclinata</p>
-        <textarea id="note-mar" placeholder="Carichi di oggi e sensazioni..."></textarea>
-    </div>
-
-    <div id="mer" class="day-section">
-        <div class="day-title"><span style="color:var(--legs)">●</span> Mercoledì - Gambe</div>
-        <div class="exercise-card legs-border">
-            <div class="ex-info"><span class="ex-name">Hack squat</span><span class="ex-details">4 × 8</span><div class="rec-tag">120s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card legs-border">
-            <div class="ex-info"><span class="ex-name">Leg press</span><span class="ex-details">4 × 10</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card legs-border">
-            <div class="ex-info"><span class="ex-name">Romanian deadlift</span><span class="ex-details">3 × 10</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card legs-border">
-            <div class="ex-info"><span class="ex-name">Leg curl</span><span class="ex-details">3 × 12</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card legs-border">
-            <div class="ex-info"><span class="ex-name">Calf raise</span><span class="ex-details">4 × 15</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <textarea id="note-mer" placeholder="Carichi di oggi..."></textarea>
-    </div>
-
-    <div id="gio" class="day-section">
-        <div class="day-title"><span style="color:var(--push)">●</span> Giovedì - Push 2</div>
-        <div class="exercise-card push-border">
-            <div class="ex-info"><span class="ex-name">Panca inclinata manubri</span><span class="ex-details">4 × 8</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info"><span class="ex-name">Croci cavi</span><span class="ex-details">3 × 12</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info"><span class="ex-name">Alzate laterali</span><span class="ex-details">4 × 12</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info"><span class="ex-name">Dips</span><span class="ex-details">3 × 8</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card push-border">
-            <div class="ex-info"><span class="ex-name">Pushdown tricipiti</span><span class="ex-details">3 × 10</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <textarea id="note-gio" placeholder="Carichi di oggi..."></textarea>
-    </div>
-
-    <div id="ven" class="day-section">
-        <div class="day-title"><span style="color:var(--pull)">●</span> Venerdì - Pull 2</div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info"><span class="ex-name">Trazioni</span><span class="ex-details">4 × max</span><div class="rec-tag">120s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info"><span class="ex-name">Pulley basso</span><span class="ex-details">4 × 8</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info"><span class="ex-name">Lat machine</span><span class="ex-details">3 × 10</span><div class="rec-tag">90s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info"><span class="ex-name">Curl bilanciere</span><span class="ex-details">3 × 8</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <div class="exercise-card pull-border">
-            <div class="ex-info"><span class="ex-name">Curl martello</span><span class="ex-details">3 × 10</span><div class="rec-tag">60s</div></div>
-            <div class="check-container"><input type="checkbox"></div>
-        </div>
-        <textarea id="note-ven" placeholder="Carichi di oggi..."></textarea>
+<div class="header-sticky">
+    <div id="main-title">GYM LOG <b>2026</b></div>
+    <div id="timer-display">00:00</div>
+    <div class="stats-bar">
+        <span>Volume Sessione: <b id="total-vol">0</b> kg</span>
     </div>
 </div>
 
+<nav>
+    <button onclick="switchDay('lun')" id="nav-lun" class="active">LUN - PUSH</button>
+    <button onclick="switchDay('mar')" id="nav-mar">MAR - PULL</button>
+    <button onclick="switchDay('mer')" id="nav-mer">MER - LEGS</button>
+    <button onclick="switchDay('gio')" id="nav-gio">GIO - PUSH</button>
+    <button onclick="switchDay('ven')" id="nav-ven">VEN - PULL</button>
+</nav>
+
+<div class="container" id="days-container">
+    </div>
+
 <script>
-function showDay(dayId, btn) {
-    // Nascondi tutte le sezioni
-    document.querySelectorAll('.day-section').forEach(section => {
-        section.style.display = 'none';
+// Database Esercizi
+const workoutData = {
+    lun: { title: "Push Day 1", exercises: [
+        { name: "Panca Inclinata Manubri", sets: 4, rec: 90 },
+        { name: "Croci ai Cavi", sets: 3, rec: 60 },
+        { name: "Alzate Laterali", sets: 4, rec: 60 },
+        { name: "Dips", sets: 3, rec: 90 },
+        { name: "Pushdown Tricipiti", sets: 3, rec: 60 }
+    ]},
+    mar: { title: "Pull Day 1", exercises: [
+        { name: "Trazioni Zavorrate", sets: 5, rec: 120 },
+        { name: "Rematore Manubrio", sets: 4, rec: 90 },
+        { name: "Lat Machine", sets: 3, rec: 90 },
+        { name: "Curl Inclinata", sets: 3, rec: 60 },
+        { name: "Curl Martello", sets: 3, rec: 60 }
+    ]},
+    mer: { title: "Legs Day", exercises: [
+        { name: "Hack Squat", sets: 4, rec: 120 },
+        { name: "Leg Press", sets: 4, rec: 90 },
+        { name: "Romanian Deadlift", sets: 3, rec: 90 },
+        { name: "Leg Curl", sets: 3, rec: 60 },
+        { name: "Calf Raise", sets: 4, rec: 60 }
+    ]},
+    gio: { title: "Push Day 2", exercises: [
+        { name: "Panca Piana", sets: 4, rec: 90 },
+        { name: "Military Press", sets: 3, rec: 90 },
+        { name: "Croci Cavi", sets: 3, rec: 60 },
+        { name: "Alzate Laterali", sets: 4, rec: 60 },
+        { name: "French Press", sets: 3, rec: 60 }
+    ]},
+    ven: { title: "Pull Day 2", exercises: [
+        { name: "Trazioni", sets: 4, rec: 120 },
+        { name: "Pulley Basso", sets: 4, rec: 90 },
+        { name: "Facepull", sets: 3, rec: 60 },
+        { name: "Curl Bilanciere", sets: 3, rec: 60 },
+        { name: "Hammer Curl", sets: 3, rec: 60 }
+    ]}
+};
+
+// Generazione Dinamica HTML
+const container = document.getElementById('days-container');
+for (const [dayKey, dayObj] of Object.entries(workoutData)) {
+    let dayHtml = `<div id="${dayKey}" class="day-section ${dayKey === 'lun' ? 'active-day' : ''}">`;
+    dayObj.exercises.forEach((ex, exIdx) => {
+        const exId = `${dayKey}_ex${exIdx}`;
+        dayHtml += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h3>${ex.name}</h3>
+                        <small style="color:#64748b">${ex.sets} serie</small>
+                    </div>
+                    <button class="rec-btn" onclick="startTimer(${ex.rec})">⏱ ${ex.rec}s</button>
+                </div>
+                <div class="series-row">
+                    ${Array.from({length: ex.sets}).map((_, s) => `
+                        <div class="serie-box">
+                            <label>S${s+1}</label>
+                            <input type="number" placeholder="kg" 
+                                id="${exId}_s${s}" 
+                                onchange="saveWeight('${exId}', ${s}, this.value)">
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="chart_${exId}"></canvas>
+                </div>
+            </div>`;
     });
-    
-    // Mostra quella selezionata
-    document.getElementById(dayId).style.display = 'block';
-    
-    // Gestione stato bottoni
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    dayHtml += `</div>`;
+    container.innerHTML += dayHtml;
 }
 
-// Funzione per salvare le note automaticamente
-const textareas = document.querySelectorAll('textarea');
-textareas.forEach(txt => {
-    const id = txt.id;
-    // Carica se esiste
-    txt.value = localStorage.getItem(id) || "";
+// Logica Timer
+let timerInterval;
+function startTimer(sec) {
+    clearInterval(timerInterval);
+    const display = document.getElementById('timer-display');
+    const title = document.getElementById('main-title');
+    display.style.display = 'block';
+    title.style.display = 'none';
     
-    // Salva al cambiamento
-    txt.addEventListener('input', () => {
-        localStorage.setItem(id, txt.value);
-    });
-});
-</script>
+    let timeLeft = sec;
+    timerInterval = setInterval(() => {
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            display.innerText = "VIA!";
+            setTimeout(() => {
+                display.style.display = 'none';
+                title.style.display = 'block';
+            }, 2000);
+        }
+        timeLeft--;
+    }, 1000);
+}
 
+// Logica Salvataggio e Grafici
+const charts = {};
+function initCharts() {
+    for (const [dayKey, dayObj] of Object.entries(workoutData)) {
+        dayObj.exercises.forEach((ex, exIdx) => {
+            const exId = `${dayKey}_ex${exIdx}`;
+            const canvas = document.getElementById(`chart_${exId}`);
+            // Carichiamo i dati storici (se non ci sono, usiamo dati finti per mostrare il grafico inizialmente)
+            const history = JSON.parse(localStorage.getItem(`hist_${exId}`)) || [0, 0, 0, 0, 0];
+            
+            charts[exId] = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: ['-4', '-3', '-2', '-1', 'Oggi'],
+                    datasets: [{
+                        data: history,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { ticks: { color: '#475569', font: { size: 9 } } } }
+                }
+            });
+
+            // Carichiamo anche i valori attuali negli input
+            for(let s=0; s<ex.sets; s++) {
+                const val = localStorage.getItem(`${exId}_s${s}`);
+                if(val) document.getElementById(`${exId}_s${s}`).value = val;
+            }
+        });
+    }
+    calcVolume();
+}
+
+function saveWeight(exId, setIdx, value) {
+    localStorage.setItem(`${exId}_s${setIdx}`, value);
+    
+    // Aggiorna il valore "Oggi" nel grafico
+    const chart = charts[exId];
+    chart.data.datasets[0].data[4] = parseFloat(value) || 0;
+    chart.update();
+    
+    // Salva lo storico (per semplicità usiamo l'ultimo valore inserito come picco della giornata)
+    const history = chart.data.datasets[0].data;
+    localStorage.setItem(`hist_${exId}`, JSON.stringify(history));
+    
+    calcVolume();
+}
+
+function calcVolume() {
+    let total = 0;
+    document.querySelectorAll('input').forEach(input => {
+        total += parseFloat(input.value) || 0;
+    });
+    document.getElementById('total-vol').innerText = total;
+}
+
+function switchDay(dayId) {
+    document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(dayId).classList.add('active-day');
+    document.getElementById('nav-' + dayId).classList.add('active');
+}
+
+window.onload = initCharts;
+</script>
 </body>
 </html>

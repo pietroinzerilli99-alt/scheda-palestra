@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Legacy v11.5 - Unleashed & Vanishing</title>
+    <title>Rayleigh Legacy v12.0 - Emperor Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -22,11 +22,13 @@
             overflow-x: hidden;
         }
 
-        header { padding: 20px; text-align: center; }
+        header { padding: 30px 20px; text-align: center; }
+        .main-title { font-weight: 900; letter-spacing: 8px; font-size: 0.8rem; color: #444; margin-bottom: 15px; }
+        
         .week-select {
             background: #111; border: 1px solid #333; color: var(--primary);
-            padding: 12px; border-radius: 12px; font-weight: 800; width: 85%;
-            font-size: 0.9rem; letter-spacing: 1px;
+            padding: 12px; border-radius: 12px; font-weight: 800; width: 90%;
+            font-size: 0.9rem; letter-spacing: 1px; outline: none;
         }
 
         nav { 
@@ -45,43 +47,28 @@
 
         .nav-item.active .char-frame { transform: scale(1.1); border-color: #fff; }
 
-        /* --- HAKI OVERLAYS --- */
-        .haki-fx-layer {
-            position: absolute; inset: -30px; pointer-events: none; z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-        }
+        /* HAKI OVERLAYS */
+        .haki-fx-layer { position: absolute; inset: -40px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .lightning-bolt { position: absolute; background: currentColor; width: 2px; box-shadow: 0 0 12px currentColor; animation: haki-strike 0.6s ease-out forwards; }
+        .shanks-scar { position: absolute; width: 2px; background: var(--shanks); box-shadow: 0 0 15px var(--shanks); animation: scar-fade 0.7s ease-in-out forwards; }
 
-        .lightning-bolt {
-            position: absolute; background: currentColor; width: 2px; border-radius: 2px;
-            box-shadow: 0 0 12px currentColor; animation: haki-strike 0.6s ease-out forwards;
-        }
+        @keyframes haki-strike { 0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; } 100% { transform: rotate(var(--r)) scaleY(2.5) translateY(-50px); opacity: 0; } }
+        @keyframes scar-fade { 0% { height: 0; opacity: 1; transform: rotate(20deg) translateY(-20px); } 50% { height: 70px; opacity: 1; } 100% { height: 90px; opacity: 0; transform: rotate(20deg) translateY(20px); } }
 
-        .shanks-scar {
-            position: absolute; width: 2px; background: var(--shanks);
-            box-shadow: 0 0 15px var(--shanks); animation: scar-fade 0.7s ease-in-out forwards;
-        }
-
-        @keyframes haki-strike {
-            0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; }
-            100% { transform: rotate(var(--r)) scaleY(2) translateY(-40px); opacity: 0; }
-        }
-
-        @keyframes scar-fade {
-            0% { height: 0; opacity: 1; transform: rotate(20deg) translateY(-20px); }
-            50% { height: 70px; opacity: 1; }
-            100% { height: 90px; opacity: 0; transform: rotate(20deg) translateY(20px); }
-        }
-
-        /* --- CONTENT --- */
+        /* CONTENT */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; }
-        
-        .set-row { display: flex; gap: 10px; margin-top: 15px; }
-        .input-box { flex: 1; background: #151518; border-radius: 12px; padding: 10px; display: flex; align-items: center; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; font-size: 1.1rem; outline: none; font-weight: 700; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+
+        .set-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+        .set-label { font-size: 0.6rem; color: var(--primary); font-weight: 800; width: 20px; }
+        .input-box { flex: 1; background: #151518; border-radius: 10px; padding: 8px; display: flex; align-items: center; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; font-size: 1rem; outline: none; font-weight: 700; }
         .input-box span { font-size: 0.5rem; color: #555; margin-left: 5px; font-weight: 800; }
 
-        .chart-box { height: 80px; margin-bottom: 10px; opacity: 0.7; }
+        .chart-box { height: 70px; margin: 10px 0; opacity: 0.6; }
+        .timer-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.6rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
 
         #timer-ov { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
         #timer-val { font-size: 10rem; font-weight: 800; color: var(--primary); }
@@ -92,7 +79,8 @@
 <div id="timer-ov" onclick="this.style.display='none'"><div id="timer-val">00</div></div>
 
 <header>
-    <select id="weekSelector" class="week-select" onchange="renderExercises()"></select>
+    <div class="main-title">RAYLEIGH LEGACY 6.0</div>
+    <select id="weekSelector" class="week-select" onchange="renderWorkout()"></select>
 </header>
 
 <nav id="navbar"></nav>
@@ -100,7 +88,6 @@
 <div class="container" id="workout-area"></div>
 
 <script>
-// Popola 16 Settimane
 const sel = document.getElementById('weekSelector');
 for(let i=1; i<=16; i++) {
     let opt = document.createElement('option');
@@ -109,11 +96,21 @@ for(let i=1; i<=16; i++) {
 }
 
 const workoutData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: ["Panca Inclinata", "Chest Press", "Alzate Laterali"] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: ["Trazioni", "Rematore", "Curl EZ"] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: ["Hack Squat", "Leg Press", "Leg Curl"] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: ["Panca Piana", "Croci Cavi", "Shoulder Press"] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: ["Lat Machine", "Rematore Man.", "Hammer Curl"] }
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [
+        {n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}
+    ]},
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [
+        {n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}
+    ]},
+    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: [
+        {n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}
+    ]},
+    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [
+        {n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}
+    ]},
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [
+        {n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}
+    ]}
 };
 
 let currentDay = 'lun';
@@ -123,9 +120,7 @@ function init() {
     for(let day in workoutData) {
         nav.innerHTML += `
             <button onclick="setDay('${day}')" id="btn-${day}" class="nav-item ${day==='lun'?'active':''}">
-                <div class="char-frame" id="frame-${day}">
-                    <span style="font-size:1.8rem">${workoutData[day].icon}</span>
-                </div>
+                <div class="char-frame" id="frame-${day}"><span style="font-size:1.8rem">${workoutData[day].icon}</span></div>
                 <span style="font-size:0.6rem; font-weight:800; color:#444">${day.toUpperCase()}</span>
             </button>`;
     }
@@ -136,33 +131,27 @@ function setDay(day) {
     currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
-    
     burstHaki(day);
-    renderExercises();
+    renderWorkout();
 }
 
 function burstHaki(day) {
     const frame = document.getElementById('frame-'+day);
     const char = workoutData[day].char;
     const color = workoutData[day].color;
-
-    // Crea container temporaneo
     const fx = document.createElement('div');
     fx.className = 'haki-fx-layer';
     frame.appendChild(fx);
 
-    // Fulmini (Per tutti)
-    const bolts = char === 'luffy' ? 14 : 8;
+    const bolts = char === 'luffy' ? 15 : 8;
     for(let i=0; i<bolts; i++) {
         const b = document.createElement('div');
         b.className = 'lightning-bolt';
         b.style.color = color;
         b.style.setProperty('--r', `${Math.random() * 360}deg`);
-        b.style.height = (char === 'luffy' ? 70 : 40) + 'px';
+        b.style.height = (char === 'luffy' ? 80 : 45) + 'px';
         fx.appendChild(b);
     }
-
-    // Effetto Speciale Shanks
     if(char === 'shanks') {
         for(let i=0; i<3; i++) {
             const s = document.createElement('div');
@@ -171,57 +160,72 @@ function burstHaki(day) {
             fx.appendChild(s);
         }
     }
-
-    // Rimuovi tutto dopo l'animazione
     setTimeout(() => fx.remove(), 800);
 }
 
-function renderExercises() {
+function renderWorkout() {
     const area = document.getElementById('workout-area');
     area.innerHTML = '';
     const week = sel.value;
 
-    workoutData[currentDay].ex.forEach((name, idx) => {
-        const storageKey = `w${week}-${currentDay}-${idx}`;
-        const saved = JSON.parse(localStorage.getItem(storageKey)) || {kg: '', reps: ''};
-        
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="margin:0; font-size:0.8rem; letter-spacing:1px;">${name}</h3>
-                <button style="background:transparent; border:1px solid var(--primary); color:var(--primary); font-size:0.6rem; padding:5px 10px; border-radius:6px;" onclick="runTimer(90)">90s</button>
-            </div>
-            <div class="chart-box"><canvas id="chart-${idx}"></canvas></div>
-            <div class="set-row">
-                <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveData(${idx}, 'kg', this.value)" placeholder="0"><span>KG</span></div>
-                <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData(${idx}, 'reps', this.value)" placeholder="0"><span>REPS</span></div>
-            </div>
-        `;
-        area.appendChild(card);
-        drawChart(idx);
+    // Esercizi principali
+    workoutData[currentDay].ex.forEach((ex, idx) => {
+        area.appendChild(createCard(ex.n, ex.s, ex.r, idx));
     });
+
+    // Finisher fissi
+    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:4px; margin:25px 0;">DAILY FINISHER</div>`;
+    area.appendChild(createCard("Addominali Core", 3, 60, 'abs'));
+    area.appendChild(createCard("Cardio LISS (15m)", 1, 900, 'cardio'));
 }
 
-function saveData(idx, type, val) {
+function createCard(title, sets, rest, id) {
     const week = sel.value;
-    const storageKey = `w${week}-${currentDay}-${idx}`;
+    const card = document.createElement('div');
+    card.className = 'card';
+    let html = `
+        <div class="card-header">
+            <h3>${title}</h3>
+            <button class="timer-btn" onclick="runTimer(${rest})">${rest >= 60 ? rest/60+'m' : rest+'s'}</button>
+        </div>
+        <div class="chart-box"><canvas id="chart-${id}"></canvas></div>`;
+    
+    for(let i=1; i<=sets; i++) {
+        const storageKey = `w${week}-${currentDay}-${id}-s${i}`;
+        const saved = JSON.parse(localStorage.getItem(storageKey)) || {kg: '', reps: ''};
+        html += `
+            <div class="set-row">
+                <div class="set-label">${i}</div>
+                <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveData('${id}', ${i}, 'kg', this.value)" placeholder="0"><span>KG</span></div>
+                <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData('${id}', ${i}, 'reps', this.value)" placeholder="0"><span>REPS</span></div>
+            </div>`;
+    }
+    card.innerHTML = html;
+    setTimeout(() => drawChart(id), 50);
+    return card;
+}
+
+function saveData(exId, setIdx, type, val) {
+    const week = sel.value;
+    const storageKey = `w${week}-${currentDay}-${exId}-s${setIdx}`;
     let data = JSON.parse(localStorage.getItem(storageKey)) || {kg: '', reps: ''};
     data[type] = val;
     localStorage.setItem(storageKey, JSON.stringify(data));
-    drawChart(idx);
+    drawChart(exId);
 }
 
-function drawChart(idx) {
-    const ctx = document.getElementById(`chart-${idx}`).getContext('2d');
+function drawChart(id) {
+    const canvas = document.getElementById(`chart-${id}`);
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
     const history = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}`));
+        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${id}-s1`)); // Prende progresso della prima serie
         history.push(d ? parseFloat(d.kg) || 0 : 0);
     }
 
-    if(window[`cObj${idx}`]) window[`cObj${idx}`].destroy();
-    window[`cObj${idx}`] = new Chart(ctx, {
+    if(window[`cObj${id}`]) window[`cObj${id}`].destroy();
+    window[`cObj${id}`] = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({length: 16}, (_, i) => i + 1),

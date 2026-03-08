@@ -3,93 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Haki Definitive</title>
+    <title>Rayleigh Haki System - Final</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(15, 20, 25, 0.7);
+            --glass: rgba(15, 20, 25, 0.85);
             --primary: #00ffaa; 
-            --silver: #f8fafc;
-            --text-dim: #64748b;
-            --haki-red: #ff0000;
             --zoro-color: #00ff88;
-            --luffy-color: #ffaa00;
+            --luffy-color: #ffffff;
+            --luffy-aura: #ffaa00;
             --shanks-color: #ff1100;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            color: var(--silver);
+            color: #f8fafc;
             margin: 0; padding-bottom: 80px;
-            overflow-x: hidden;
             background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 170, 0.05) 0%, transparent 50%);
         }
 
-        /* Fulmini Haki */
-        .haki-lightning-svg {
-            position: absolute; top: 50%; left: 50%;
-            width: 140%; height: 140%; transform: translate(-50%, -50%);
-            pointer-events: none; z-index: 1000;
-            filter: drop-shadow(0 0 3px var(--haki-red));
-        }
+        header { padding: 30px 20px; max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .week-selector { background: #111; border: 1px solid #333; color: var(--primary); padding: 8px 12px; border-radius: 6px; font-weight: 700; outline: none; }
 
-        header { 
-            padding: 30px 20px; max-width: 600px; margin: 0 auto; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        
-        .week-selector {
-            background: #111; border: 1px solid #333;
-            color: var(--primary); padding: 8px 12px; border-radius: 6px; 
-            font-size: 0.75rem; font-weight: 700; outline: none;
-        }
-
-        /* Navigazione con Foto */
-        nav {
-            display: flex; gap: 10px; padding: 10px; overflow-x: auto;
-            max-width: 600px; margin: 0 auto; justify-content: center;
-            scrollbar-width: none;
-        }
+        /* Navigazione */
+        nav { display: flex; gap: 8px; padding: 10px; overflow-x: auto; max-width: 600px; margin: 0 auto; justify-content: center; }
         .nav-item {
             background: transparent; border: none; padding: 5px;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            cursor: pointer; min-width: 75px;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            cursor: pointer; min-width: 85px; position: relative;
         }
-        
-        .char-container {
-            width: 60px; height: 60px;
-            border-radius: 10px;
+
+        /* Icone Vettoriali Blindate */
+        .char-box {
+            width: 70px; height: 70px;
+            border-radius: 14px;
             border: 2px solid #222;
-            overflow: hidden;
-            position: relative;
-            transition: 0.3s;
-            background: #111; /* Fallback se l'immagine non carica */
-        }
-        
-        .char-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: 0.3s;
+            background: #0a0a0a;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
         }
 
-        .nav-item.active .char-container { 
-            border-color: #fff; 
-            transform: scale(1.1); 
-            box-shadow: 0 0 15px rgba(255,255,255,0.2); 
-        }
+        .nav-item.active .char-box { transform: scale(1.1) translateY(-5px); border-color: #fff; }
 
-        /* Colori Auree Personaggi */
-        .zoro.active .char-container { border-color: var(--zoro-color); box-shadow: 0 0 15px var(--zoro-color); }
-        .shanks.active .char-container { border-color: var(--shanks-color); box-shadow: 0 0 15px var(--shanks-color); }
-        .luffy.active .char-container { border-color: var(--luffy-color); box-shadow: 0 0 15px var(--luffy-color); }
+        /* Stili Aura Personaggi */
+        .zoro.active .char-box { border-color: var(--zoro-color); box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); }
+        .shanks.active .char-box { border-color: var(--shanks-color); box-shadow: 0 0 20px rgba(255, 17, 0, 0.4); }
+        .luffy.active .char-box { border-color: var(--luffy-aura); box-shadow: 0 0 20px rgba(255, 170, 0, 0.4); }
 
-        .day-label { font-size: 0.7rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
+        .day-label { font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; }
         .nav-item.active .day-label { color: #fff; }
-        
-        .legend-title { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.4; }
+        .legend-title { font-size: 0.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.4; text-align: center; width: 100%; }
         .nav-item.active .legend-title { opacity: 1; }
 
         /* Container & Cards */
@@ -97,217 +64,169 @@
         .day-section { display: none; }
         .active-day { display: block; animation: fadeIn 0.4s ease; }
 
-        .card {
-            background: var(--glass); backdrop-filter: blur(20px);
-            border-radius: 12px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.05); position: relative;
-        }
+        .card { background: var(--glass); backdrop-filter: blur(20px); border-radius: 12px; padding: 22px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
         
-        /* Luffy Gear 5 "Softness" */
-        .joyboy-card {
-            border-radius: 25px; border-color: rgba(255, 255, 255, 0.1);
-            animation: rubberPulse 4s infinite alternate ease-in-out;
-        }
-        @keyframes rubberPulse {
-            0% { transform: scale(1); border-radius: 25px; }
-            100% { transform: scale(1.01); border-radius: 35px; }
-        }
+        /* Effetto Gomma JoyBoy */
+        .luffy-mode .card { animation: rubber 4s infinite alternate ease-in-out; border-color: rgba(255,170,0,0.2); }
+        @keyframes rubber { 0% { border-radius: 20px; } 100% { border-radius: 40px; transform: scale(1.01); } }
 
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .card-header h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        .timer-btn {
-            background: transparent; color: var(--primary); border: 1px solid var(--primary);
-            padding: 5px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
-        }
+        .timer-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 5px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 
-        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
-        .input-box { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #222; padding: 4px 0; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.1rem; outline: none; text-align: right; }
-        .input-box span { font-size: 0.55rem; color: var(--text-dim); font-weight: 700; }
+        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
+        .input-box { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #222; padding: 6px 0; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.2rem; outline: none; text-align: right; }
+        .input-box span { font-size: 0.6rem; color: #475569; font-weight: 700; }
 
-        .chart-container { height: 60px; margin-top: 15px; opacity: 0.4; }
-
-        #timer-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 9999;
-        }
-        #timer-val { font-size: 6rem; font-weight: 200; color: var(--primary); }
+        /* Haki Lightning */
+        .haki-lightning-svg { position: absolute; top: 50%; left: 50%; width: 150%; height: 150%; transform: translate(-50%, -50%); pointer-events: none; z-index: 1000; }
+        #timer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 10000; }
+        #timer-val { font-size: 7rem; font-weight: 200; color: var(--primary); }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight: 700; letter-spacing: 2px; font-size: 0.8rem; opacity: 0.6;">PROGRESSION</div>
+    <div style="font-weight: 700; letter-spacing: 3px; font-size: 0.8rem; opacity: 0.4;">RAYLEIGH SYSTEM</div>
     <select class="week-selector" id="weekSelect" onchange="loadWeekData()"></select>
 </header>
 
 <nav id="dayNav">
     <button onclick="switchDay('lun', 'zoro')" id="n-lun" class="nav-item active zoro interactive">
-        <div class="char-container">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Zoro" style="display:none"> <img class="char-img" src="https://i.pinimg.com/originals/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg" alt="Zoro">
+        <div class="char-box">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--zoro-color)" stroke-width="1.5">
+                <path d="M2 22L12 12M12 12L22 2M12 12L22 22M12 12L2 2" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="2" fill="var(--zoro-color)"/>
+            </svg>
         </div>
         <span class="day-label">Lun</span>
         <span class="legend-title" style="color:var(--zoro-color)">King of Hell</span>
     </button>
+
     <button onclick="switchDay('mar', 'shanks')" id="n-mar" class="nav-item shanks interactive">
-        <div class="char-container">
-            <img class="char-img" src="https://i.pinimg.com/originals/21/53/74/21537463f25608b89e602414777a8345.jpg" alt="Shanks">
+        <div class="char-box">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--shanks-color)" stroke-width="2">
+                <path d="M8 6L10 18M12 4L14 20M16 6L18 18" stroke-linecap="round"/>
+                <path d="M4 10C4 10 12 8 20 10" stroke="rgba(255,0,0,0.3)" stroke-width="4"/>
+            </svg>
         </div>
         <span class="day-label">Mar</span>
         <span class="legend-title" style="color:var(--shanks-color)">Akagami</span>
     </button>
+
     <button onclick="switchDay('mer', 'luffy')" id="n-mer" class="nav-item luffy interactive">
-        <div class="char-container">
-            <img class="char-img" src="https://i.pinimg.com/originals/8b/6e/0f/8b6e0f2b3e895478479900994d5b244d.jpg" alt="Luffy">
+        <div class="char-box">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--luffy-aura)" stroke-width="1.5">
+                <path d="M12 2C12 2 15 6 12 10C9 14 12 18 12 18" stroke-dasharray="2 2"/>
+                <circle cx="12" cy="11" r="5" stroke="white" stroke-width="2"/>
+                <path d="M7 11Q12 6 17 11" stroke="white" opacity="0.5"/>
+            </svg>
         </div>
         <span class="day-label">Mer</span>
-        <span class="legend-title" style="color:var(--luffy-color)">God of Liberation</span>
+        <span class="legend-title" style="color:var(--luffy-aura)">God of Liberation</span>
     </button>
+
     <button onclick="switchDay('gio', 'zoro')" id="n-gio" class="nav-item zoro interactive">
-        <div class="char-container">
-            <img class="char-img" src="https://i.pinimg.com/originals/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg" alt="Zoro">
-        </div>
+        <div class="char-box"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--zoro-color)" stroke-width="1.5"><path d="M2 22L12 12M12 12L22 2M12 12L22 22M12 12L2 2"/></svg></div>
         <span class="day-label">Gio</span>
         <span class="legend-title" style="color:var(--zoro-color)">King of Hell</span>
     </button>
+
     <button onclick="switchDay('ven', 'shanks')" id="n-ven" class="nav-item shanks interactive">
-        <div class="char-container">
-            <img class="char-img" src="https://i.pinimg.com/originals/21/53/74/21537463f25608b89e602414777a8345.jpg" alt="Shanks">
-        </div>
+        <div class="char-box"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--shanks-color)" stroke-width="2"><path d="M8 6L10 18M12 4L14 20M16 6L18 18"/></svg></div>
         <span class="day-label">Ven</span>
         <span class="legend-title" style="color:var(--shanks-color)">Akagami</span>
     </button>
 </nav>
 
 <div class="container" id="mainContainer"></div>
-
 <div id="timer-overlay"><div id="timer-val">00:00</div></div>
 
 <script>
-// LOGICA HAKI (Fulmini)
-function createHakiLightning() {
+// Logica Haki Interaction
+function createLightning() {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "haki-lightning-svg");
     svg.setAttribute("viewBox", "0 0 200 200");
     let paths = "";
-    for(let i=0; i<6; i++) {
-        let angle = (i/6)*Math.PI*2; let r=80+Math.random()*20;
-        let x=100+Math.cos(angle)*r, y=100+Math.sin(angle)*r;
-        let d=`M ${x} ${y} `;
-        for(let j=0; j<3; j++) {
-            x+=(Math.random()-0.5)*50; y+=(Math.random()-0.5)*50;
-            d+=`L ${x} ${y} `;
-        }
-        paths += `<path d="${d}" stroke="black" stroke-width="4" fill="none" opacity="0.8"/>`;
-        paths += `<path d="${d}" stroke="red" stroke-width="1.2" fill="none"/>`;
+    for(let i=0; i<5; i++) {
+        let x=100, y=100; let d=`M 100 100 `;
+        for(let j=0; j<3; j++) { x+=(Math.random()-0.5)*80; y+=(Math.random()-0.5)*80; d+=`L ${x} ${y} `; }
+        paths += `<path d="${d}" stroke="black" stroke-width="4" fill="none"/><path d="${d}" stroke="red" stroke-width="1.2" fill="none"/>`;
     }
-    svg.innerHTML = paths;
-    return svg;
+    svg.innerHTML = paths; return svg;
 }
 
 function triggerHaki(e) {
-    const target = e.currentTarget;
-    const bolt = createHakiLightning();
-    target.appendChild(bolt);
+    const bolt = createLightning(); e.currentTarget.appendChild(bolt);
     setTimeout(() => bolt.remove(), 300);
 }
 
-// Settimane
+// Inizializzazione Workout
 const weekSelect = document.getElementById('weekSelect');
 for(let i=1; i<=16; i++) {
-    let opt = document.createElement('option');
-    opt.value = i; opt.innerText = `Settimana ${i.toString().padStart(2, '0')}`;
-    weekSelect.appendChild(opt);
+    let opt = document.createElement('option'); opt.value = i; opt.innerText = `Week ${i.toString().padStart(2, '0')}`; weekSelect.appendChild(opt);
 }
 
 const workout = {
-    lun: { ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}] },
-    mar: { ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}] },
-    mer: { joyboy: true, ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
-    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
-    ven: { ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
+    lun: { char: 'zoro', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}] },
+    mar: { char: 'shanks', ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}] },
+    mer: { char: 'luffy', ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
+    gio: { char: 'zoro', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
+    ven: { char: 'shanks', ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
 };
-
-let charts = {};
 
 function init() {
     const main = document.getElementById('mainContainer');
     for(let day in workout) {
-        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''}">`;
+        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''} ${workout[day].char}-mode">`;
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            let cardClass = workout[day].joyboy ? 'card joyboy-card' : 'card';
-            section += `<div class="${cardClass}"><div class="card-header"><h3>${e.n}</h3><button class="timer-btn interactive" onclick="startTimer(${e.r})">${e.r}s</button></div>`;
-            for(let s=0; s<e.s; s++) {
-                section += `<div class="inputs"><div class="input-box"><input type="number" id="${id}_w${s}" onchange="saveData('${id}')" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" id="${id}_r${s}" onchange="saveData('${id}')" placeholder="0"><span>RE</span></div></div>`;
-            }
-            if(!e.spec) section += `<div class="chart-container"><canvas id="c_${id}"></canvas></div>`;
+            section += `<div class="card"><div class="card-header"><h3>${e.n}</h3><button class="timer-btn interactive" onclick="startTimer(${e.r})">${e.r}s</button></div>`;
+            for(let s=0; s<e.s; s++) { section += `<div class="inputs"><div class="input-box"><input type="number" id="${id}_w${s}" onchange="saveData('${id}')" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" id="${id}_r${s}" onchange="saveData('${id}')" placeholder="0"><span>RE</span></div></div>`; }
             section += `</div>`;
         });
         main.innerHTML += section + `</div>`;
     }
     loadWeekData();
-    document.querySelectorAll('.interactive').forEach(el => {
-        el.addEventListener('mousedown', triggerHaki);
-        el.addEventListener('touchstart', triggerHaki);
-    });
+    document.querySelectorAll('.interactive').forEach(el => { el.addEventListener('mousedown', triggerHaki); el.addEventListener('touchstart', triggerHaki); });
 }
 
-function switchDay(id) {
+function switchDay(day, mode) {
     document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active-day');
-    document.getElementById('n-'+id).classList.add('active');
+    document.getElementById(day).classList.add('active-day');
+    document.getElementById('n-'+day).classList.add('active');
     window.scrollTo(0,0);
 }
 
 function saveData(exId) {
-    const week = weekSelect.value;
-    const entry = { w: [], r: [] };
+    const week = weekSelect.value; const entry = { w: [], r: [] };
     const [day, idx] = exId.split('_');
     for(let i=0; i<workout[day].ex[idx].s; i++) {
         entry.w.push(document.getElementById(`${exId}_w${i}`).value || 0);
         entry.r.push(document.getElementById(`${exId}_r${i}`).value || 0);
     }
     localStorage.setItem(`RayFinal_${week}_${exId}`, JSON.stringify(entry));
-    updateChart(exId);
 }
 
 function loadWeekData() {
     const week = weekSelect.value;
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
-            const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`RayFinal_${week}_${id}`));
+            const id = `${day}_${idx}`; const saved = JSON.parse(localStorage.getItem(`RayFinal_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 document.getElementById(`${id}_w${i}`).value = saved ? saved.w[i] : "";
                 document.getElementById(`${id}_r${i}`).value = saved ? saved.r[i] : "";
             }
-            if(!e.spec) updateChart(id);
         });
     }
 }
 
-function updateChart(id) {
-    const history = [];
-    for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`RayFinal_${w}_${id}`));
-        let vol = 0; if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
-        history.push(vol);
-    }
-    const ctx = document.getElementById(`c_${id}`);
-    if(!ctx) return;
-    if(charts[id]) charts[id].destroy();
-    charts[id] = new Chart(ctx, {
-        type: 'line', data: { labels: history.map((_, i) => i + 1), datasets: [{ data: history, borderColor: '#00ffaa', fill: false, tension: 0.4, borderWidth: 1, pointRadius: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-    });
-}
-
 function startTimer(s) {
-    const ov = document.getElementById('timer-overlay');
-    ov.style.display = 'flex';
+    const ov = document.getElementById('timer-overlay'); ov.style.display = 'flex';
     let time = s;
     const interval = setInterval(() => {
         document.getElementById('timer-val').innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2, '0')}`;

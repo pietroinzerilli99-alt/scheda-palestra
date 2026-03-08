@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Legacy v11.0 - Eternal Storage</title>
+    <title>Rayleigh Legacy v11.5 - Unleashed & Vanishing</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #020202;
+            --bg: #000;
             --card-bg: #0d0d0f;
             --primary: #00ffaa;
             --zoro: #00ff88;
@@ -22,70 +22,77 @@
             overflow-x: hidden;
         }
 
-        /* SVG FILTERS FOR HAKI */
-        .haki-svg-filters { position: absolute; width: 0; height: 0; }
-
-        header { padding: 25px; text-align: center; border-bottom: 1px solid #111; }
+        header { padding: 20px; text-align: center; }
         .week-select {
-            background: #000; border: 1px solid #333; color: var(--primary);
-            padding: 12px; border-radius: 10px; font-weight: 800; width: 90%; max-width: 400px;
-            text-align: center; outline: none;
+            background: #111; border: 1px solid #333; color: var(--primary);
+            padding: 12px; border-radius: 12px; font-weight: 800; width: 85%;
+            font-size: 0.9rem; letter-spacing: 1px;
         }
 
         nav { 
             display: flex; gap: 15px; padding: 20px; justify-content: center;
-            position: sticky; top: 0; z-index: 1000; background: rgba(2,2,2,0.9);
+            position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85);
             backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a;
         }
 
         .nav-item { background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+        
         .char-frame {
             width: 70px; height: 95px; border-radius: 15px; border: 2px solid #1a1a1a;
             background: #050505; display: flex; align-items: center; justify-content: center;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+            transition: 0.3s; position: relative; z-index: 5;
         }
 
-        .nav-item.active .char-frame { transform: scale(1.15); border-color: #fff; box-shadow: 0 0 25px rgba(255,255,255,0.1); }
-        
-        /* Haki Containers */
-        .haki-aura { position: absolute; inset: -15px; pointer-events: none; z-index: 10; opacity: 0; transition: 0.3s; }
-        .active .haki-aura { opacity: 1; }
+        .nav-item.active .char-frame { transform: scale(1.1); border-color: #fff; }
 
-        .lightning { position: absolute; background: currentColor; filter: url(#wavy); }
+        /* --- HAKI OVERLAYS --- */
+        .haki-fx-layer {
+            position: absolute; inset: -30px; pointer-events: none; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
 
+        .lightning-bolt {
+            position: absolute; background: currentColor; width: 2px; border-radius: 2px;
+            box-shadow: 0 0 12px currentColor; animation: haki-strike 0.6s ease-out forwards;
+        }
+
+        .shanks-scar {
+            position: absolute; width: 2px; background: var(--shanks);
+            box-shadow: 0 0 15px var(--shanks); animation: scar-fade 0.7s ease-in-out forwards;
+        }
+
+        @keyframes haki-strike {
+            0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; }
+            100% { transform: rotate(var(--r)) scaleY(2) translateY(-40px); opacity: 0; }
+        }
+
+        @keyframes scar-fade {
+            0% { height: 0; opacity: 1; transform: rotate(20deg) translateY(-20px); }
+            50% { height: 70px; opacity: 1; }
+            100% { height: 90px; opacity: 0; transform: rotate(20deg) translateY(20px); }
+        }
+
+        /* --- CONTENT --- */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .card { background: var(--card-bg); border: 1px solid #1a1a1c; border-radius: 24px; padding: 20px; margin-bottom: 25px; transition: 0.3s; }
+        .card { background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; }
         
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+        .set-row { display: flex; gap: 10px; margin-top: 15px; }
+        .input-box { flex: 1; background: #151518; border-radius: 12px; padding: 10px; display: flex; align-items: center; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; font-size: 1.1rem; outline: none; font-weight: 700; }
+        .input-box span { font-size: 0.5rem; color: #555; margin-left: 5px; font-weight: 800; }
 
-        .chart-container { height: 100px; margin: 10px 0 20px; }
+        .chart-box { height: 80px; margin-bottom: 10px; opacity: 0.7; }
 
-        .set-row { display: flex; gap: 12px; margin-bottom: 12px; }
-        .input-box { flex: 1; background: #151518; border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; border: 1px solid transparent; transition: 0.3s; }
-        .input-box:focus-within { border-color: var(--primary); background: #1a1a20; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.1rem; outline: none; text-align: right; font-weight: 700; }
-        .input-box span { font-size: 0.6rem; color: #444; margin-left: 8px; font-weight: 800; }
-
-        .timer-btn { background: rgba(0,255,170,0.1); border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
-
-        #t-ov { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
-        #t-val { font-size: 10rem; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
+        #timer-ov { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
+        #timer-val { font-size: 10rem; font-weight: 800; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<svg class="haki-svg-filters">
-    <filter id="wavy">
-        <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" />
-    </filter>
-</svg>
-
-<div id="t-ov" onclick="this.style.display='none'"><div id="t-val">00</div></div>
+<div id="timer-ov" onclick="this.style.display='none'"><div id="timer-val">00</div></div>
 
 <header>
-    <select id="weekSelector" class="week-select" onchange="loadProgress()"></select>
+    <select id="weekSelector" class="week-select" onchange="renderExercises()"></select>
 </header>
 
 <nav id="navbar"></nav>
@@ -93,6 +100,7 @@
 <div class="container" id="workout-area"></div>
 
 <script>
+// Popola 16 Settimane
 const sel = document.getElementById('weekSelector');
 for(let i=1; i<=16; i++) {
     let opt = document.createElement('option');
@@ -115,9 +123,8 @@ function init() {
     for(let day in workoutData) {
         nav.innerHTML += `
             <button onclick="setDay('${day}')" id="btn-${day}" class="nav-item ${day==='lun'?'active':''}">
-                <div class="char-frame">
-                    <span style="font-size:1.8rem; z-index:5">${workoutData[day].icon}</span>
-                    <div class="haki-aura" id="haki-${day}"></div>
+                <div class="char-frame" id="frame-${day}">
+                    <span style="font-size:1.8rem">${workoutData[day].icon}</span>
                 </div>
                 <span style="font-size:0.6rem; font-weight:800; color:#444">${day.toUpperCase()}</span>
             </button>`;
@@ -129,33 +136,44 @@ function setDay(day) {
     currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
-    triggerHaki(day);
+    
+    burstHaki(day);
     renderExercises();
 }
 
-function triggerHaki(day) {
-    const container = document.getElementById('haki-'+day);
-    container.innerHTML = '';
+function burstHaki(day) {
+    const frame = document.getElementById('frame-'+day);
     const char = workoutData[day].char;
     const color = workoutData[day].color;
-    
-    // Shanks Special: Scar
+
+    // Crea container temporaneo
+    const fx = document.createElement('div');
+    fx.className = 'haki-fx-layer';
+    frame.appendChild(fx);
+
+    // Fulmini (Per tutti)
+    const bolts = char === 'luffy' ? 14 : 8;
+    for(let i=0; i<bolts; i++) {
+        const b = document.createElement('div');
+        b.className = 'lightning-bolt';
+        b.style.color = color;
+        b.style.setProperty('--r', `${Math.random() * 360}deg`);
+        b.style.height = (char === 'luffy' ? 70 : 40) + 'px';
+        fx.appendChild(b);
+    }
+
+    // Effetto Speciale Shanks
     if(char === 'shanks') {
         for(let i=0; i<3; i++) {
-            const scar = document.createElement('div');
-            scar.style.cssText = `position:absolute; width:2px; height:60px; background:${color}; left:${40+i*10}%; top:20%; transform:rotate(15deg); box-shadow:0 0 10px ${color}; opacity:0.8;`;
-            container.appendChild(scar);
+            const s = document.createElement('div');
+            s.className = 'shanks-scar';
+            s.style.left = (40 + i*10) + '%';
+            fx.appendChild(s);
         }
     }
 
-    // Lightning
-    const count = char === 'luffy' ? 12 : 6;
-    for(let i=0; i<count; i++) {
-        const l = document.createElement('div');
-        l.className = 'lightning';
-        l.style.cssText = `color:${color}; left:50%; top:50%; width:2px; height:${char==='luffy'?80:40}px; transform:rotate(${Math.random()*360}deg) translateY(-50%); box-shadow:0 0 15px currentColor;`;
-        container.appendChild(l);
-    }
+    // Rimuovi tutto dopo l'animazione
+    setTimeout(() => fx.remove(), 800);
 }
 
 function renderExercises() {
@@ -170,18 +188,18 @@ function renderExercises() {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <div class="card-header">
-                <h3>${name}</h3>
-                <button class="timer-btn" onclick="startT(90)">90s</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0; font-size:0.8rem; letter-spacing:1px;">${name}</h3>
+                <button style="background:transparent; border:1px solid var(--primary); color:var(--primary); font-size:0.6rem; padding:5px 10px; border-radius:6px;" onclick="runTimer(90)">90s</button>
             </div>
-            <div class="chart-container"><canvas id="chart-${idx}"></canvas></div>
+            <div class="chart-box"><canvas id="chart-${idx}"></canvas></div>
             <div class="set-row">
                 <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveData(${idx}, 'kg', this.value)" placeholder="0"><span>KG</span></div>
                 <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData(${idx}, 'reps', this.value)" placeholder="0"><span>REPS</span></div>
             </div>
         `;
         area.appendChild(card);
-        renderChart(idx, name);
+        drawChart(idx);
     });
 }
 
@@ -191,29 +209,26 @@ function saveData(idx, type, val) {
     let data = JSON.parse(localStorage.getItem(storageKey)) || {kg: '', reps: ''};
     data[type] = val;
     localStorage.setItem(storageKey, JSON.stringify(data));
-    renderChart(idx, workoutData[currentDay].ex[idx]); // Aggiorna grafico live
+    drawChart(idx);
 }
 
-function renderChart(idx, name) {
+function drawChart(idx) {
     const ctx = document.getElementById(`chart-${idx}`).getContext('2d');
     const history = [];
-    // Recupera dati reali dalle settimane precedenti
     for(let w=1; w<=16; w++) {
         const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}`));
         history.push(d ? parseFloat(d.kg) || 0 : 0);
     }
 
-    if(window[`chartObj${idx}`]) window[`chartObj${idx}`].destroy();
-
-    window[`chartObj${idx}`] = new Chart(ctx, {
+    if(window[`cObj${idx}`]) window[`cObj${idx}`].destroy();
+    window[`cObj${idx}`] = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({length: 16}, (_, i) => i + 1),
             datasets: [{
                 data: history,
                 borderColor: workoutData[currentDay].color,
-                borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true,
-                backgroundColor: 'rgba(255,255,255,0.02)'
+                borderWidth: 2, tension: 0.4, pointRadius: 0, fill: false
             }]
         },
         options: {
@@ -224,12 +239,12 @@ function renderChart(idx, name) {
     });
 }
 
-function startT(s) {
-    const ov = document.getElementById('t-ov');
+function runTimer(s) {
+    const ov = document.getElementById('timer-ov');
     ov.style.display = 'flex';
     let t = s;
     const iv = setInterval(() => {
-        document.getElementById('t-val').innerText = t;
+        document.getElementById('timer-val').innerText = t;
         if(t-- <= 0) { clearInterval(iv); ov.style.display = 'none'; }
     }, 1000);
 }

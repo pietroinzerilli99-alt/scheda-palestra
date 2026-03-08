@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Haki Final</title>
+    <title>Rayleigh Workout - Haki Definitive</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
             background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 170, 0.05) 0%, transparent 50%);
         }
 
-        /* Haki Lightning SVG */
+        /* Fulmini Haki */
         .haki-lightning-svg {
             position: absolute; top: 50%; left: 50%;
             width: 140%; height: 140%; transform: translate(-50%, -50%);
@@ -47,36 +47,50 @@
             font-size: 0.75rem; font-weight: 700; outline: none;
         }
 
-        /* Navigazione Personaggi */
+        /* Navigazione con Foto */
         nav {
-            display: flex; gap: 12px; padding: 10px 15px; overflow-x: auto;
+            display: flex; gap: 10px; padding: 10px; overflow-x: auto;
             max-width: 600px; margin: 0 auto; justify-content: center;
             scrollbar-width: none;
         }
         .nav-item {
             background: transparent; border: none; padding: 5px;
             display: flex; flex-direction: column; align-items: center; gap: 6px;
-            cursor: pointer; min-width: 80px; position: relative;
+            cursor: pointer; min-width: 75px;
         }
         
-        /* Immagini Personaggi */
+        .char-container {
+            width: 60px; height: 60px;
+            border-radius: 10px;
+            border: 2px solid #222;
+            overflow: hidden;
+            position: relative;
+            transition: 0.3s;
+            background: #111; /* Fallback se l'immagine non carica */
+        }
+        
         .char-img {
-            width: 55px; height: 55px;
-            background-size: cover; background-position: center;
-            border-radius: 8px; border: 2px solid #222;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: 0.3s;
         }
+
+        .nav-item.active .char-container { 
+            border-color: #fff; 
+            transform: scale(1.1); 
+            box-shadow: 0 0 15px rgba(255,255,255,0.2); 
+        }
+
+        /* Colori Auree Personaggi */
+        .zoro.active .char-container { border-color: var(--zoro-color); box-shadow: 0 0 15px var(--zoro-color); }
+        .shanks.active .char-container { border-color: var(--shanks-color); box-shadow: 0 0 15px var(--shanks-color); }
+        .luffy.active .char-container { border-color: var(--luffy-color); box-shadow: 0 0 15px var(--luffy-color); }
+
+        .day-label { font-size: 0.7rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
+        .nav-item.active .day-label { color: #fff; }
         
-        .nav-item.active .char-img { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-        .nav-item span.day-label { font-size: 0.7rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
-        .nav-item.active span.day-label { color: #fff; }
-        
-        /* Titoli Leggendari */
-        .legend-title { font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.4; text-align: center; }
+        .legend-title { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.4; }
         .nav-item.active .legend-title { opacity: 1; }
-        .zoro .legend-title { color: var(--zoro-color); }
-        .shanks .legend-title { color: var(--shanks-color); }
-        .luffy .legend-title { color: var(--luffy-color); }
 
         /* Container & Cards */
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
@@ -89,9 +103,9 @@
             border: 1px solid rgba(255,255,255,0.05); position: relative;
         }
         
-        /* JoyBoy/Luffy Softness */
+        /* Luffy Gear 5 "Softness" */
         .joyboy-card {
-            border-radius: 25px; border-color: rgba(255, 170, 0, 0.2);
+            border-radius: 25px; border-color: rgba(255, 255, 255, 0.1);
             animation: rubberPulse 4s infinite alternate ease-in-out;
         }
         @keyframes rubberPulse {
@@ -100,7 +114,7 @@
         }
 
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .card-header h3 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
 
         .timer-btn {
             background: transparent; color: var(--primary); border: 1px solid var(--primary);
@@ -130,29 +144,39 @@
 
 <nav id="dayNav">
     <button onclick="switchDay('lun', 'zoro')" id="n-lun" class="nav-item active zoro interactive">
-        <div class="char-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8X3zUv_iS02Pq4pMv7Xm4pL2_XW0Kk6-p8A&s')"></div>
+        <div class="char-container">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Zoro" style="display:none"> <img class="char-img" src="https://i.pinimg.com/originals/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg" alt="Zoro">
+        </div>
         <span class="day-label">Lun</span>
-        <span class="legend-title">King of Hell</span>
+        <span class="legend-title" style="color:var(--zoro-color)">King of Hell</span>
     </button>
     <button onclick="switchDay('mar', 'shanks')" id="n-mar" class="nav-item shanks interactive">
-        <div class="char-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6A6R4EOnr6CgW6S_wLqK08YvjY27pB6mGvg&s')"></div>
+        <div class="char-container">
+            <img class="char-img" src="https://i.pinimg.com/originals/21/53/74/21537463f25608b89e602414777a8345.jpg" alt="Shanks">
+        </div>
         <span class="day-label">Mar</span>
-        <span class="legend-title">Akagami</span>
+        <span class="legend-title" style="color:var(--shanks-color)">Akagami</span>
     </button>
     <button onclick="switchDay('mer', 'luffy')" id="n-mer" class="nav-item luffy interactive">
-        <div class="char-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6-60xV68lA9_Y7mY0G2f99X6V-p1K16uXtg&s')"></div>
+        <div class="char-container">
+            <img class="char-img" src="https://i.pinimg.com/originals/8b/6e/0f/8b6e0f2b3e895478479900994d5b244d.jpg" alt="Luffy">
+        </div>
         <span class="day-label">Mer</span>
-        <span class="legend-title">God of Liberation</span>
+        <span class="legend-title" style="color:var(--luffy-color)">God of Liberation</span>
     </button>
     <button onclick="switchDay('gio', 'zoro')" id="n-gio" class="nav-item zoro interactive">
-        <div class="char-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8X3zUv_iS02Pq4pMv7Xm4pL2_XW0Kk6-p8A&s')"></div>
+        <div class="char-container">
+            <img class="char-img" src="https://i.pinimg.com/originals/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg" alt="Zoro">
+        </div>
         <span class="day-label">Gio</span>
-        <span class="legend-title">King of Hell</span>
+        <span class="legend-title" style="color:var(--zoro-color)">King of Hell</span>
     </button>
     <button onclick="switchDay('ven', 'shanks')" id="n-ven" class="nav-item shanks interactive">
-        <div class="char-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6A6R4EOnr6CgW6S_wLqK08YvjY27pB6mGvg&s')"></div>
+        <div class="char-container">
+            <img class="char-img" src="https://i.pinimg.com/originals/21/53/74/21537463f25608b89e602414777a8345.jpg" alt="Shanks">
+        </div>
         <span class="day-label">Ven</span>
-        <span class="legend-title">Akagami</span>
+        <span class="legend-title" style="color:var(--shanks-color)">Akagami</span>
     </button>
 </nav>
 
@@ -161,7 +185,7 @@
 <div id="timer-overlay"><div id="timer-val">00:00</div></div>
 
 <script>
-// EFFETTO HAKI JOY BOY (Fulmini Neri/Rossi)
+// LOGICA HAKI (Fulmini)
 function createHakiLightning() {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "haki-lightning-svg");
@@ -189,7 +213,7 @@ function triggerHaki(e) {
     setTimeout(() => bolt.remove(), 300);
 }
 
-// Inizializzazione Settimane
+// Settimane
 const weekSelect = document.getElementById('weekSelect');
 for(let i=1; i<=16; i++) {
     let opt = document.createElement('option');
@@ -198,7 +222,7 @@ for(let i=1; i<=16; i++) {
 }
 
 const workout = {
-    lun: { ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
+    lun: { ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}] },
     mar: { ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}] },
     mer: { joyboy: true, ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
     gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },

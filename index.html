@@ -22,7 +22,6 @@
             overflow-x: hidden;
         }
 
-        /* ANIMAZIONE TREMORE */
         @keyframes quake {
             0% { transform: translate(0,0); }
             25% { transform: translate(-2px, 2px); }
@@ -235,7 +234,11 @@ function renderWorkout() {
     workoutData[currentDay].ex.forEach((ex, idx) => area.appendChild(createCard(ex.n, ex.s, ex.r, idx)));
     
     area.innerHTML += `<div style="text-align:center; color:#1a1a1a; font-size:0.6rem; letter-spacing:5px; margin:40px 0; font-weight:900;">DAILY FINISHER</div>`;
-    area.appendChild(createCard("Addominali Core", 3, 60, 'abs'));
+    
+    // NUOVI ADDOMINALI EFFICACI
+    area.appendChild(createCard("Leg Raises (Sbarra/Parallele)", 3, 60, 'abs1'));
+    area.appendChild(createCard("Cable Crunch (Crunch Cavo)", 3, 60, 'abs2'));
+    area.appendChild(createCard("Ab Wheel Rollout", 3, 60, 'abs3'));
     area.appendChild(createCard("Cardio LISS", 1, 900, 'cardio'));
 
     const char = workoutData[currentDay].char;

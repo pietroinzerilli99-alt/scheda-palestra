@@ -8,253 +8,185 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #020408;
-            --glass: rgba(10, 15, 25, 0.7);
-            --primary: #00f2ff; /* Ciano base */
-            --text: #e2e8f0;
+            --bg: #010204;
+            --glass: rgba(10, 15, 25, 0.8);
+            --primary: #00f2ff;
+            --text: #f8fafc;
             --text-dim: #475569;
-            --border: rgba(255, 255, 255, 0.05);
-            
-            /* Colori Personaggi */
-            --zoro-green: #00ff88;
-            --shanks-red: #ff1100;
-            --joyboy-orange: #ff8800;
-            --joyboy-white: #ffffff;
-            
-            /* Haki */
+            --zoro: #00ff88;
+            --shanks: #ff1100;
+            --joyboy: #ffaa00;
             --haki-red: #ff0000;
-            --haki-black: #000000;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.03) 0%, transparent 50%);
-            background-attachment: fixed;
             color: var(--text);
             margin: 0; padding-bottom: 60px;
             overflow-x: hidden;
-            user-select: none;
-            -webkit-font-smoothing: antialiased;
+            background-attachment: fixed;
         }
 
-        /* Effetti Haki Ambientali */
-        body.zoro-mode { background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.08) 0%, transparent 50%); }
-        body.shanks-mode { background-image: radial-gradient(circle at 50% 0%, rgba(255, 17, 0, 0.08) 0%, transparent 50%); }
-        body.joyboy-mode { 
-            background-image: 
-                radial-gradient(circle at 20% 20%, rgba(255, 136, 0, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+        /* Background Dinamici */
+        body.zoro-mode { background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 136, 0.05) 0%, transparent 50%); }
+        body.shanks-mode { background-image: radial-gradient(circle at 50% 0%, rgba(255, 17, 0, 0.05) 0%, transparent 50%); }
+        body.joyboy-mode { background-image: radial-gradient(circle at 50% 0%, rgba(255, 170, 0, 0.05) 0%, transparent 50%); }
+
+        header { padding: 40px 20px 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        h1 { font-size: 0.8rem; letter-spacing: 5px; text-transform: uppercase; opacity: 0.5; margin: 0; }
+
+        /* Navigazione con Immagini */
+        nav {
+            display: flex; justify-content: center; gap: 15px;
+            padding: 30px 10px; max-width: 600px; margin: 0 auto;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 10px; cursor: pointer; transition: 0.3s;
+            background: transparent; border: none; outline: none;
+        }
+        .nav-item .avatar {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dim);
+            background-size: cover; background-position: center;
+            filter: grayscale(100%) contrast(120%);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .nav-item span {
+            font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--text-dim);
         }
 
-        #haki-screen-effect {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; opacity: 0;
-            background: radial-gradient(circle, transparent 20%, #cc0000 150%);
-        }
-        .screen-blast { animation: blast 0.4s forwards; }
-        @keyframes blast {
-            0% { opacity: 1; filter: invert(0); }
-            15% { filter: invert(1) blur(2px); }
-            100% { opacity: 0; }
-        }
-
-        .haki-lightning-svg {
-            position: absolute; top: 50%; left: 50%;
-            width: 140%; height: 140%; transform: translate(-50%, -50%);
-            pointer-events: none; z-index: 1000;
-            filter: drop-shadow(0 0 3px var(--haki-red));
-        }
-
-        /* Header */
-        header { padding: 50px 25px 10px; max-width: 650px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        h1 { font-size: 1rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin: 0; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
-        
-        .week-selector {
-            background: var(--glass); border: 1px solid var(--border);
-            color: var(--primary); padding: 8px 15px; border-radius: 30px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px;
-            cursor: pointer; backdrop-filter: blur(10px);
-        }
-
-        /* Navigazione Personaggi */
-        nav { display: flex; gap: 15px; padding: 25px 20px; overflow-x: auto; max-width: 650px; margin: 0 auto; justify-content: center; }
-        nav button {
-            background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-            display: flex; flex-direction: column; align-items: center; gap: 5px; transition: 0.3s;
-        }
-        nav button span.icon { font-size: 1.2rem; opacity: 0.5; }
-        
-        /* Colori Active Nav */
-        nav button.active.zoro { color: var(--zoro-green); text-shadow: 0 0 10px var(--zoro-green); }
-        nav button.active.shanks { color: var(--shanks-red); text-shadow: 0 0 10px var(--shanks-red); }
-        nav button.active.joyboy { color: var(--joyboy-orange); text-shadow: 0 0 10px var(--joyboy-orange); }
-        nav button.active span.icon { opacity: 1; }
+        /* Stati Active per Personaggi */
+        .nav-item.active.zoro .avatar { border-color: var(--zoro); filter: grayscale(0%) drop-shadow(0 0 10px var(--zoro)); transform: scale(1.2); }
+        .nav-item.active.shanks .avatar { border-color: var(--shanks); filter: grayscale(0%) drop-shadow(0 0 10px var(--shanks)); transform: scale(1.2); }
+        .nav-item.active.joyboy .avatar { border-color: var(--joyboy); filter: grayscale(0%) drop-shadow(0 0 10px var(--joyboy)); transform: scale(1.2); }
+        .nav-item.active span { color: #fff; }
 
         /* Container & Cards */
-        .container { padding: 10px; max-width: 650px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .day-section { display: none; }
-        .active-day { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active-day { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
-            background: var(--glass); backdrop-filter: blur(20px);
-            border-radius: 16px; padding: 25px; margin-bottom: 20px;
-            border: 1px solid var(--border); position: relative;
-            transition: 0.3s ease;
+            background: var(--glass); backdrop-filter: blur(15px);
+            border-radius: 12px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.03); position: relative;
         }
-        
-        /* Card Mode: Zoro (Bagliore Verde) */
-        .zoro-mode .card { border-color: rgba(0, 255, 136, 0.1); box-shadow: 0 5px 20px rgba(0, 255, 136, 0.05); }
-        
-        /* Card Mode: Shanks (Bagliore Rosso + Pressione) */
-        .shanks-mode .card { border-color: rgba(255, 17, 0, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
-        
-        /* Card Mode: JoyBoy (Gommosa, Morbida, Pulsante) */
-        .joyboy-mode .card { 
-            border-radius: 30px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.03);
-            box-shadow: 0 10px 40px rgba(255, 136, 0, 0.1);
-            animation: joyboyPulse 4s infinite;
-        }
-        @keyframes joyboyPulse {
-            0% { transform: scale(1); border-color: rgba(255, 255, 255, 0.1); }
-            50% { transform: scale(1.02) rotate(0.5deg); border-color: rgba(255, 136, 0, 0.2); }
-            100% { transform: scale(1); border-color: rgba(255, 255, 255, 0.1); }
-        }
-        .joyboy-mode .card-header h3 { color: var(--joyboy-white) !important; text-shadow: 0 0 15px var(--joyboy-white); }
-        .joyboy-mode .input-box input { color: var(--joyboy-orange) !important; }
 
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+        /* JoyBoy Mode: Morbida e Gommosa */
+        .joyboy-mode .card {
+            border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.1);
+            animation: rubber 3s infinite alternate ease-in-out;
+        }
+        @keyframes rubber {
+            from { border-radius: 30px 40px 30px 40px; }
+            to { border-radius: 40px 30px 40px 30px; }
+        }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin: 0; }
 
         .timer-btn {
-            background: transparent; color: var(--primary); border: 1px solid var(--primary);
-            padding: 5px 12px; border-radius: 8px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            background: transparent; border: 1px solid var(--primary);
+            color: var(--primary); padding: 5px 12px; border-radius: 5px;
+            font-size: 0.6rem; font-weight: 800; cursor: pointer;
         }
-        .shanks-mode .timer-btn { color: var(--shanks-red); border-color: var(--shanks-red); }
-        .zoro-mode .timer-btn { color: var(--zoro-green); border-color: var(--zoro-green); }
-        .joyboy-mode .timer-btn { color: var(--joyboy-white); border-color: var(--joyboy-white); border-radius: 20px;}
 
-        /* Input Grid */
-        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 5px; }
-        .input-box { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .input-box input { background: transparent; border: none; color: var(--primary); width: 100%; font-size: 1.2rem; font-weight: 700; outline: none; text-align: right; font-family: inherit; }
-        .input-box span { font-size: 0.6rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
+        /* Input Styles */
+        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+        .input-box { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); padding: 5px 0; }
+        .input-box input {
+            background: transparent; border: none; color: #fff; width: 100%;
+            font-size: 1.1rem; font-weight: 700; outline: none; text-align: right;
+        }
+        .input-box span { font-size: 0.55rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; }
 
-        /* Grafico */
-        .chart-container { height: 60px; margin-top: 20px; opacity: 0.3; }
+        .chart-container { height: 50px; margin-top: 15px; opacity: 0.3; }
 
-        /* Timer Overlay */
+        /* Haki Lightning */
+        .haki-lightning-svg {
+            position: absolute; top: 50%; left: 50%; width: 150%; height: 150%;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 100;
+        }
+
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 4, 8, 0.98); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9998;
+            background: rgba(1,2,4,0.98); display: none; align-items: center; justify-content: center; z-index: 9999;
         }
-        #timer-val { font-size: 8rem; font-weight: 200; color: var(--primary); text-shadow: 0 0 30px rgba(0, 242, 255, 0.4); }
-
-        /* Mobile Optimization */
-        @media (max-width: 480px) {
-            h1 { letter-spacing: 1px; font-size: 0.9rem; }
-            nav { gap: 10px; }
-            nav button { font-size: 0.6rem; letter-spacing: 1px; }
-            .card { padding: 20px; }
-            .inputs input { font-size: 1.1rem; width: 40px; }
-        }
+        #timer-val { font-size: 6rem; font-weight: 200; color: var(--primary); }
     </style>
 </head>
-<body class="zoro-mode"> <div id="haki-screen-effect"></div>
+<body class="zoro-mode">
 
 <header>
-    <h1>Rayleigh <span style="font-weight:200; opacity:0.6;">Pirate Edition</span></h1>
-    <select class="week-selector interactive" id="weekSelect" onchange="loadWeekData()"></select>
+    <h1>Haki Progression System</h1>
 </header>
 
 <nav id="dayNav">
-    <button onclick="switchDay('lun', 'zoro')" id="n-lun" class="active zoro interactive">
-        <span class="icon">⚔️</span>Lun
+    <button onclick="switchDay('lun', 'zoro')" id="btn-lun" class="nav-item active zoro">
+        <div class="avatar" style="background-image: url('https://i.pinimg.com/736x/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg')"></div>
+        <span>Lun</span>
     </button>
-    <button onclick="switchDay('mar', 'shanks')" id="n-mar" class="shanks interactive">
-        <span class="icon">☠️</span>Mar
+    <button onclick="switchDay('mar', 'shanks')" id="btn-mar" class="nav-item shanks">
+        <div class="avatar" style="background-image: url('https://i.pinimg.com/736x/21/53/74/21537463f25608b89e602414777a8345.jpg')"></div>
+        <span>Mar</span>
     </button>
-    <button onclick="switchDay('mer', 'joyboy')" id="n-mer" class="joyboy interactive">
-        <span class="icon">👒</span>Mer
+    <button onclick="switchDay('mer', 'joyboy')" id="btn-mer" class="nav-item joyboy">
+        <div class="avatar" style="background-image: url('https://i.pinimg.com/736x/8b/6e/0f/8b6e0f2b3e895478479900994d5b244d.jpg')"></div>
+        <span>Mer</span>
     </button>
-    <button onclick="switchDay('gio', 'zoro')" id="n-gio" class="zoro interactive">
-        <span class="icon">⚔️</span>Gio
+    <button onclick="switchDay('gio', 'zoro')" id="btn-gio" class="nav-item zoro">
+        <div class="avatar" style="background-image: url('https://i.pinimg.com/736x/8f/94/a1/8f94a1d5e359990b797871b86d997d4c.jpg')"></div>
+        <span>Gio</span>
     </button>
-    <button onclick="switchDay('ven', 'shanks')" id="n-ven" class="shanks interactive">
-        <span class="icon">☠️</span>Ven
+    <button onclick="switchDay('ven', 'shanks')" id="btn-ven" class="nav-item shanks">
+        <div class="avatar" style="background-image: url('https://i.pinimg.com/736x/21/53/74/21537463f25608b89e602414777a8345.jpg')"></div>
+        <span>Ven</span>
     </button>
 </nav>
 
 <div class="container" id="mainContainer"></div>
 
+<div id="timer-overlay"><div id="timer-val">00:00</div></div>
+
 <script>
-// LOGICA HAKI DI JOY BOY/SHANKS (Micro-Interazioni Avanzate)
-function createHakiBolt() {
+// Logica Haki al tocco (Fulmini Neri/Rossi)
+function createHakiLightning() {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "haki-lightning-svg");
     svg.setAttribute("viewBox", "0 0 200 200");
-    
     let paths = "";
-    // Generiamo fulmini neri/rossi densi e orbitali
-    for(let i=0; i<5; i++) { 
-        let angle = (i / 5) * Math.PI * 2 + (Math.random() * 0.5);
-        let radius = 85 + Math.random() * 15;
-        let x = 100 + Math.cos(angle) * radius;
-        let y = 100 + Math.sin(angle) * radius;
-        
-        let d = `M ${x} ${y} `;
+    for(let i=0; i<4; i++) {
+        let x=100, y=100; let d=`M 100 100 `;
         for(let j=0; j<4; j++) {
-            x += (Math.random() - 0.5) * 40;
-            y += (Math.random() - 0.5) * 40;
+            x += (Math.random()-0.5)*60; y += (Math.random()-0.5)*60;
             d += `L ${x} ${y} `;
         }
-        paths += `<path d="${d}" stroke="black" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>`;
-        paths += `<path d="${d}" stroke="red" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+        paths += `<path d="${d}" stroke="black" stroke-width="3" fill="none" opacity="0.8"/>`;
+        paths += `<path d="${d}" stroke="red" stroke-width="1" fill="none"/>`;
     }
     svg.innerHTML = paths;
     return svg;
 }
 
-function triggerHakiEffect(e) {
+function applyHakiEffect(e) {
     const target = e.currentTarget;
-    
-    // Non mostriamo fulmini se siamo in JoyBoy mode per mantenere la morbidezza
-    if(document.body.classList.contains('joyboy-mode')) return;
-
-    const bolt = createHakiBolt();
-    target.appendChild(bolt);
-    
-    // Rimuovi dopo l'animazione rapidissima
-    setTimeout(() => bolt.remove(), 300);
-
-    // Se pressione lunga, scateniamo l'Emet Blast (Haki del Re Totale)
-    let longPress = setTimeout(() => {
-        document.getElementById('haki-screen-effect').classList.add('screen-blast');
-        setTimeout(() => document.getElementById('haki-screen-effect').classList.remove('screen-blast'), 400);
-    }, 450);
-
-    target.onmouseup = target.ontouchend = target.onmouseleave = () => clearTimeout(longPress);
+    const lightning = createHakiLightning();
+    target.appendChild(lightning);
+    setTimeout(() => lightning.remove(), 300);
 }
 
-// Inizializzazione dati e UI
-const weekSelect = document.getElementById('weekSelect');
-for (let i = 1; i <= 16; i++) {
-    const opt = document.createElement('option');
-    opt.value = i; opt.innerHTML = `SETTIMANA ${i.toString().padStart(2, '0')}`;
-    weekSelect.appendChild(opt);
-}
-
+// Workout Data
 const workout = {
-    lun: { title: "Push Alpha • Zoro's Asura", ex: [{n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
-    mar: { title: "Pull Alpha • Shanks' Haki", ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore Manubrio", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core", s:3, r:60, spec:true}] },
-    mer: { title: "Legs • JoyBoy's Rubber", ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
-    gio: { title: "Push Beta • Zoro's Santoryu", ex: [{n:"Panca Piana Manubri", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
-    ven: { title: "Full Beta • Shanks' Gryphon", ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60}] }
+    lun: { title: "Push Alpha - Zoro", ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}] },
+    mar: { title: "Pull Alpha - Shanks", ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}] },
+    mer: { title: "Legs - JoyBoy", ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
+    gio: { title: "Push Beta - Zoro", ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
+    ven: { title: "Full Beta - Shanks", ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
 };
 
 let charts = {};
@@ -262,112 +194,36 @@ let charts = {};
 function init() {
     const main = document.getElementById('mainContainer');
     for(let day in workout) {
-        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day' : ''}">`;
-        section += `<p style="color:var(--text-dim); font-size:0.65rem; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; text-align:center;">${workout[day].title}</p>`;
+        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''}">`;
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
             section += `
-            <div class="card">
-                <div class="card-header">
-                    <h3>${e.n}</h3>
-                    <button class="timer-btn interactive" onclick="startTimer(${e.r})">${e.r}s rest</button>
-                </div>
-                <div class="series-grid">
+                <div class="card">
+                    <div class="card-header"><h3>${e.n}</h3><button class="timer-btn" onclick="startTimer(${e.r})">${e.r}S</button></div>
                     ${Array.from({length:e.s}).map((_, s) => `
                         <div class="inputs">
-                            <div class="input-box">
-                                <input type="number" placeholder="0" id="${id}_w${s}" onchange="saveData('${id}')">
-                                <span>kg</span>
-                            </div>
-                            <div class="input-box">
-                                <input type="number" placeholder="0" id="${id}_r${s}" onchange="saveData('${id}')">
-                                <span>re</span>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                ${!e.spec ? `<div class="chart-container"><canvas id="c_${id}"></canvas></div>` : ''}
-            </div>`;
+                            <div class="input-box"><input type="number" id="${id}_w${s}" onchange="saveData('${id}')"><span>KG</span></div>
+                            <div class="input-box"><input type="number" id="${id}_r${s}" onchange="saveData('${id}')"><span>RE</span></div>
+                        </div>`).join('')}
+                    <div class="chart-container"><canvas id="c_${id}"></canvas></div>
+                </div>`;
         });
-        section += `</div>`;
-        main.innerHTML += section;
+        main.innerHTML += section + `</div>`;
     }
-    loadWeekData();
-    addHakiListeners();
-}
-
-function addHakiListeners() {
-    document.querySelectorAll('.interactive').forEach(el => {
-        el.addEventListener('mousedown', triggerHakiEffect);
-        el.addEventListener('touchstart', triggerHakiEffect);
+    loadData();
+    document.querySelectorAll('.nav-item, .timer-btn').forEach(el => {
+        el.addEventListener('mousedown', applyHakiEffect);
+        el.addEventListener('touchstart', applyHakiEffect);
     });
 }
 
-function saveData(exId) {
-    const week = weekSelect.value;
-    const entry = { w: [], r: [] };
-    const day = exId.split('_')[0];
-    const idx = exId.split('_')[1];
-    for(let i=0; i<workout[day].ex[idx].s; i++) {
-        entry.w.push(document.getElementById(`${exId}_w${i}`).value || 0);
-        entry.r.push(document.getElementById(`${exId}_r${i}`).value || 0);
-    }
-    localStorage.setItem(`Rayleigh_Pirate_${week}_${exId}`, JSON.stringify(entry));
-    updateChart(exId);
-}
-
-function loadWeekData() {
-    const week = weekSelect.value;
-    for(let day in workout) {
-        workout[day].ex.forEach((e, idx) => {
-            const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Pirate_${week}_${id}`));
-            for(let i=0; i<e.s; i++) {
-                document.getElementById(`${id}_w${i}`).value = saved ? saved.w[i] : "";
-                document.getElementById(`${id}_r${i}`).value = saved ? saved.r[i] : "";
-            }
-            if(!e.spec) updateChart(id);
-        });
-    }
-}
-
-function updateChart(id) {
-    const history = [];
-    for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Pirate_${w}_${id}`));
-        let vol = 0; if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
-        history.push(vol);
-    }
-    const ctx = document.getElementById(`c_${id}`);
-    if(!ctx) return;
-    if(charts[id]) charts[id].destroy();
-    
-    // Colore grafico basato sul modo attuale
-    let lineColor = '#00f2ff';
-    if(document.body.classList.contains('zoro-mode')) lineColor = '#00ff88';
-    if(document.body.classList.contains('shanks-mode')) lineColor = '#ff1100';
-    if(document.body.classList.contains('joyboy-mode')) lineColor = '#ff8800';
-
-    charts[id] = new Chart(ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: Array.from({length:16}, (_, i) => i + 1),
-            datasets: [{
-                data: history,
-                borderColor: lineColor,
-                backgroundColor: 'transparent',
-                fill: false, tension: 0.4, borderWidth: 1.5, pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { enabled: false } },
-            scales: { 
-                x: { display: false }, 
-                y: { display: false, grid: { display: false } } 
-            }
-        }
-    });
+function switchDay(day, mode) {
+    document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active-day'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(day).classList.add('active-day');
+    document.getElementById('btn-'+day).classList.add('active');
+    document.body.className = mode + '-mode';
+    window.scrollTo(0,0);
 }
 
 function startTimer(s) {
@@ -376,32 +232,46 @@ function startTimer(s) {
     let time = s;
     const interval = setInterval(() => {
         document.getElementById('timer-val').innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2, '0')}`;
-        if(time-- <= 0) { 
-            clearInterval(interval); 
-            ov.style.display = 'none';
-            // Haki Blast a fine timer
-            document.getElementById('haki-screen-effect').classList.add('screen-blast');
-            setTimeout(() => document.getElementById('haki-screen-effect').classList.remove('screen-blast'), 400);
-        }
+        if(time-- <= 0) { clearInterval(interval); ov.style.display = 'none'; }
     }, 1000);
     ov.onclick = () => { clearInterval(interval); ov.style.display = 'none'; };
 }
 
-function switchDay(dayId, characterMode) {
-    // Gestione Active Day
-    document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(dayId).classList.add('active-day');
-    document.getElementById('n-'+dayId).classList.add('active');
-    
-    // Gestione Character Mode sul Body
-    document.body.classList.remove('zoro-mode', 'shanks-mode', 'joyboy-mode');
-    document.body.classList.add(characterMode + '-mode');
-    
-    // Aggiorna i colori dei grafici esistenti
-    for (let id in charts) { updateChart(id); }
-    
-    window.scrollTo(0,0);
+function saveData(id) {
+    const entry = { w: [], r: [] };
+    const [day, idx] = id.split('_');
+    for(let i=0; i<workout[day].ex[idx].s; i++) {
+        entry.w.push(document.getElementById(`${id}_w${i}`).value || 0);
+        entry.r.push(document.getElementById(`${id}_r${i}`).value || 0);
+    }
+    localStorage.setItem(`PirateHaki_${id}`, JSON.stringify(entry));
+    updateChart(id);
+}
+
+function loadData() {
+    for(let day in workout) {
+        workout[day].ex.forEach((e, idx) => {
+            const id = `${day}_${idx}`;
+            const saved = JSON.parse(localStorage.getItem(`PirateHaki_${id}`));
+            if(saved) {
+                saved.w.forEach((v, i) => document.getElementById(`${id}_w${i}`).value = v);
+                saved.r.forEach((v, i) => document.getElementById(`${id}_r${i}`).value = v);
+            }
+            updateChart(id);
+        });
+    }
+}
+
+function updateChart(id) {
+    const ctx = document.getElementById(`c_${id}`);
+    if(!ctx) return;
+    const saved = JSON.parse(localStorage.getItem(`PirateHaki_${id}`));
+    const data = saved ? saved.w.map((w, i) => w * saved.r[i]) : [0,0,0,0];
+    if(charts[id]) charts[id].destroy();
+    charts[id] = new Chart(ctx, {
+        type: 'line', data: { labels:[1,2,3,4], datasets:[{data:data, borderColor:'#00f2ff', tension:0.4, pointRadius:0, borderWidth:1.5}] },
+        options: { responsive:true, maintainAspectRatio:false, scales:{x:{display:false},y:{display:false}}, plugins:{legend:{display:false}} }
+    });
 }
 
 window.onload = init;

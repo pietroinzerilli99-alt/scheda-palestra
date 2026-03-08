@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Legacy v13.0 - Final Emperor</title>
+    <title>Rayleigh Legacy v14.0 - True Haki Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -14,11 +14,12 @@
             --zoro: #00ff88;
             --shanks: #ff1100;
             --luffy: #ffcc00;
+            --haki-dark: #1a0000;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 50px;
+            background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 80px;
             overflow-x: hidden;
         }
 
@@ -31,51 +32,61 @@
             font-size: 0.9rem; letter-spacing: 1px; outline: none;
         }
 
-        /* Navigazione Fluida */
         nav { 
             display: flex; gap: 15px; padding: 20px; overflow-x: auto;
-            scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-            justify-content: flex-start; position: sticky; top: 0; z-index: 1000; 
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a;
+            scroll-snap-type: x mandatory; justify-content: flex-start; 
+            position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a;
         }
         nav::-webkit-scrollbar { display: none; }
 
-        .nav-item { 
-            scroll-snap-align: center; flex: 0 0 auto;
-            background: transparent; border: none; cursor: pointer; 
-            display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; 
-        }
+        .nav-item { scroll-snap-align: center; flex: 0 0 auto; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
         
         .char-frame {
             width: 70px; height: 95px; border-radius: 15px; border: 2px solid #1a1a1a;
             background: #050505; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s; position: relative; z-index: 5;
+            transition: 0.3s; position: relative;
         }
 
         .nav-item.active .char-frame { transform: scale(1.1); border-color: #fff; }
 
-        /* HAKI EFFECTS */
-        .haki-fx-layer { position: absolute; inset: -40px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
-        .lightning-bolt { position: absolute; background: currentColor; width: 2px; box-shadow: 0 0 12px currentColor; animation: haki-strike 0.6s ease-out forwards; }
-        .shanks-scar { position: absolute; width: 2px; background: var(--shanks); box-shadow: 0 0 15px var(--shanks); animation: scar-fade 0.7s ease-in-out forwards; }
+        /* HAKI ANIME EFFECTS */
+        .haki-fx-layer { position: absolute; inset: -50px; pointer-events: none; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        
+        .bolt { position: absolute; background: currentColor; width: 2px; border-radius: 2px; filter: blur(0.5px); animation: bolt-anim 0.5s ease-out forwards; }
+        @keyframes bolt-anim {
+            0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; }
+            100% { transform: rotate(var(--r)) scaleY(3) translateY(-60px); opacity: 0; }
+        }
 
-        @keyframes haki-strike { 0% { transform: rotate(var(--r)) scaleY(0); opacity: 1; } 100% { transform: rotate(var(--r)) scaleY(2.5) translateY(-50px); opacity: 0; } }
-        @keyframes scar-fade { 0% { height: 0; opacity: 1; transform: rotate(20deg) translateY(-20px); } 50% { height: 70px; opacity: 1; } 100% { height: 90px; opacity: 0; transform: rotate(20deg) translateY(20px); } }
+        .shockwave { position: absolute; border: 2px solid currentColor; border-radius: 50%; animation: wave-anim 0.6s ease-out forwards; }
+        @keyframes wave-anim {
+            0% { width: 0; height: 0; opacity: 1; border-width: 4px; }
+            100% { width: 200px; height: 200px; opacity: 0; border-width: 1px; }
+        }
 
-        /* CARDS */
+        .shanks-scar { position: absolute; width: 3px; background: #ff0000; box-shadow: 0 0 15px #ff0000; animation: scar-anim 0.7s ease-in-out forwards; }
+        @keyframes scar-anim { 0% { height: 0; opacity: 1; transform: rotate(20deg) translateY(-30px); } 100% { height: 100px; opacity: 0; transform: rotate(20deg) translateY(30px); } }
+
+        /* CARDS & CHARTS */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #1a1a1a; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { margin: 0; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
 
         .set-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
-        .set-label { font-size: 0.6rem; color: var(--primary); font-weight: 800; width: 20px; }
-        .input-box { flex: 1; background: #151518; border-radius: 10px; padding: 8px; display: flex; align-items: center; }
+        .set-label { font-size: 0.6rem; color: #444; font-weight: 800; width: 20px; }
+        .input-box { flex: 1; background: #151518; border-radius: 10px; padding: 8px; display: flex; align-items: center; border: 1px solid transparent; }
+        .input-box:focus-within { border-color: #333; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; font-size: 1rem; outline: none; font-weight: 700; }
         .input-box span { font-size: 0.5rem; color: #555; margin-left: 5px; font-weight: 800; }
 
-        .chart-box { height: 85px; margin: 15px 0; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.02); }
-        .timer-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.6rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+        .chart-box { height: 80px; margin-top: 15px; border-top: 1px solid #1a1a1a; padding-top: 10px; }
+        
+        /* QUOTE BOX */
+        .quote-container { margin-top: 40px; padding: 30px; text-align: center; border-top: 1px solid #111; }
+        #quote-text { font-style: italic; font-size: 1rem; color: #666; line-height: 1.6; }
+        #quote-author { display: block; margin-top: 10px; font-weight: 800; font-size: 0.7rem; color: var(--primary); letter-spacing: 2px; }
 
         #timer-ov { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
         #timer-val { font-size: 10rem; font-weight: 800; color: var(--primary); }
@@ -94,23 +105,29 @@
 
 <div class="container" id="workout-area"></div>
 
+<div class="quote-container">
+    <p id="quote-text">"La forza non deriva solo dalle capacità fisiche, ma da una volontà indomabile."</p>
+    <span id="quote-author">SILVERS RAYLEIGH</span>
+</div>
+
 <script>
+const workoutData = {
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', quote: "Non c'è gusto a percorrere una strada se non rischi la vita.", ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}] },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', quote: "Sono venuto a porre fine a questa guerra!", ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}] },
+    mer: { char: 'luffy', icon: '🍖', quote: "Se non rischi la vita, non puoi creare un futuro.", color: '#ffcc00', ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}] },
+    gio: { char: 'zoro', icon: '⚔️', quote: "Se morirò qui, allora significa che non potevo andare oltre.", color: '#00ff88', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}] },
+    ven: { char: 'shanks', icon: '🍷', quote: "Scommetto questa braccio sulla nuova era.", color: '#ff1100', ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
+};
+
+let currentDay = 'lun';
+
+// Setup Settimane
 const sel = document.getElementById('weekSelector');
 for(let i=1; i<=16; i++) {
     let opt = document.createElement('option');
     opt.value = i; opt.innerText = `SETTIMANA ${i}`;
     sel.appendChild(opt);
 }
-
-const workoutData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
-};
-
-let currentDay = 'lun';
 
 function init() {
     const nav = document.getElementById('navbar');
@@ -130,6 +147,12 @@ function setDay(day) {
     document.getElementById('btn-'+day).classList.add('active');
     burstHaki(day);
     renderWorkout();
+    updateQuote(day);
+}
+
+function updateQuote(day) {
+    document.getElementById('quote-text').innerText = `"${workoutData[day].quote}"`;
+    document.getElementById('quote-author').innerText = workoutData[day].char.toUpperCase();
 }
 
 function burstHaki(day) {
@@ -140,20 +163,31 @@ function burstHaki(day) {
     fx.className = 'haki-fx-layer';
     frame.appendChild(fx);
 
-    const bolts = char === 'luffy' ? 15 : 8;
-    for(let i=0; i<bolts; i++) {
+    // ONDA D'URTO (Shanks & Luffy)
+    if(char !== 'zoro') {
+        const wave = document.createElement('div');
+        wave.className = 'shockwave';
+        wave.style.color = color;
+        fx.appendChild(wave);
+    }
+
+    // FULMINI ANIME
+    const count = char === 'luffy' ? 20 : 10;
+    for(let i=0; i<count; i++) {
         const b = document.createElement('div');
-        b.className = 'lightning-bolt';
-        b.style.color = color;
+        b.className = 'bolt';
+        b.style.color = (char === 'luffy' && Math.random() > 0.5) ? '#ff0000' : color;
         b.style.setProperty('--r', `${Math.random() * 360}deg`);
-        b.style.height = (char === 'luffy' ? 80 : 45) + 'px';
+        b.style.height = (char === 'luffy' ? 90 : 50) + 'px';
+        b.style.width = (char === 'luffy' ? '3px' : '1px');
         fx.appendChild(b);
     }
+
     if(char === 'shanks') {
         for(let i=0; i<3; i++) {
             const s = document.createElement('div');
             s.className = 'shanks-scar';
-            s.style.left = (40 + i*10) + '%';
+            s.style.left = (35 + i*15) + '%';
             fx.appendChild(s);
         }
     }
@@ -163,14 +197,9 @@ function burstHaki(day) {
 function renderWorkout() {
     const area = document.getElementById('workout-area');
     area.innerHTML = '';
-    const week = sel.value;
-
-    workoutData[currentDay].ex.forEach((ex, idx) => {
-        area.appendChild(createCard(ex.n, ex.s, ex.r, idx));
-    });
-
-    // Finisher
-    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:4px; margin:25px 0;">FINISHER</div>`;
+    workoutData[currentDay].ex.forEach((ex, idx) => area.appendChild(createCard(ex.n, ex.s, ex.r, idx)));
+    
+    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:4px; margin:30px 0;">DAILY FINISHER</div>`;
     area.appendChild(createCard("Addominali Core", 3, 60, 'abs'));
     area.appendChild(createCard("Cardio LISS", 1, 900, 'cardio'));
 }
@@ -179,8 +208,7 @@ function createCard(title, sets, rest, id) {
     const week = sel.value;
     const card = document.createElement('div');
     card.className = 'card';
-    let html = `<div class="card-header"><h3>${title}</h3><button class="timer-btn" onclick="runTimer(${rest})">${rest}s</button></div>
-                <div class="chart-box"><canvas id="chart-${id}"></canvas></div>`;
+    let html = `<div class="card-header"><h3>${title}</h3><button class="timer-btn" onclick="runTimer(${rest})">${rest}s</button></div>`;
     
     for(let i=1; i<=sets; i++) {
         const key = `w${week}-${currentDay}-${id}-s${i}`;
@@ -191,6 +219,9 @@ function createCard(title, sets, rest, id) {
             <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveData('${id}', ${i}, 'reps', this.value)" placeholder="0"><span>REPS</span></div>
         </div>`;
     }
+    
+    // GRAFICO SOTTO LE SERIE
+    html += `<div class="chart-box"><canvas id="chart-${id}"></canvas></div>`;
     card.innerHTML = html;
     setTimeout(() => drawChart(id), 50);
     return card;
@@ -198,36 +229,38 @@ function createCard(title, sets, rest, id) {
 
 function saveData(exId, setIdx, type, val) {
     const week = sel.value;
-    localStorage.setItem(`w${week}-${currentDay}-${exId}-s${setIdx}`, JSON.stringify({
-        ...JSON.parse(localStorage.getItem(`w${week}-${currentDay}-${exId}-s${setIdx}`)) || {kg: '', reps: ''},
-        [type]: val
-    }));
+    const key = `w${week}-${currentDay}-${exId}-s${setIdx}`;
+    let data = JSON.parse(localStorage.getItem(key)) || {kg: '', reps: ''};
+    data[type] = val;
+    localStorage.setItem(key, JSON.stringify(data));
     drawChart(exId);
 }
 
 function drawChart(id) {
-    const ctx = document.getElementById(`chart-${id}`).getContext('2d');
-    const dataPoints = [];
+    const canvas = document.getElementById(`chart-${id}`);
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const points = [];
     for(let w=1; w<=16; w++) {
         const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${id}-s1`));
-        dataPoints.push(d && d.kg ? parseFloat(d.kg) : 0);
+        points.push(d && d.kg ? parseFloat(d.kg) : 0);
     }
 
-    if(window[`cObj${id}`]) window[`cObj${id}`].destroy();
-    window[`cObj${id}`] = new Chart(ctx, {
+    if(window[`c${id}`]) window[`c${id}`].destroy();
+    window[`c${id}`] = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({length: 16}, (_, i) => i + 1),
             datasets: [{
-                data: dataPoints,
+                data: points,
                 borderColor: workoutData[currentDay].color,
-                borderWidth: 2, tension: 0.4, pointRadius: 3, pointBackgroundColor: workoutData[currentDay].color, fill: false
+                borderWidth: 2, tension: 0.4, pointRadius: 0, fill: false
             }]
         },
         options: {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: { x: { display: true, ticks: { color: '#333', font: { size: 8 } } }, y: { display: false } }
+            scales: { x: { display: false }, y: { display: false } }
         }
     });
 }

@@ -3,125 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Cyber-Zen Log</title>
+    <title>Rayleigh Workout - Void Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000; 
-            --surface: #030303; /* Quasi nero */
-            --primary: #ffffff; /* Bianco: Eleganza pura, futurismo, pace */
-            --text: #ffffff;
-            --text-dim: #333333; /* Grigio scuro per elementi inattivi */
-            --border: #1a1a1a; /* Linee grigie sottili per struttura */
+            --bg: #020408;
+            --glass: rgba(15, 20, 30, 0.6);
+            --primary: #00f2ff; /* Ciano Olografico */
+            --accent: #7000ff; /* Viola Profondo */
+            --text: #e2e8f0;
+            --text-dim: #475569;
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(112, 0, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
             color: var(--text);
-            margin: 0; padding-bottom: 40px;
+            margin: 0; padding-bottom: 50px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header Cyber-Zen */
+        /* Header Futuristico */
         header { 
-            padding: 50px 20px 20px; 
+            padding: 50px 25px 20px; 
             max-width: 650px; margin: 0 auto; 
-            display: flex; justify-content: space-between; align-items: baseline; 
-            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
         h1 { 
-            font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; margin: 0; 
-            color: #fff;
+            font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; margin: 0; 
+            text-transform: uppercase; color: var(--text);
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
         }
 
         .week-selector {
-            background: transparent;
-            border: none;
-            color: var(--text-dim); padding: 0;
-            font-weight: 300; outline: none; cursor: pointer; font-family: inherit; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 2px;
-            transition: 0.3s;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--primary); padding: 8px 15px; border-radius: 30px;
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 1px;
+            outline: none; cursor: pointer; backdrop-filter: blur(10px);
         }
-        .week-selector:hover { color: var(--primary); }
 
-        /* Navigazione Giorni Lineare */
+        /* Navigazione Olografica */
         nav {
-            display: flex; gap: 30px; padding: 25px; overflow-x: auto;
+            display: flex; gap: 20px; padding: 20px; overflow-x: auto;
             max-width: 650px; margin: 0 auto; scrollbar-width: none;
             justify-content: center;
         }
-        nav::-webkit-scrollbar { display: none; }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s;
-            padding: 0; letter-spacing: 1px; text-transform: uppercase;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 2px; position: relative;
         }
         nav button.active { color: var(--primary); }
-        nav button:hover { color: var(--primary); text-shadow: 0 0 5px rgba(255,255,255,0.3); }
-
-        /* Contenitore */
-        .container { padding: 10px; max-width: 650px; margin: 0 auto; }
-        .day-section { display: none; animation: fadeIn 0.3s ease; }
-        .active-day { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Schede Esercizi Pannellate */
-        .card {
-            background: var(--surface);
-            border-radius: 8px; padding: 25px; margin-bottom: 15px;
-            border: 1px solid var(--border);
+        nav button.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px;
+            background: var(--primary); box-shadow: 0 0 10px var(--primary);
         }
-        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 1rem; font-weight: 600; color: #fff; letter-spacing: -0.2px;}
+
+        .container { padding: 15px; max-width: 650px; margin: 0 auto; }
+        .day-section { display: none; animation: slideFade 0.5s ease-out; }
+        .active-day { display: block; }
+        @keyframes slideFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Card Effetto Vetro */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 25px; margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .card-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
         
         .timer-btn {
-            background: transparent; color: var(--text-dim); border: none;
-            padding: 0; font-weight: 300; font-size: 0.65rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1.5px;
-            transition: 0.3s;
+            background: rgba(0, 242, 255, 0.05); color: var(--primary); 
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 0.6rem; cursor: pointer;
+            text-transform: uppercase; transition: 0.3s;
         }
-        .timer-btn:hover { color: var(--primary); }
+        .timer-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
-        /* Input Cyber */
-        .series-grid { display: flex; flex-direction: column; gap: 5px; }
+        /* Input Grid HUD */
         .serie-row {
-            display: grid; grid-template-columns: 60px 1fr; align-items: center;
-            padding: 8px 0; border-bottom: 1px solid var(--border);
+            display: grid; grid-template-columns: 70px 1fr; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
         }
-        .serie-row:last-child { border-bottom: none; }
-        .serie-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-        .inputs { display: flex; justify-content: flex-start; gap: 15px; align-items: center; }
-        .input-group { display: flex; align-items: baseline; gap: 4px; }
+        .serie-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
+        .inputs { display: flex; gap: 20px; }
+        .input-group { display: flex; align-items: baseline; gap: 6px; }
         .inputs input {
-            width: 38px; background: transparent; border: none; color: white;
-            font-weight: 300; font-size: 1.2rem; text-align: right; outline: none;
-            font-family: inherit;
+            width: 45px; background: transparent; border: none; color: var(--primary);
+            font-weight: 700; font-size: 1.1rem; text-align: right; outline: none;
         }
-        .input-unit { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; font-weight: 100;}
+        .input-unit { color: var(--text-dim); font-size: 0.6rem; font-weight: 700; }
 
-        /* Grafico "Impulso Bianco" */
-        .chart-container { height: 70px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;}
+        /* Grafico Neon */
+        .chart-container { height: 80px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;}
 
-        /* Overlay Timer Olografico */
+        /* Timer HUD Overlay */
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.98); display: none; flex-direction: column;
+            background: rgba(2, 4, 8, 0.95); display: none; flex-direction: column;
             align-items: center; justify-content: center; z-index: 9999;
         }
-        #timer-val { font-size: 6rem; font-weight: 100; color: var(--primary); letter-spacing: -3px; font-family: 'Inter', sans-serif;}
+        #timer-val { 
+            font-size: 7rem; font-weight: 200; color: var(--primary); 
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.4); 
+        }
     </style>
 </head>
 <body>
 
 <div id="timer-overlay" onclick="closeTimer()">
+    <div style="font-size: 0.7rem; letter-spacing: 5px; color: var(--text-dim); margin-bottom: 20px;">SYNCING RECOVERY</div>
     <div id="timer-val">00:00</div>
-    <div style="color:var(--text-dim); font-size: 0.65rem; margin-top: 10px; letter-spacing: 3px; font-weight: 300;">TAP TO SKIP</div>
+    <div style="color:var(--primary); font-size: 0.6rem; margin-top: 30px; letter-spacing: 2px; cursor:pointer;">ABORT MISSION</div>
 </div>
 
 <header>
-    <h1>Rayleigh Workout</h1>
+    <h1>Rayleigh <span style="font-weight:200">Workout</span></h1>
     <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
         </select>
 </header>
@@ -140,36 +147,16 @@
 const weekSelect = document.getElementById('weekSelect');
 for (let i = 1; i <= 16; i++) {
     const opt = document.createElement('option');
-    opt.value = i; opt.innerHTML = `Settimana ${i}`;
+    opt.value = i; opt.innerHTML = `PHASE ${i < 10 ? '0'+i : i}`;
     weekSelect.appendChild(opt);
 }
 
 const workout = {
-    lun: { title: "Push Alpha • Petto e Spalle", ex: [
-        {n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press Macchina", s:3, r:60}, 
-        {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown Tricipiti", s:4, r:60},
-        {n:"Crunch Addominali", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
-    ]},
-    mar: { title: "Pull Alpha • Trazioni Pesanti", ex: [
-        {n:"Trazioni Zavorrate (Heavy)", s:5, r:120}, {n:"Rematore Manubrio", s:3, r:90}, 
-        {n:"Curl Bilanciere EZ", s:4, r:60}, {n:"Facepull", s:3, r:60},
-        {n:"Leg Raise", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
-    ]},
-    mer: { title: "Legs • Potenza Gambe", ex: [
-        {n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, 
-        {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60},
-        {n:"Plank", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
-    ]},
-    gio: { title: "Push Beta • Richiamo & Spalle", ex: [
-        {n:"Panca Piana Manubri", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, 
-        {n:"Shoulder Press Macchina", s:3, r:90}, {n:"French Press Manubri", s:3, r:60},
-        {n:"Crunch Inverso", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
-    ]},
-    ven: { title: "Pull Beta • Trazioni Volume", ex: [
-        {n:"Trazioni Zavorrate (Vol)", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, 
-        {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60},
-        {n:"Russian Twist", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
-    ]}
+    lun: { ex: [{n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
+    mar: { ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core", s:3, r:60, spec:true}] },
+    mer: { ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf", s:4, r:60}] },
+    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
+    ven: { ex: [{n:"Trazioni Vol.", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
 };
 
 let charts = {};
@@ -184,7 +171,7 @@ function init() {
             <div class="card">
                 <div class="card-header">
                     <h3>${e.n}</h3>
-                    <button class="timer-btn" onclick="startTimer(${e.r})">Recupero ${e.r}s</button>
+                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}s rest</button>
                 </div>
                 <div class="series-grid">
                     ${Array.from({length:e.s}).map((_, s) => `
@@ -222,7 +209,7 @@ function saveData(exId) {
         dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
         dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
     }
-    localStorage.setItem(`Rayleigh_Cyber_${week}_${exId}`, JSON.stringify(dataEntry));
+    localStorage.setItem(`Rayleigh_Void_${week}_${exId}`, JSON.stringify(dataEntry));
     updateSingleChart(exId);
 }
 
@@ -231,7 +218,7 @@ function loadWeekData() {
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Cyber_${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Void_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 const wIn = document.getElementById(`${id}_w${i}`);
                 const rIn = document.getElementById(`${id}_r${i}`);
@@ -249,13 +236,11 @@ function loadWeekData() {
 
 function updateSingleChart(exId) {
     const historyVol = [];
-    const labels = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Cyber_${w}_${exId}`));
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_Void_${w}_${exId}`));
         let vol = 0;
         if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         historyVol.push(vol);
-        labels.push(w);
     }
     const ctx = document.getElementById(`c_${exId}`);
     if(!ctx) return;
@@ -263,19 +248,19 @@ function updateSingleChart(exId) {
     charts[exId] = new Chart(ctx.getContext('2d'), {
         type: 'line',
         data: {
-            labels: labels,
+            labels: Array.from({length:16}, (_, i) => i+1),
             datasets: [{
                 data: historyVol,
-                borderColor: '#ffffff', // Bianco Cyber
+                borderColor: '#00f2ff',
                 backgroundColor: 'transparent',
-                fill: false, tension: 0.1, borderWidth: 1, pointRadius: 0
+                fill: false, tension: 0.4, borderWidth: 2, pointRadius: 0
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            plugins: { legend: { display: false } },
             scales: { 
-                x: { grid: { display: false }, ticks: { color: '#2a2a2a', font: { size: 7 } } }, 
+                x: { display: false }, 
                 y: { display: false } 
             }
         }
@@ -291,7 +276,7 @@ function startTimer(s) {
     tInterval = setInterval(() => {
         let m = Math.floor(time/60); let sec = time%60;
         val.innerText = `${m}:${sec<10?'0':''}${sec}`;
-        if(time <= 0) { clearInterval(tInterval); val.innerText = "VIA!"; }
+        if(time <= 0) { clearInterval(tInterval); val.innerText = "ACTION"; }
         time--;
     }, 1000);
 }

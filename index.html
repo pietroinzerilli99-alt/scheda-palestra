@@ -3,352 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Track Pro - 2026 Edition</title>
+    <title>Aura Training - Elite Log</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0f1a;
-            --card: #161e2d;
-            --primary: #38bdf8;
-            --accent: #f472b6;
-            --success: #22c55e;
-            --text: #f8fafc;
-            --border: #2d3748;
+            --bg: #05070a;
+            --surface: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.05);
+            --primary: #00d2ff; /* Azzurro pace */
+            --accent: #7a5cff;  /* Viola motivazione */
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --success: #00ff88;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(122, 92, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 210, 255, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
             color: var(--text);
             margin: 0;
             padding-bottom: 50px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Top Bar & Timer */
-        .header-sticky {
-            position: sticky;
-            top: 0;
-            background: rgba(10, 15, 26, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            text-align: center;
+        /* Header Elegante */
+        header {
+            padding: 40px 20px 20px;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        #timer-display {
-            font-size: 2rem;
+        h1 {
+            font-size: 2.2rem;
             font-weight: 800;
-            color: var(--accent);
-            display: none;
-            font-variant-numeric: tabular-nums;
+            margin: 0;
+            background: linear-gradient(to right, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1.5px;
         }
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
+        .vol-badge {
+            display: inline-block;
+            background: var(--surface);
+            padding: 6px 14px;
+            border-radius: 100px;
             font-size: 0.8rem;
             color: var(--primary);
-            margin-top: 5px;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            margin-top: 10px;
         }
 
-        /* Navigation */
+        /* Navigazione Minimalista */
         nav {
             display: flex;
+            gap: 12px;
+            padding: 10px 20px;
             overflow-x: auto;
-            gap: 10px;
-            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
             scrollbar-width: none;
         }
         nav::-webkit-scrollbar { display: none; }
 
         nav button {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: #94a3b8;
-            padding: 10px 20px;
-            border-radius: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 0.9rem;
             font-weight: 600;
+            padding: 8px 4px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
+            position: relative;
         }
 
         nav button.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            color: var(--text);
         }
 
-        /* Exercise Cards */
-        .container { padding: 0 15px; }
-        .day-section { display: none; animation: slideUp 0.4s ease; }
+        nav button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* Contenitore Cards */
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .day-section { display: none; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
         .active-day { display: block; }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 18px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px;
             margin-bottom: 20px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: transform 0.3s;
         }
+
+        .card:active { transform: scale(0.98); }
 
         .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            align-items: flex-start;
+            margin-bottom: 20px;
         }
 
-        .card-header h3 { margin: 0; font-size: 1.1rem; }
-        
-        .rec-btn {
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
+        .card-header h3 { 
+            margin: 0; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
-        /* Grid per le Serie */
+        .timer-btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Input Serie Soft */
         .series-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+            gap: 12px;
         }
 
         .serie-box {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 8px;
-            text-align: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .serie-box label { display: block; font-size: 0.7rem; color: #64748b; margin-bottom: 4px; }
-        
+        .serie-box span { display: block; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
         .serie-box input {
-            width: 80%;
+            width: 100%;
             background: transparent;
             border: none;
-            color: white;
+            color: var(--text);
             text-align: center;
-            font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             outline: none;
         }
 
-        /* Mini Chart */
+        /* Grafici Minimal */
         .chart-wrap {
-            height: 120px;
-            margin-top: 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            padding: 10px;
+            height: 60px;
+            margin-top: 20px;
+            pointer-events: none;
+        }
+
+        /* Timer Overlay Overlay */
+        #timer-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(20px);
+        }
+
+        #timer-big {
+            font-size: 6rem;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Cardio Style */
+        .cardio-card {
+            background: linear-gradient(145deg, rgba(122, 92, 255, 0.1), rgba(0, 210, 255, 0.05));
+            border: 1px solid rgba(122, 92, 255, 0.2);
         }
     </style>
 </head>
 <body>
 
-<div class="header-sticky">
-    <div id="main-title">GYM LOG <b>2026</b></div>
-    <div id="timer-display">00:00</div>
-    <div class="stats-bar">
-        <span>Volume Sessione: <b id="total-vol">0</b> kg</span>
-    </div>
+<div id="timer-overlay" onclick="closeTimer()">
+    <div style="color: var(--primary); letter-spacing: 2px; margin-bottom: 10px;">RECUPERO...</div>
+    <div id="timer-big">00:00</div>
+    <div style="margin-top: 30px; color: var(--text-dim);">Tocca per chiudere</div>
 </div>
 
-<nav>
-    <button onclick="switchDay('lun')" id="nav-lun" class="active">LUN - PUSH</button>
-    <button onclick="switchDay('mar')" id="nav-mar">MAR - PULL</button>
-    <button onclick="switchDay('mer')" id="nav-mer">MER - LEGS</button>
-    <button onclick="switchDay('gio')" id="nav-gio">GIO - PUSH</button>
-    <button onclick="switchDay('ven')" id="nav-ven">VEN - PULL</button>
+<header>
+    <h1>Aura Log</h1>
+    <div class="vol-badge">Volume Sessione: <span id="total-vol">0</span> KG</div>
+</header>
+
+<nav id="dayNav">
+    <button onclick="switchDay('lun')" id="nav-lun" class="active">LUN</button>
+    <button onclick="switchDay('mar')" id="nav-mar">MAR</button>
+    <button onclick="switchDay('mer')" id="nav-mer">MER</button>
+    <button onclick="switchDay('gio')" id="nav-gio">GIO</button>
+    <button onclick="switchDay('ven')" id="nav-ven">VEN</button>
 </nav>
 
-<div class="container" id="days-container">
-    </div>
+<div class="container" id="days-container"></div>
 
 <script>
-// Database Esercizi
 const workoutData = {
-    lun: { title: "Push Day 1", exercises: [
+    lun: { title: "Push Alpha • Petto & Spalle", exercises: [
         { name: "Panca Inclinata Manubri", sets: 4, rec: 90 },
-        { name: "Croci ai Cavi", sets: 3, rec: 60 },
+        { name: "Chest Press (Controllo)", sets: 3, rec: 60 },
         { name: "Alzate Laterali", sets: 4, rec: 60 },
-        { name: "Dips", sets: 3, rec: 90 },
-        { name: "Pushdown Tricipiti", sets: 3, rec: 60 }
+        { name: "Pushdown Corda", sets: 4, rec: 60 },
+        { name: "Crunch Addominali", sets: 3, rec: 60, isSpecial: true },
+        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
     ]},
-    mar: { title: "Pull Day 1", exercises: [
-        { name: "Trazioni Zavorrate", sets: 5, rec: 120 },
-        { name: "Rematore Manubrio", sets: 4, rec: 90 },
-        { name: "Lat Machine", sets: 3, rec: 90 },
-        { name: "Curl Inclinata", sets: 3, rec: 60 },
-        { name: "Curl Martello", sets: 3, rec: 60 }
+    mar: { title: "Pull Alpha • Trazioni Pesanti", exercises: [
+        { name: "Trazioni Zavorrate (Heavy)", sets: 5, rec: 120 },
+        { name: "Rematore Manubrio", sets: 3, rec: 90 },
+        { name: "Curl Bilanciere EZ", sets: 4, rec: 60 },
+        { name: "Facepull (Salute Spalla)", sets: 3, rec: 60 },
+        { name: "Leg Raise", sets: 3, rec: 60, isSpecial: true },
+        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
     ]},
-    mer: { title: "Legs Day", exercises: [
+    mer: { title: "Legs • Potenza & Volume", exercises: [
         { name: "Hack Squat", sets: 4, rec: 120 },
-        { name: "Leg Press", sets: 4, rec: 90 },
-        { name: "Romanian Deadlift", sets: 3, rec: 90 },
-        { name: "Leg Curl", sets: 3, rec: 60 },
-        { name: "Calf Raise", sets: 4, rec: 60 }
+        { name: "Leg Press", sets: 3, rec: 90 },
+        { name: "Leg Curl", sets: 4, rec: 60 },
+        { name: "Calf Raise", sets: 4, rec: 60 },
+        { name: "Plank", sets: 3, rec: 60, isSpecial: true },
+        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
     ]},
-    gio: { title: "Push Day 2", exercises: [
-        { name: "Panca Piana", sets: 4, rec: 90 },
-        { name: "Military Press", sets: 3, rec: 90 },
-        { name: "Croci Cavi", sets: 3, rec: 60 },
-        { name: "Alzate Laterali", sets: 4, rec: 60 },
-        { name: "French Press", sets: 3, rec: 60 }
+    gio: { title: "Push Beta • Richiamo & Braccia", exercises: [
+        { name: "Panca Piana Manubri", sets: 4, rec: 90 },
+        { name: "Croci ai Cavi High", sets: 3, rec: 60 },
+        { name: "Shoulder Press Macchina", sets: 3, rec: 90 },
+        { name: "French Press Manubri", sets: 3, rec: 60 },
+        { name: "Crunch Inverso", sets: 3, rec: 60, isSpecial: true },
+        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
     ]},
-    ven: { title: "Pull Day 2", exercises: [
-        { name: "Trazioni", sets: 4, rec: 120 },
-        { name: "Pulley Basso", sets: 4, rec: 90 },
-        { name: "Facepull", sets: 3, rec: 60 },
-        { name: "Curl Bilanciere", sets: 3, rec: 60 },
-        { name: "Hammer Curl", sets: 3, rec: 60 }
+    ven: { title: "Pull Beta • Trazioni Volume", exercises: [
+        { name: "Trazioni Zavorrate (Vol)", sets: 4, rec: 120 },
+        { name: "Lat Machine Inversa", sets: 3, rec: 90 },
+        { name: "Hammer Curl", sets: 3, rec: 60 },
+        { name: "Curl ai Cavi", sets: 3, rec: 60 },
+        { name: "Russian Twist", sets: 3, rec: 60, isSpecial: true },
+        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
     ]}
 };
 
-// Generazione Dinamica HTML
-const container = document.getElementById('days-container');
-for (const [dayKey, dayObj] of Object.entries(workoutData)) {
-    let dayHtml = `<div id="${dayKey}" class="day-section ${dayKey === 'lun' ? 'active-day' : ''}">`;
-    dayObj.exercises.forEach((ex, exIdx) => {
-        const exId = `${dayKey}_ex${exIdx}`;
-        dayHtml += `
-            <div class="card">
-                <div class="card-header">
-                    <div>
+const charts = {};
+function render() {
+    const container = document.getElementById('days-container');
+    for (const [dayKey, dayObj] of Object.entries(workoutData)) {
+        let html = `<div id="${dayKey}" class="day-section ${dayKey === 'lun' ? 'active-day' : ''}">`;
+        html += `<div style="color:var(--text-dim); font-size:0.8rem; margin-bottom:20px; font-weight:600; text-transform:uppercase; letter-spacing:2px;">${dayObj.title}</div>`;
+        
+        dayObj.exercises.forEach((ex, iIdx) => {
+            const id = `${dayKey}_ex${iIdx}`;
+            html += `
+                <div class="card ${ex.isSpecial ? 'cardio-card' : ''}">
+                    <div class="card-header">
                         <h3>${ex.name}</h3>
-                        <small style="color:#64748b">${ex.sets} serie</small>
+                        <button class="timer-btn" onclick="startTimer(${ex.rec})">${ex.rec}S</button>
                     </div>
-                    <button class="rec-btn" onclick="startTimer(${ex.rec})">⏱ ${ex.rec}s</button>
-                </div>
-                <div class="series-row">
-                    ${Array.from({length: ex.sets}).map((_, s) => `
-                        <div class="serie-box">
-                            <label>S${s+1}</label>
-                            <input type="number" placeholder="kg" 
-                                id="${exId}_s${s}" 
-                                onchange="saveWeight('${exId}', ${s}, this.value)">
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="chart-wrap">
-                    <canvas id="chart_${exId}"></canvas>
-                </div>
-            </div>`;
-    });
-    dayHtml += `</div>`;
-    container.innerHTML += dayHtml;
+                    <div class="series-row">
+                        ${Array.from({length: ex.sets}).map((_, s) => `
+                            <div class="serie-box">
+                                <span>SET ${s+1}</span>
+                                <input type="number" id="${id}_s${s}" oninput="save('${id}', ${s}, this.value)">
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${!ex.isSpecial ? `<div class="chart-wrap"><canvas id="c_${id}"></canvas></div>` : ''}
+                </div>`;
+        });
+        html += `</div>`;
+        container.innerHTML += html;
+    }
 }
 
-// Logica Timer
-let timerInterval;
-function startTimer(sec) {
-    clearInterval(timerInterval);
-    const display = document.getElementById('timer-display');
-    const title = document.getElementById('main-title');
-    display.style.display = 'block';
-    title.style.display = 'none';
-    
-    let timeLeft = sec;
-    timerInterval = setInterval(() => {
-        let m = Math.floor(timeLeft / 60);
-        let s = timeLeft % 60;
-        display.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            display.innerText = "VIA!";
-            setTimeout(() => {
-                display.style.display = 'none';
-                title.style.display = 'block';
-            }, 2000);
-        }
-        timeLeft--;
+let timerInt;
+function startTimer(s) {
+    const overlay = document.getElementById('timer-overlay');
+    const display = document.getElementById('timer-big');
+    overlay.style.display = 'flex';
+    let left = s;
+    timerInt = setInterval(() => {
+        let m = Math.floor(left / 60); let sec = left % 60;
+        display.innerText = `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        if(left <= 0) { clearInterval(timerInt); display.innerText = "VIA!"; }
+        left--;
     }, 1000);
 }
 
-// Logica Salvataggio e Grafici
-const charts = {};
-function initCharts() {
-    for (const [dayKey, dayObj] of Object.entries(workoutData)) {
-        dayObj.exercises.forEach((ex, exIdx) => {
-            const exId = `${dayKey}_ex${exIdx}`;
-            const canvas = document.getElementById(`chart_${exId}`);
-            // Carichiamo i dati storici (se non ci sono, usiamo dati finti per mostrare il grafico inizialmente)
-            const history = JSON.parse(localStorage.getItem(`hist_${exId}`)) || [0, 0, 0, 0, 0];
-            
-            charts[exId] = new Chart(canvas, {
-                type: 'line',
-                data: {
-                    labels: ['-4', '-3', '-2', '-1', 'Oggi'],
-                    datasets: [{
-                        data: history,
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 3
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { ticks: { color: '#475569', font: { size: 9 } } } }
-                }
-            });
+function closeTimer() { clearInterval(timerInt); document.getElementById('timer-overlay').style.display = 'none'; }
 
-            // Carichiamo anche i valori attuali negli input
-            for(let s=0; s<ex.sets; s++) {
-                const val = localStorage.getItem(`${exId}_s${s}`);
-                if(val) document.getElementById(`${exId}_s${s}`).value = val;
-            }
-        });
+function save(id, s, v) {
+    localStorage.setItem(`${id}_s${s}`, v);
+    if(charts[id]) {
+        charts[id].data.datasets[0].data[4] = parseFloat(v) || 0;
+        charts[id].update();
+        localStorage.setItem(`h_${id}`, JSON.stringify(charts[id].data.datasets[0].data));
     }
-    calcVolume();
+    calc();
 }
 
-function saveWeight(exId, setIdx, value) {
-    localStorage.setItem(`${exId}_s${setIdx}`, value);
-    
-    // Aggiorna il valore "Oggi" nel grafico
-    const chart = charts[exId];
-    chart.data.datasets[0].data[4] = parseFloat(value) || 0;
-    chart.update();
-    
-    // Salva lo storico (per semplicità usiamo l'ultimo valore inserito come picco della giornata)
-    const history = chart.data.datasets[0].data;
-    localStorage.setItem(`hist_${exId}`, JSON.stringify(history));
-    
-    calcVolume();
+function calc() {
+    let t = 0; document.querySelectorAll('input').forEach(i => t += (parseFloat(i.value) || 0));
+    document.getElementById('total-vol').innerText = t;
 }
 
-function calcVolume() {
-    let total = 0;
-    document.querySelectorAll('input').forEach(input => {
-        total += parseFloat(input.value) || 0;
-    });
-    document.getElementById('total-vol').innerText = total;
-}
-
-function switchDay(dayId) {
+function switchDay(id) {
     document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(dayId).classList.add('active-day');
-    document.getElementById('nav-' + dayId).classList.add('active');
+    document.getElementById(id).classList.add('active-day');
+    document.getElementById('nav-' + id).classList.add('active');
 }
 
-window.onload = initCharts;
+window.onload = () => {
+    render();
+    Object.keys(workoutData).forEach(dk => {
+        workoutData[dk].exercises.forEach((ex, ei) => {
+            const id = `${dk}_ex${ei}`;
+            const ctx = document.getElementById(`c_${id}`);
+            if(ctx) {
+                const h = JSON.parse(localStorage.getItem(`h_${id}`)) || [0,0,0,0,0];
+                charts[id] = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels:[1,2,3,4,5], datasets:[{ data:h, borderColor:'#00d2ff', borderWidth:2, tension:0.4, fill:true, backgroundColor:'rgba(0,210,255,0.05)', pointRadius:0 }] },
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{display:false}} }
+                });
+            }
+            for(let s=0; s<ex.sets; s++) {
+                const v = localStorage.getItem(`${id}_s${s}`);
+                if(v) document.getElementById(`${id}_s${s}`).value = v;
+            }
+        });
+    });
+    calc();
+};
 </script>
 </body>
 </html>

@@ -3,132 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Void Edition</title>
+    <title>Rayleigh Workout - Haki System</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #020408;
-            --glass: rgba(15, 20, 30, 0.6);
-            --primary: #00f2ff; /* Ciano Olografico */
-            --accent: #7000ff; /* Viola Profondo */
-            --text: #e2e8f0;
-            --text-dim: #475569;
-            --border: rgba(255, 255, 255, 0.05);
+            --bg: #010204;
+            --glass: rgba(10, 15, 20, 0.7);
+            --primary: #00ffaa; /* Verde Rayleigh Cyber */
+            --silver: #e2e8f0; /* Argento "Silvers" */
+            --text-dim: #4a5568;
+            --glow: rgba(0, 255, 170, 0.15);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(112, 0, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(100, 100, 255, 0.05) 0%, transparent 50%);
             background-attachment: fixed;
-            color: var(--text);
-            margin: 0; padding-bottom: 50px;
+            color: var(--silver);
+            margin: 0; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header Futuristico */
+        /* Header Legendario */
         header { 
-            padding: 50px 25px 20px; 
+            padding: 50px 25px 10px; 
             max-width: 650px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center;
         }
         h1 { 
-            font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; margin: 0; 
-            text-transform: uppercase; color: var(--text);
-            text-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            font-size: 1.1rem; font-weight: 700; letter-spacing: 4px; margin: 0; 
+            text-transform: uppercase; color: var(--silver);
+            border-left: 3px solid var(--primary); padding-left: 15px;
         }
 
         .week-selector {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: var(--primary); padding: 8px 15px; border-radius: 30px;
-            font-size: 0.65rem; font-weight: 700; letter-spacing: 1px;
-            outline: none; cursor: pointer; backdrop-filter: blur(10px);
+            background: transparent; border: 1px solid var(--text-dim);
+            color: var(--primary); padding: 6px 12px; border-radius: 4px;
+            font-size: 0.7rem; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* Navigazione Olografica */
+        /* Navigazione Nautica */
         nav {
-            display: flex; gap: 20px; padding: 20px; overflow-x: auto;
+            display: flex; gap: 25px; padding: 25px; overflow-x: auto;
             max-width: 650px; margin: 0 auto; scrollbar-width: none;
-            justify-content: center;
+            justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.4s;
-            text-transform: uppercase; letter-spacing: 2px; position: relative;
+            font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 2px;
         }
-        nav button.active { color: var(--primary); }
-        nav button.active::after {
-            content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px;
-            background: var(--primary); box-shadow: 0 0 10px var(--primary);
-        }
+        nav button.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
         .container { padding: 15px; max-width: 650px; margin: 0 auto; }
-        .day-section { display: none; animation: slideFade 0.5s ease-out; }
+        .day-section { display: none; animation: observationHaki 0.6s ease; }
         .active-day { display: block; }
-        @keyframes slideFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes observationHaki { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
 
-        /* Card Effetto Vetro */
+        /* Card "Vetro del Re" */
         .card {
             background: var(--glass);
-            backdrop-filter: blur(15px);
-            border-radius: 20px; padding: 25px; margin-bottom: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            border-radius: 2px; padding: 25px; margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.03);
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
         }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 0.5px;}
+        .card-header h3 { margin: 0; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;}
         
         .timer-btn {
-            background: rgba(0, 242, 255, 0.05); color: var(--primary); 
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 0.6rem; cursor: pointer;
+            background: transparent; color: var(--primary); 
+            border: 1px solid var(--primary);
+            padding: 4px 10px; font-weight: 700; font-size: 0.55rem; cursor: pointer;
             text-transform: uppercase; transition: 0.3s;
         }
-        .timer-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        .timer-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary); }
 
-        /* Input Grid HUD */
+        /* Grid Dati */
         .serie-row {
-            display: grid; grid-template-columns: 70px 1fr; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: grid; grid-template-columns: 80px 1fr; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.02);
         }
-        .serie-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
-        .inputs { display: flex; gap: 20px; }
-        .input-group { display: flex; align-items: baseline; gap: 6px; }
+        .serie-label { font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
+        .inputs { display: flex; gap: 25px; }
+        .input-group { display: flex; align-items: center; gap: 8px; }
         .inputs input {
-            width: 45px; background: transparent; border: none; color: var(--primary);
-            font-weight: 700; font-size: 1.1rem; text-align: right; outline: none;
+            width: 45px; background: transparent; border: none; color: var(--silver);
+            font-weight: 500; font-size: 1.2rem; text-align: right; outline: none;
         }
-        .input-unit { color: var(--text-dim); font-size: 0.6rem; font-weight: 700; }
+        .input-unit { color: var(--primary); font-size: 0.55rem; font-weight: 700; opacity: 0.6; }
 
-        /* Grafico Neon */
-        .chart-container { height: 80px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;}
+        /* Grafico Spirituale */
+        .chart-container { height: 70px; margin-top: 25px; opacity: 0.5; filter: grayscale(1); transition: 0.5s;}
+        .card:hover .chart-container { opacity: 1; filter: grayscale(0); }
 
-        /* Timer HUD Overlay */
+        /* Timer "King's Haki" */
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 4, 8, 0.95); display: none; flex-direction: column;
+            background: rgba(1, 2, 4, 0.98); display: none; flex-direction: column;
             align-items: center; justify-content: center; z-index: 9999;
         }
         #timer-val { 
-            font-size: 7rem; font-weight: 200; color: var(--primary); 
-            text-shadow: 0 0 30px rgba(0, 242, 255, 0.4); 
+            font-size: 8rem; font-weight: 300; color: var(--primary); 
+            text-shadow: 0 0 40px var(--glow); 
         }
+        .haki-flash { animation: flash 0.3s ease; }
+        @keyframes flash { from { background: white; } to { background: rgba(1, 2, 4, 0.98); } }
     </style>
 </head>
 <body>
 
 <div id="timer-overlay" onclick="closeTimer()">
-    <div style="font-size: 0.7rem; letter-spacing: 5px; color: var(--text-dim); margin-bottom: 20px;">SYNCING RECOVERY</div>
+    <div style="font-size: 0.6rem; letter-spacing: 8px; color: var(--text-dim); margin-bottom: 30px;">CONCENTRATION REQUIRED</div>
     <div id="timer-val">00:00</div>
-    <div style="color:var(--primary); font-size: 0.6rem; margin-top: 30px; letter-spacing: 2px; cursor:pointer;">ABORT MISSION</div>
+    <div style="color:var(--text-dim); font-size: 0.5rem; margin-top: 40px; letter-spacing: 3px;">TAP TO ABORT</div>
 </div>
 
 <header>
-    <h1>Rayleigh <span style="font-weight:200">Workout</span></h1>
+    <h1>Rayleigh <span style="font-weight:300; opacity:0.6;">System</span></h1>
     <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
         </select>
 </header>
@@ -147,16 +149,16 @@
 const weekSelect = document.getElementById('weekSelect');
 for (let i = 1; i <= 16; i++) {
     const opt = document.createElement('option');
-    opt.value = i; opt.innerHTML = `PHASE ${i < 10 ? '0'+i : i}`;
+    opt.value = i; opt.innerHTML = `SETTIMANA ${i < 10 ? '0'+i : i}`;
     weekSelect.appendChild(opt);
 }
 
 const workout = {
     lun: { ex: [{n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
-    mar: { ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core", s:3, r:60, spec:true}] },
-    mer: { ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf", s:4, r:60}] },
-    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
-    ven: { ex: [{n:"Trazioni Vol.", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
+    mar: { ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl Bilanciere", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core Stability", s:3, r:60, spec:true}] },
+    mer: { ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
+    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
+    ven: { ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60}] }
 };
 
 let charts = {};
@@ -176,15 +178,15 @@ function init() {
                 <div class="series-grid">
                     ${Array.from({length:e.s}).map((_, s) => `
                         <div class="serie-row">
-                            <span class="serie-label">Set ${s+1}</span>
+                            <span class="serie-label">Serie ${s+1}</span>
                             <div class="inputs">
                                 <div class="input-group">
                                     <input type="number" placeholder="0" id="${id}_w${s}" onchange="saveData('${id}')">
-                                    <span class="input-unit">kg</span>
+                                    <span class="input-unit">KG</span>
                                 </div>
                                 <div class="input-group">
                                     <input type="number" placeholder="0" id="${id}_r${s}" onchange="saveData('${id}')">
-                                    <span class="input-unit">re</span>
+                                    <span class="input-unit">RE</span>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +211,7 @@ function saveData(exId) {
         dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
         dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
     }
-    localStorage.setItem(`Rayleigh_Void_${week}_${exId}`, JSON.stringify(dataEntry));
+    localStorage.setItem(`Rayleigh_Haki_${week}_${exId}`, JSON.stringify(dataEntry));
     updateSingleChart(exId);
 }
 
@@ -218,7 +220,7 @@ function loadWeekData() {
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Void_${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Haki_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 const wIn = document.getElementById(`${id}_w${i}`);
                 const rIn = document.getElementById(`${id}_r${i}`);
@@ -237,7 +239,7 @@ function loadWeekData() {
 function updateSingleChart(exId) {
     const historyVol = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Void_${w}_${exId}`));
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_Haki_${w}_${exId}`));
         let vol = 0;
         if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         historyVol.push(vol);
@@ -251,18 +253,15 @@ function updateSingleChart(exId) {
             labels: Array.from({length:16}, (_, i) => i+1),
             datasets: [{
                 data: historyVol,
-                borderColor: '#00f2ff',
+                borderColor: '#00ffaa',
                 backgroundColor: 'transparent',
-                fill: false, tension: 0.4, borderWidth: 2, pointRadius: 0
+                fill: false, tension: 0.4, borderWidth: 1, pointRadius: 0
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: { 
-                x: { display: false }, 
-                y: { display: false } 
-            }
+            scales: { x: { display: false }, y: { display: false } }
         }
     });
 }
@@ -276,7 +275,12 @@ function startTimer(s) {
     tInterval = setInterval(() => {
         let m = Math.floor(time/60); let sec = time%60;
         val.innerText = `${m}:${sec<10?'0':''}${sec}`;
-        if(time <= 0) { clearInterval(tInterval); val.innerText = "ACTION"; }
+        if(time <= 0) { 
+            clearInterval(tInterval); 
+            val.innerText = "GO!";
+            ov.classList.add('haki-flash');
+            setTimeout(() => ov.classList.remove('haki-flash'), 300);
+        }
         time--;
     }, 1000);
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Haki Conquistatore</title>
+    <title>Rayleigh Workout - Joy Boy Haki</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -12,8 +12,8 @@
             --glass: rgba(15, 20, 25, 0.7);
             --primary: #00ffaa; 
             --silver: #f8fafc;
-            --text-dim: #475569;
             --haki-red: #ff0000;
+            --haki-black: #000000;
         }
 
         body {
@@ -23,83 +23,76 @@
             background-attachment: fixed;
             color: var(--silver);
             margin: 0; padding-bottom: 60px;
-            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            user-select: none;
         }
 
-        /* Overlay per l'Haki del Re Totale */
-        #haki-overlay {
+        /* Effetto Glitch/Vibrazione Haki */
+        @keyframes hakiShake {
+            0% { transform: translate(0,0) scale(1.1); }
+            20% { transform: translate(-2px, 2px) scale(1.1); }
+            40% { transform: translate(-2px, -2px) scale(1.15); }
+            60% { transform: translate(2px, 2px) scale(1.1); }
+            80% { transform: translate(2px, -2px) scale(1.15); }
+            100% { transform: translate(0,0) scale(1.1); }
+        }
+
+        .haki-lightning-svg {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 300px; height: 300px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+            filter: drop-shadow(0 0 5px var(--haki-red));
+        }
+
+        #haki-screen-effect {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 0, 0, 0); z-index: 10001; pointer-events: none;
-            transition: background 0.1s ease;
-        }
-        .haki-shockwave { animation: hakiShockwave 0.5s ease-out; }
-        @keyframes hakiShockwave {
-            0% { background: rgba(255, 0, 0, 0.3); filter: blur(0px); }
-            50% { background: rgba(255, 0, 0, 0.1); filter: blur(2px); }
-            100% { background: rgba(255, 0, 0, 0); filter: blur(0px); }
+            pointer-events: none; z-index: 9999; opacity: 0;
+            background: radial-gradient(circle, transparent 20%, var(--haki-red) 150%);
         }
 
-        /* Animazione Fulmini Rossi */
-        .haki-lightning {
-            position: absolute; width: 200%; height: 200%;
-            top: -50%; left: -50%; pointer-events: none;
-            background-image: 
-                radial-gradient(circle at 50% 50%, transparent 40%, var(--haki-red) 50%, transparent 60%),
-                conic-gradient(from 0deg at 50% 50%, transparent 0deg, var(--haki-red) 10deg, transparent 20deg, var(--haki-red) 40deg, transparent 50deg, var(--haki-red) 70deg, transparent 80deg, var(--haki-red) 100deg, transparent 110deg);
-            background-size: 100% 100%, 10px 10px;
-            opacity: 0; transform: scale(0.5);
-            border-radius: 50%;
-        }
-        .haki-active { animation: hakiLightning 0.4s ease-out; }
-        @keyframes hakiLightning {
-            0% { opacity: 0.8; transform: scale(0.8); }
-            100% { opacity: 0; transform: scale(1.5); }
+        .screen-blast { animation: blast 0.4s forwards; }
+        @keyframes blast {
+            0% { opacity: 1; filter: invert(0); }
+            10% { filter: invert(1); }
+            100% { opacity: 0; }
         }
 
-        /* Stile base per pulsanti interattivi */
         .interactive {
-            position: relative; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease, color 0.2s ease;
-            cursor: pointer; outline: none;
+            position: relative; transition: transform 0.1s cubic-bezier(.17,.67,.83,.67);
+            cursor: pointer;
         }
-        .interactive:active { transform: scale(1.1); background: #fff !important; color: #000 !important; box-shadow: 0 0 20px #fff; }
+        .interactive:active {
+            animation: hakiShake 0.15s infinite;
+            color: var(--haki-red) !important;
+            z-index: 10;
+        }
 
-        header { 
-            padding: 50px 25px 10px; 
-            max-width: 600px; margin: 0 auto; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        header { padding: 50px 25px 10px; max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         h1 { font-size: 1rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
         
         .week-selector {
-            background: transparent; border: 1px solid var(--text-dim);
+            background: transparent; border: 1px solid #475569;
             color: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;
         }
 
-        nav {
-            display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto;
-            max-width: 600px; margin: 0 auto; justify-content: center;
-        }
-        nav button {
-            background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            padding: 5px 10px;
-        }
+        nav { display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto; max-width: 600px; margin: 0 auto; justify-content: center; }
+        nav button { background: transparent; border: none; color: #475569; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         nav button.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
         .container { padding: 10px; max-width: 600px; margin: 0 auto; }
         .day-section { display: none; }
-        .active-day { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active-day { display: block; }
 
         .card {
             background: var(--glass); backdrop-filter: blur(20px);
             border-radius: 8px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.03);
-            overflow: hidden; /* Per contenere i fulmini */
+            border: 1px solid rgba(255,255,255,0.03); position: relative;
         }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+        .card-header h3 { margin: 0; font-size: 0.85rem; text-transform: uppercase; font-weight: 600; }
 
         .timer-btn {
             background: transparent; color: var(--primary); border: 1px solid var(--primary);
@@ -108,29 +101,25 @@
 
         .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
         .input-box { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .input-box input {
-            background: transparent; border: none; color: #fff; width: 100%;
-            font-size: 1.1rem; outline: none; text-align: right;
-            font-family: inherit;
-        }
-        .input-box span { font-size: 0.55rem; color: var(--text-dim); font-weight: 700; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1.1rem; outline: none; text-align: right; }
+        .input-box span { font-size: 0.55rem; color: #475569; font-weight: 700; }
 
         .chart-container { height: 50px; margin-top: 15px; opacity: 0.4; }
 
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(1,2,4,0.98); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
+            align-items: center; justify-content: center; z-index: 9998;
         }
         #timer-val { font-size: 7rem; font-weight: 300; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="haki-overlay"></div>
+<div id="haki-screen-effect"></div>
 
 <header>
-    <h1>Rayleigh <span style="font-weight:300; opacity:0.5">Haki</span></h1>
+    <h1>Rayleigh <span style="font-weight:300; opacity:0.5">JoyBoy</span></h1>
     <select class="week-selector interactive" id="weekSelect" onchange="loadWeekData()"></select>
 </header>
 
@@ -145,38 +134,46 @@
 <div class="container" id="mainContainer"></div>
 
 <script>
-// Gestione Haki Visivo
-const hakiOverlay = document.getElementById('haki-overlay');
-
-function triggerHakiEffect(element) {
-    const lightning = document.createElement('div');
-    lightning.className = 'haki-lightning haki-active';
-    element.appendChild(lightning);
-    setTimeout(() => { element.removeChild(lightning); }, 400);
+// LOGICA HAKI DI JOY BOY
+function createJoyBoyBolt() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "haki-lightning-svg");
+    svg.setAttribute("viewBox", "0 0 200 200");
+    
+    let paths = "";
+    for(let i=0; i<8; i++) { // Genera 8 fulmini neri/rossi
+        let x = 100, y = 100;
+        let d = `M 100 100 `;
+        for(let j=0; j<5; j++) {
+            x += (Math.random() - 0.5) * 80;
+            y += (Math.random() - 0.5) * 80;
+            d += `L ${x} ${y} `;
+        }
+        paths += `<path d="${d}" stroke="black" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+        paths += `<path d="${d}" stroke="red" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+    }
+    svg.innerHTML = paths;
+    return svg;
 }
 
-function triggerHakiShockwave() {
-    hakiOverlay.classList.add('haki-shockwave');
-    setTimeout(() => { hakiOverlay.classList.remove('haki-shockwave'); }, 500);
+function triggerJoyBoyHaki(e) {
+    const target = e.currentTarget;
+    const bolt = createJoyBoyBolt();
+    target.appendChild(bolt);
+    
+    // Rimuovi dopo l'animazione
+    setTimeout(() => bolt.remove(), 300);
+
+    // Se pressione lunga, scateniamo l'Emet Blast
+    let longPress = setTimeout(() => {
+        document.getElementById('haki-screen-effect').classList.add('screen-blast');
+        setTimeout(() => document.getElementById('haki-screen-effect').classList.remove('screen-blast'), 400);
+    }, 400);
+
+    target.onmouseup = target.ontouchend = () => clearTimeout(longPress);
 }
 
-// Applica logica Haki a tutti gli elementi interattivi
-document.addEventListener('DOMContentLoaded', () => {
-    const interactives = document.querySelectorAll('.interactive');
-    interactives.forEach(el => {
-        el.addEventListener('mousedown', () => triggerHakiEffect(el));
-        el.addEventListener('touchstart', () => triggerHakiEffect(el)); // Per mobile
-        
-        // Logica Haki del Re totale (pressione prolungata)
-        let hakiTimer;
-        el.addEventListener('mousedown', () => { hakiTimer = setTimeout(triggerHakiShockwave, 500); });
-        el.addEventListener('touchstart', () => { hakiTimer = setTimeout(triggerHakiShockwave, 500); });
-        el.addEventListener('mouseup', () => clearTimeout(hakiTimer));
-        el.addEventListener('touchend', () => clearTimeout(hakiTimer));
-        el.addEventListener('mouseleave', () => clearTimeout(hakiTimer));
-    });
-});
-
+// Inizializzazione dati e UI (come prima)
 const weekSelect = document.getElementById('weekSelect');
 for (let i = 1; i <= 16; i++) {
     const opt = document.createElement('option');
@@ -212,25 +209,23 @@ function init() {
     }
     loadWeekData();
     
-    // Riapplica la logica Haki ai pulsanti del timer generati dinamicamente
-    const timerBtns = document.querySelectorAll('.timer-btn.interactive');
-    timerBtns.forEach(btn => {
-        btn.addEventListener('mousedown', () => triggerHakiEffect(btn));
-        btn.addEventListener('touchstart', () => triggerHakiEffect(btn));
+    // Aggancia l'evento Haki a tutti i pulsanti interattivi
+    document.querySelectorAll('.interactive').forEach(el => {
+        el.addEventListener('mousedown', triggerJoyBoyHaki);
+        el.addEventListener('touchstart', triggerJoyBoyHaki);
     });
 }
 
 function saveData(exId) {
     const week = weekSelect.value;
+    const entry = { w: [], r: [] };
     const day = exId.split('_')[0];
     const idx = exId.split('_')[1];
-    const sets = workout[day].ex[idx].s;
-    let entry = { w: [], r: [] };
-    for(let i=0; i<sets; i++) {
+    for(let i=0; i<workout[day].ex[idx].s; i++) {
         entry.w.push(document.getElementById(`${exId}_w${i}`).value || 0);
         entry.r.push(document.getElementById(`${exId}_r${i}`).value || 0);
     }
-    localStorage.setItem(`Rayleigh_Pure_Haki_${week}_${exId}`, JSON.stringify(entry));
+    localStorage.setItem(`Rayleigh_JoyBoy_${week}_${exId}`, JSON.stringify(entry));
     updateChart(exId);
 }
 
@@ -239,7 +234,7 @@ function loadWeekData() {
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Pure_Haki_${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_JoyBoy_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 document.getElementById(`${id}_w${i}`).value = saved ? saved.w[i] : "";
                 document.getElementById(`${id}_r${i}`).value = saved ? saved.r[i] : "";
@@ -252,7 +247,7 @@ function loadWeekData() {
 function updateChart(id) {
     const history = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Pure_Haki_${w}_${id}`));
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_JoyBoy_${w}_${id}`));
         let vol = 0; if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         history.push(vol);
     }
@@ -266,15 +261,19 @@ function updateChart(id) {
 }
 
 function startTimer(s) {
-    const ov = document.createElement('div'); ov.id = 'timer-overlay';
-    ov.innerHTML = `<div id="timer-val">00:00</div>`; document.body.appendChild(ov);
+    const ov = document.getElementById('timer-overlay');
     ov.style.display = 'flex';
     let time = s;
     const interval = setInterval(() => {
         document.getElementById('timer-val').innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2, '0')}`;
-        if(time-- <= 0) { clearInterval(interval); document.body.removeChild(ov); triggerHakiShockwave(); }
+        if(time-- <= 0) { 
+            clearInterval(interval); 
+            ov.style.display = 'none';
+            document.getElementById('haki-screen-effect').classList.add('screen-blast');
+            setTimeout(() => document.getElementById('haki-screen-effect').classList.remove('screen-blast'), 400);
+        }
     }, 1000);
-    ov.onclick = () => { clearInterval(interval); document.body.removeChild(ov); triggerHakiShockwave(); };
+    ov.onclick = () => { clearInterval(interval); ov.style.display = 'none'; };
 }
 
 function switchDay(id) {

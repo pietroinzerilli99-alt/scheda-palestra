@@ -4,164 +4,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Scheda Allenamento</title>
+<title>Scheda Palestra</title>
 
 <style>
-
-body{
-font-family:Arial;
-background:#f5f5f5;
-margin:0;
-padding:20px;
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f2f5;
 }
 
-h1{
-text-align:center;
+header {
+  background: #1a73e8;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-.menu{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-margin-bottom:20px;
+nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.menu button{
-padding:12px 16px;
-margin:5px;
-border:none;
-border-radius:8px;
-background:#0077ff;
-color:white;
-font-size:16px;
-cursor:pointer;
+nav button {
+  flex: 1 1 18%;
+  margin: 0.3rem;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
 }
 
-.menu button:hover{
-background:#005ad1;
+nav button.push { background: #ff6b6b; }
+nav button.pull { background: #34c759; }
+nav button.gambe { background: #1e90ff; }
+
+nav button.active { border: 3px solid #fff; }
+
+.container {
+  padding: 1rem;
 }
 
-.day{
-display:none;
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+.day {
+  display: none;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-ul{
-line-height:1.8;
+.day h2 {
+  margin-top: 0;
+  text-align: center;
+  color: #333;
 }
 
-.cardio{
-color:#666;
-font-style:italic;
+ul {
+  list-style: none;
+  padding-left: 0;
 }
 
+li {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+span.rec {
+  font-style: italic;
+  color: #666;
+  margin-left: 0.5rem;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.cardio {
+  font-style: italic;
+  color: #555;
+  margin-top: 0.5rem;
+}
 </style>
 
 </head>
-
 <body>
 
-<h1>Scheda Allenamento</h1>
+<header>Scheda Palestra</header>
 
-<div class="menu">
+<nav>
+  <button class="push" onclick="showDay('lun')">Lunedì</button>
+  <button class="pull" onclick="showDay('mar')">Martedì</button>
+  <button class="gambe" onclick="showDay('mer')">Mercoledì</button>
+  <button class="push" onclick="showDay('gio')">Giovedì</button>
+  <button class="pull" onclick="showDay('ven')">Venerdì</button>
+</nav>
 
-<button onclick="showDay('lun')">Lunedì</button> <button onclick="showDay('mar')">Martedì</button> <button onclick="showDay('mer')">Mercoledì</button> <button onclick="showDay('gio')">Giovedì</button> <button onclick="showDay('ven')">Venerdì</button>
-
-</div>
+<div class="container">
 
 <div id="lun" class="day">
-
-<h2>Lunedì PUSH</h2>
-
+<h2>Lunedì – PUSH</h2>
 <ul>
-<li>Panca inclinata manubri 4×8-10 (rec 90s)</li>
-<li>Croci cavi 3×12 (rec 60s)</li>
-<li>Alzate laterali 4×12 (rec 60s)</li>
-<li>Dips 3×8 (rec 90s)</li>
-<li>Pushdown tricipiti 3×10</li>
+<li>Panca inclinata manubri 4×8-10 <span class="rec">(Rec 90s)</span></li>
+<li>Croci ai cavi 3×12 <span class="rec">(Rec 60s)</span></li>
+<li>Alzate laterali 4×12 <span class="rec">(Rec 60s)</span></li>
+<li>Dips 3×8 <span class="rec">(Rec 90s)</span></li>
+<li>Pushdown tricipiti 3×10 <span class="rec">(Rec 60s)</span></li>
 <li class="cardio">Cardio: 10 min camminata inclinata</li>
 </ul>
-
+<textarea placeholder="Note e carichi"></textarea>
 </div>
 
 <div id="mar" class="day">
-
-<h2>Martedì PULL</h2>
-
+<h2>Martedì – PULL</h2>
 <ul>
-<li>Trazioni zavorrate 5×4-6 (rec 120s)</li>
-<li>Rematore manubrio 4×8</li>
-<li>Lat machine 3×10</li>
-<li>Curl panca inclinata 3×10</li>
-<li>Curl martello 3×10</li>
+<li>Trazioni zavorrate 5×4-6 <span class="rec">(Rec 120s)</span></li>
+<li>Rematore manubrio 4×8 <span class="rec">(Rec 90s)</span></li>
+<li>Lat machine 3×10 <span class="rec">(Rec 90s)</span></li>
+<li>Curl panca inclinata 3×10 <span class="rec">(Rec 60s)</span></li>
+<li>Curl martello 3×10 <span class="rec">(Rec 60s)</span></li>
 <li class="cardio">Cardio: 10 min camminata inclinata</li>
 </ul>
-
+<textarea placeholder="Note e carichi"></textarea>
 </div>
 
 <div id="mer" class="day">
-
-<h2>Mercoledì GAMBE</h2>
-
+<h2>Mercoledì – GAMBE</h2>
 <ul>
-<li>Hack squat 4×8</li>
-<li>Leg press 4×10</li>
-<li>Romanian deadlift 3×10</li>
-<li>Leg curl 3×12</li>
-<li>Calf raise 4×15</li>
+<li>Hack squat 4×8 <span class="rec">(Rec 120s)</span></li>
+<li>Leg press 4×10 <span class="rec">(Rec 90s)</span></li>
+<li>Romanian deadlift 3×10 <span class="rec">(Rec 90s)</span></li>
+<li>Leg curl 3×12 <span class="rec">(Rec 60s)</span></li>
+<li>Calf raise 4×15 <span class="rec">(Rec 60s)</span></li>
 </ul>
-
+<textarea placeholder="Note e carichi"></textarea>
 </div>
 
 <div id="gio" class="day">
-
-<h2>Giovedì PUSH</h2>
-
+<h2>Giovedì – PUSH</h2>
 <ul>
-<li>Panca inclinata manubri 4×8</li>
-<li>Croci cavi 3×12</li>
-<li>Alzate laterali 4×12</li>
-<li>Dips 3×8</li>
-<li>Pushdown 3×10</li>
-<li class="cardio">Cardio: 10 min camminata</li>
+<li>Panca inclinata manubri 4×8 <span class="rec">(Rec 90s)</span></li>
+<li>Croci cavi 3×12 <span class="rec">(Rec 60s)</span></li>
+<li>Alzate laterali 4×12 <span class="rec">(Rec 60s)</span></li>
+<li>Dips 3×8 <span class="rec">(Rec 90s)</span></li>
+<li>Pushdown tricipiti 3×10 <span class="rec">(Rec 60s)</span></li>
+<li class="cardio">Cardio: 10 min camminata inclinata</li>
 </ul>
-
+<textarea placeholder="Note e carichi"></textarea>
 </div>
 
 <div id="ven" class="day">
-
-<h2>Venerdì PULL</h2>
-
+<h2>Venerdì – PULL</h2>
 <ul>
-<li>Trazioni 4×max</li>
-<li>Pulley 4×8</li>
-<li>Lat machine 3×10</li>
-<li>Curl bilanciere 3×8</li>
-<li>Curl martello 3×10</li>
+<li>Trazioni 4×max <span class="rec">(Rec 120s)</span></li>
+<li>Pulley basso 4×8 <span class="rec">(Rec 90s)</span></li>
+<li>Lat machine 3×10 <span class="rec">(Rec 90s)</span></li>
+<li>Curl bilanciere 3×8 <span class="rec">(Rec 60s)</span></li>
+<li>Curl martello 3×10 <span class="rec">(Rec 60s)</span></li>
 </ul>
+<textarea placeholder="Note e carichi"></textarea>
+</div>
 
 </div>
 
 <script>
-
 function showDay(day){
-
-let days=document.querySelectorAll(".day");
-
-days.forEach(function(d){
-d.style.display="none";
-});
-
-document.getElementById(day).style.display="block";
-
+  // Nascondi tutti i giorni
+  let days = document.querySelectorAll(".day");
+  days.forEach(d => d.style.display = "none");
+  
+  // Mostra il giorno selezionato
+  document.getElementById(day).style.display = "block";
+  
+  // Aggiorna pulsanti attivi
+  let buttons = document.querySelectorAll("nav button");
+  buttons.forEach(b => b.classList.remove("active"));
+  document.querySelector("nav button[onclick=\"showDay('" + day + "')\"]").classList.add("active");
 }
 
+// Mostra Lunedì di default
 showDay("lun");
-
 </script>
 
 </body>

@@ -1,203 +1,377 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scheda Palestra</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Training Log</title>
+    <style>
+        :root {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --primary: #007aff;
+            --push: #ff4757;
+            --pull: #2ed573;
+            --legs: #ffa502;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
 
-<style>
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f0f2f5;
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
 
-header {
-  background: #1a73e8;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+        header {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(180deg, #1a1a1a 0%, var(--bg-body) 100%);
+        }
 
-nav {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  padding: 0.5rem;
-  background: #ffffff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
 
-nav button {
-  flex: 1 1 18%;
-  margin: 0.3rem;
-  padding: 10px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
-  font-weight: bold;
-}
+        /* Navigazione */
+        nav {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            gap: 10px;
+            sticky: top;
+            background: var(--bg-body);
+            scrollbar-width: none; /* Nasconde scrollbar su Firefox */
+        }
 
-nav button.push { background: #ff6b6b; }
-nav button.pull { background: #34c759; }
-nav button.gambe { background: #1e90ff; }
+        nav::-webkit-scrollbar { display: none; } /* Nasconde scrollbar su Chrome/Safari */
 
-nav button.active { border: 3px solid #fff; }
+        nav button {
+            flex: 0 0 auto;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: var(--bg-card);
+            color: var(--text-dim);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-.container {
-  padding: 1rem;
-}
+        nav button.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
 
-.day {
-  display: none;
-  background: white;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+        /* Contenitore */
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.day h2 {
-  margin-top: 0;
-  text-align: center;
-  color: #333;
-}
+        .day-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
 
-ul {
-  list-style: none;
-  padding-left: 0;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-li {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-}
+        .day-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-span.rec {
-  font-style: italic;
-  color: #666;
-  margin-left: 0.5rem;
-}
+        /* Lista Esercizi */
+        .exercise-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid transparent;
+        }
 
-textarea {
-  width: 100%;
-  height: 80px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  padding: 8px;
-}
+        .push-border { border-left-color: var(--push); }
+        .pull-border { border-left-color: var(--pull); }
+        .legs-border { border-left-color: var(--legs); }
 
-.cardio {
-  font-style: italic;
-  color: #555;
-  margin-top: 0.5rem;
-}
-</style>
+        .ex-info { flex-grow: 1; }
+        .ex-name { display: block; font-weight: 600; font-size: 1.1rem; }
+        .ex-details { color: var(--text-dim); font-size: 0.9rem; }
+        
+        .rec-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
 
+        /* Checkbox */
+        .check-container {
+            margin-left: 15px;
+        }
+
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--primary);
+        }
+
+        /* Note Area */
+        .notes-area {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .cardio-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed #444;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+    </style>
 </head>
 <body>
 
-<header>Scheda Palestra</header>
+<header>
+    <h1>Gym Tracker Pro</h1>
+</header>
 
-<nav>
-  <button class="push" onclick="showDay('lun')">Lunedì</button>
-  <button class="pull" onclick="showDay('mar')">Martedì</button>
-  <button class="gambe" onclick="showDay('mer')">Mercoledì</button>
-  <button class="push" onclick="showDay('gio')">Giovedì</button>
-  <button class="pull" onclick="showDay('ven')">Venerdì</button>
+<nav id="dayNav">
+    <button onclick="showDay('lun', this)" class="active">LUN</button>
+    <button onclick="showDay('mar', this)">MAR</button>
+    <button onclick="showDay('mer', this)">MER</button>
+    <button onclick="showDay('gio', this)">GIO</button>
+    <button onclick="showDay('ven', this)">VEN</button>
 </nav>
 
 <div class="container">
+    <div id="lun" class="day-section" style="display: block;">
+        <div class="day-title"><span style="color:var(--push)">●</span> Lunedì - Push</div>
+        <div class="exercise-card push-border">
+            <div class="ex-info">
+                <span class="ex-name">Panca inclinata manubri</span>
+                <span class="ex-details">4 × 8-10</span>
+                <div class="rec-tag">Rec: 90s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info">
+                <span class="ex-name">Croci ai cavi</span>
+                <span class="ex-details">3 × 12</span>
+                <div class="rec-tag">Rec: 60s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info">
+                <span class="ex-name">Alzate laterali</span>
+                <span class="ex-details">4 × 12</span>
+                <div class="rec-tag">Rec: 60s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info">
+                <span class="ex-name">Dips</span>
+                <span class="ex-details">3 × 8</span>
+                <div class="rec-tag">Rec: 90s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info">
+                <span class="ex-name">Pushdown tricipiti</span>
+                <span class="ex-details">3 × 10</span>
+                <div class="rec-tag">Rec: 60s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <p class="cardio-box">🏃 Cardio: 10 min camminata inclinata</p>
+        <textarea id="note-lun" placeholder="Carichi di oggi e sensazioni..."></textarea>
+    </div>
 
-<div id="lun" class="day">
-<h2>Lunedì – PUSH</h2>
-<ul>
-<li>Panca inclinata manubri 4×8-10 <span class="rec">(Rec 90s)</span></li>
-<li>Croci ai cavi 3×12 <span class="rec">(Rec 60s)</span></li>
-<li>Alzate laterali 4×12 <span class="rec">(Rec 60s)</span></li>
-<li>Dips 3×8 <span class="rec">(Rec 90s)</span></li>
-<li>Pushdown tricipiti 3×10 <span class="rec">(Rec 60s)</span></li>
-<li class="cardio">Cardio: 10 min camminata inclinata</li>
-</ul>
-<textarea placeholder="Note e carichi"></textarea>
-</div>
+    <div id="mar" class="day-section">
+        <div class="day-title"><span style="color:var(--pull)">●</span> Martedì - Pull</div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info">
+                <span class="ex-name">Trazioni zavorrate</span>
+                <span class="ex-details">5 × 4-6</span>
+                <div class="rec-tag">Rec: 120s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info">
+                <span class="ex-name">Rematore manubrio</span>
+                <span class="ex-details">4 × 8</span>
+                <div class="rec-tag">Rec: 90s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info">
+                <span class="ex-name">Lat machine</span>
+                <span class="ex-details">3 × 10</span>
+                <div class="rec-tag">Rec: 90s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info">
+                <span class="ex-name">Curl panca inclinata</span>
+                <span class="ex-details">3 × 10</span>
+                <div class="rec-tag">Rec: 60s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info">
+                <span class="ex-name">Curl martello</span>
+                <span class="ex-details">3 × 10</span>
+                <div class="rec-tag">Rec: 60s</div>
+            </div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <p class="cardio-box">🏃 Cardio: 10 min camminata inclinata</p>
+        <textarea id="note-mar" placeholder="Carichi di oggi e sensazioni..."></textarea>
+    </div>
 
-<div id="mar" class="day">
-<h2>Martedì – PULL</h2>
-<ul>
-<li>Trazioni zavorrate 5×4-6 <span class="rec">(Rec 120s)</span></li>
-<li>Rematore manubrio 4×8 <span class="rec">(Rec 90s)</span></li>
-<li>Lat machine 3×10 <span class="rec">(Rec 90s)</span></li>
-<li>Curl panca inclinata 3×10 <span class="rec">(Rec 60s)</span></li>
-<li>Curl martello 3×10 <span class="rec">(Rec 60s)</span></li>
-<li class="cardio">Cardio: 10 min camminata inclinata</li>
-</ul>
-<textarea placeholder="Note e carichi"></textarea>
-</div>
+    <div id="mer" class="day-section">
+        <div class="day-title"><span style="color:var(--legs)">●</span> Mercoledì - Gambe</div>
+        <div class="exercise-card legs-border">
+            <div class="ex-info"><span class="ex-name">Hack squat</span><span class="ex-details">4 × 8</span><div class="rec-tag">120s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card legs-border">
+            <div class="ex-info"><span class="ex-name">Leg press</span><span class="ex-details">4 × 10</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card legs-border">
+            <div class="ex-info"><span class="ex-name">Romanian deadlift</span><span class="ex-details">3 × 10</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card legs-border">
+            <div class="ex-info"><span class="ex-name">Leg curl</span><span class="ex-details">3 × 12</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card legs-border">
+            <div class="ex-info"><span class="ex-name">Calf raise</span><span class="ex-details">4 × 15</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <textarea id="note-mer" placeholder="Carichi di oggi..."></textarea>
+    </div>
 
-<div id="mer" class="day">
-<h2>Mercoledì – GAMBE</h2>
-<ul>
-<li>Hack squat 4×8 <span class="rec">(Rec 120s)</span></li>
-<li>Leg press 4×10 <span class="rec">(Rec 90s)</span></li>
-<li>Romanian deadlift 3×10 <span class="rec">(Rec 90s)</span></li>
-<li>Leg curl 3×12 <span class="rec">(Rec 60s)</span></li>
-<li>Calf raise 4×15 <span class="rec">(Rec 60s)</span></li>
-</ul>
-<textarea placeholder="Note e carichi"></textarea>
-</div>
+    <div id="gio" class="day-section">
+        <div class="day-title"><span style="color:var(--push)">●</span> Giovedì - Push 2</div>
+        <div class="exercise-card push-border">
+            <div class="ex-info"><span class="ex-name">Panca inclinata manubri</span><span class="ex-details">4 × 8</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info"><span class="ex-name">Croci cavi</span><span class="ex-details">3 × 12</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info"><span class="ex-name">Alzate laterali</span><span class="ex-details">4 × 12</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info"><span class="ex-name">Dips</span><span class="ex-details">3 × 8</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card push-border">
+            <div class="ex-info"><span class="ex-name">Pushdown tricipiti</span><span class="ex-details">3 × 10</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <textarea id="note-gio" placeholder="Carichi di oggi..."></textarea>
+    </div>
 
-<div id="gio" class="day">
-<h2>Giovedì – PUSH</h2>
-<ul>
-<li>Panca inclinata manubri 4×8 <span class="rec">(Rec 90s)</span></li>
-<li>Croci cavi 3×12 <span class="rec">(Rec 60s)</span></li>
-<li>Alzate laterali 4×12 <span class="rec">(Rec 60s)</span></li>
-<li>Dips 3×8 <span class="rec">(Rec 90s)</span></li>
-<li>Pushdown tricipiti 3×10 <span class="rec">(Rec 60s)</span></li>
-<li class="cardio">Cardio: 10 min camminata inclinata</li>
-</ul>
-<textarea placeholder="Note e carichi"></textarea>
-</div>
-
-<div id="ven" class="day">
-<h2>Venerdì – PULL</h2>
-<ul>
-<li>Trazioni 4×max <span class="rec">(Rec 120s)</span></li>
-<li>Pulley basso 4×8 <span class="rec">(Rec 90s)</span></li>
-<li>Lat machine 3×10 <span class="rec">(Rec 90s)</span></li>
-<li>Curl bilanciere 3×8 <span class="rec">(Rec 60s)</span></li>
-<li>Curl martello 3×10 <span class="rec">(Rec 60s)</span></li>
-</ul>
-<textarea placeholder="Note e carichi"></textarea>
-</div>
-
+    <div id="ven" class="day-section">
+        <div class="day-title"><span style="color:var(--pull)">●</span> Venerdì - Pull 2</div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info"><span class="ex-name">Trazioni</span><span class="ex-details">4 × max</span><div class="rec-tag">120s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info"><span class="ex-name">Pulley basso</span><span class="ex-details">4 × 8</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info"><span class="ex-name">Lat machine</span><span class="ex-details">3 × 10</span><div class="rec-tag">90s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info"><span class="ex-name">Curl bilanciere</span><span class="ex-details">3 × 8</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <div class="exercise-card pull-border">
+            <div class="ex-info"><span class="ex-name">Curl martello</span><span class="ex-details">3 × 10</span><div class="rec-tag">60s</div></div>
+            <div class="check-container"><input type="checkbox"></div>
+        </div>
+        <textarea id="note-ven" placeholder="Carichi di oggi..."></textarea>
+    </div>
 </div>
 
 <script>
-function showDay(day){
-  // Nascondi tutti i giorni
-  let days = document.querySelectorAll(".day");
-  days.forEach(d => d.style.display = "none");
-  
-  // Mostra il giorno selezionato
-  document.getElementById(day).style.display = "block";
-  
-  // Aggiorna pulsanti attivi
-  let buttons = document.querySelectorAll("nav button");
-  buttons.forEach(b => b.classList.remove("active"));
-  document.querySelector("nav button[onclick=\"showDay('" + day + "')\"]").classList.add("active");
+function showDay(dayId, btn) {
+    // Nascondi tutte le sezioni
+    document.querySelectorAll('.day-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Mostra quella selezionata
+    document.getElementById(dayId).style.display = 'block';
+    
+    // Gestione stato bottoni
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
 
-// Mostra Lunedì di default
-showDay("lun");
+// Funzione per salvare le note automaticamente
+const textareas = document.querySelectorAll('textarea');
+textareas.forEach(txt => {
+    const id = txt.id;
+    // Carica se esiste
+    txt.value = localStorage.getItem(id) || "";
+    
+    // Salva al cambiamento
+    txt.addEventListener('input', () => {
+        localStorage.setItem(id, txt.value);
+    });
+});
 </script>
 
 </body>

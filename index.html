@@ -3,368 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Training - Elite Log</title>
+    <title>Aura Evolution - Elite Training Log</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #05070a;
-            --surface: rgba(255, 255, 255, 0.03);
-            --glass: rgba(255, 255, 255, 0.05);
-            --primary: #00d2ff; /* Azzurro pace */
-            --accent: #7a5cff;  /* Viola motivazione */
+            --surface: rgba(255, 255, 255, 0.04);
+            --primary: #00d2ff;
+            --accent: #7a5cff;
             --text: #ffffff;
-            --text-dim: #94a3b8;
-            --success: #00ff88;
+            --text-dim: #64748b;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(122, 92, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(0, 210, 255, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 10% 10%, rgba(122, 92, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
             background-attachment: fixed;
             color: var(--text);
-            margin: 0;
-            padding-bottom: 50px;
+            margin: 0; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header Elegante */
-        header {
-            padding: 40px 20px 20px;
-            text-align: left;
-            max-width: 600px;
-            margin: 0 auto;
+        /* Header & Settimana */
+        header { 
+            padding: 40px 20px 20px; 
+            max-width: 700px; margin: 0 auto; 
+            display: flex; justify-content: space-between; align-items: center; 
         }
+        h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -2px; margin: 0; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin: 0;
-            background: linear-gradient(to right, #fff, var(--text-dim));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1.5px;
-        }
-
-        .vol-badge {
-            display: inline-block;
+        .week-selector {
             background: var(--surface);
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            color: var(--primary);
-            border: 1px solid rgba(0, 210, 255, 0.2);
-            margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 12px 18px; border-radius: 16px;
+            font-weight: 700; outline: none; cursor: pointer; font-family: inherit;
         }
 
-        /* Navigazione Minimalista */
+        /* Navigazione Giorni (CARATTERI GRANDI) */
         nav {
-            display: flex;
-            gap: 12px;
-            padding: 10px 20px;
-            overflow-x: auto;
-            max-width: 600px;
-            margin: 0 auto;
-            scrollbar-width: none;
+            display: flex; gap: 25px; padding: 15px 20px; overflow-x: auto;
+            max-width: 700px; margin: 0 auto; scrollbar-width: none;
         }
         nav::-webkit-scrollbar { display: none; }
-
         nav button {
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 600;
-            padding: 8px 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
+            background: transparent; border: none; color: var(--text-dim);
+            font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.3s;
+            padding: 5px 0; letter-spacing: -1px;
         }
+        nav button.active { color: var(--primary); transform: scale(1.1); }
 
-        nav button.active {
-            color: var(--text);
-        }
-
-        nav button.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            border-radius: 2px;
-        }
-
-        /* Contenitore Cards */
-        .container {
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .day-section { display: none; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        /* Container & Cards */
+        .container { padding: 20px; max-width: 700px; margin: 0 auto; }
+        .day-section { display: none; animation: slideUp 0.5s ease; }
         .active-day { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: transform 0.3s;
-        }
-
-        .card:active { transform: scale(0.98); }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .card-header h3 { 
-            margin: 0; 
-            font-size: 1.1rem; 
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .timer-btn {
-            background: white;
-            color: black;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* Input Serie Soft */
-        .series-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
-            gap: 12px;
-        }
-
-        .serie-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: 14px;
-            padding: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .serie-box span { display: block; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .serie-box input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text);
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 600;
-            outline: none;
-        }
-
-        /* Grafici Minimal */
-        .chart-wrap {
-            height: 60px;
-            margin-top: 20px;
-            pointer-events: none;
-        }
-
-        /* Timer Overlay Overlay */
-        #timer-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
+            background: var(--surface);
             backdrop-filter: blur(20px);
+            border-radius: 28px; padding: 25px; margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; color: #fff; }
+        
+        .timer-btn {
+            background: var(--primary); color: #000; border: none;
+            padding: 6px 14px; border-radius: 100px; font-weight: 800; font-size: 0.7rem; cursor: pointer;
         }
 
-        #timer-big {
-            font-size: 6rem;
-            font-weight: 800;
-            background: linear-gradient(to bottom, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Input Grid Kg/Reps */
+        .series-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
+        .serie-box {
+            background: rgba(0,0,0,0.2); border-radius: 18px; padding: 12px;
+            border: 1px solid rgba(255,255,255,0.04); text-align: center;
         }
+        .serie-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: 700; }
+        .inputs { display: flex; justify-content: center; gap: 8px; align-items: center; }
+        .inputs input {
+            width: 45px; background: transparent; border: none; color: white;
+            font-weight: 800; font-size: 1.1rem; text-align: center; outline: none;
+        }
+        .inputs span { color: rgba(255,255,255,0.15); font-weight: 300; }
 
-        /* Cardio Style */
-        .cardio-card {
-            background: linear-gradient(145deg, rgba(122, 92, 255, 0.1), rgba(0, 210, 255, 0.05));
-            border: 1px solid rgba(122, 92, 255, 0.2);
+        /* Grafici */
+        .chart-container { height: 130px; margin-top: 25px; opacity: 0.8; }
+
+        /* Timer Overlay */
+        #timer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.98); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px);
         }
+        #timer-val { font-size: 7rem; font-weight: 900; color: var(--primary); letter-spacing: -4px; }
     </style>
 </head>
 <body>
 
 <div id="timer-overlay" onclick="closeTimer()">
-    <div style="color: var(--primary); letter-spacing: 2px; margin-bottom: 10px;">RECUPERO...</div>
-    <div id="timer-big">00:00</div>
-    <div style="margin-top: 30px; color: var(--text-dim);">Tocca per chiudere</div>
+    <div style="color:var(--primary); letter-spacing: 3px; font-weight: 700; margin-bottom: 10px;">RECOVERY</div>
+    <div id="timer-val">00:00</div>
+    <div style="color:var(--text-dim); margin-top: 20px;">Tocca per saltare</div>
 </div>
 
 <header>
-    <h1>Aura Log</h1>
-    <div class="vol-badge">Volume Sessione: <span id="total-vol">0</span> KG</div>
+    <h1>Aura Evolution</h1>
+    <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
+        <option value="1">WEEK 1</option>
+        <option value="2">WEEK 2</option>
+        <option value="3">WEEK 3</option>
+        <option value="4">WEEK 4</option>
+    </select>
 </header>
 
 <nav id="dayNav">
-    <button onclick="switchDay('lun')" id="nav-lun" class="active">LUN</button>
-    <button onclick="switchDay('mar')" id="nav-mar">MAR</button>
-    <button onclick="switchDay('mer')" id="nav-mer">MER</button>
-    <button onclick="switchDay('gio')" id="nav-gio">GIO</button>
-    <button onclick="switchDay('ven')" id="nav-ven">VEN</button>
+    <button onclick="switchDay('lun')" id="n-lun" class="active">LUNEDÌ</button>
+    <button onclick="switchDay('mar')" id="n-mar">MARTEDÌ</button>
+    <button onclick="switchDay('mer')" id="n-mer">MERCOLEDÌ</button>
+    <button onclick="switchDay('gio')" id="n-gio">GIOVEDÌ</button>
+    <button onclick="switchDay('ven')" id="n-ven">VENERDÌ</button>
 </nav>
 
-<div class="container" id="days-container"></div>
+<div class="container" id="mainContainer">
+    </div>
 
 <script>
-const workoutData = {
-    lun: { title: "Push Alpha • Petto & Spalle", exercises: [
-        { name: "Panca Inclinata Manubri", sets: 4, rec: 90 },
-        { name: "Chest Press (Controllo)", sets: 3, rec: 60 },
-        { name: "Alzate Laterali", sets: 4, rec: 60 },
-        { name: "Pushdown Corda", sets: 4, rec: 60 },
-        { name: "Crunch Addominali", sets: 3, rec: 60, isSpecial: true },
-        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
+// Database Esercizi (Ottimizzati per te)
+const workout = {
+    lun: { title: "Push Alpha • Petto & Spalle", ex: [
+        {n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press Macchina", s:3, r:60}, 
+        {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown Tricipiti", s:4, r:60},
+        {n:"Crunch Addome", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
     ]},
-    mar: { title: "Pull Alpha • Trazioni Pesanti", exercises: [
-        { name: "Trazioni Zavorrate (Heavy)", sets: 5, rec: 120 },
-        { name: "Rematore Manubrio", sets: 3, rec: 90 },
-        { name: "Curl Bilanciere EZ", sets: 4, rec: 60 },
-        { name: "Facepull (Salute Spalla)", sets: 3, rec: 60 },
-        { name: "Leg Raise", sets: 3, rec: 60, isSpecial: true },
-        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
+    mar: { title: "Pull Alpha • Trazioni Pesanti", ex: [
+        {n:"Trazioni Zavorrate (Heavy)", s:5, r:120}, {n:"Rematore Manubrio", s:3, r:90}, 
+        {n:"Curl Bilanciere EZ", s:4, r:60}, {n:"Facepull", s:3, r:60},
+        {n:"Leg Raise", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
     ]},
-    mer: { title: "Legs • Potenza & Volume", exercises: [
-        { name: "Hack Squat", sets: 4, rec: 120 },
-        { name: "Leg Press", sets: 3, rec: 90 },
-        { name: "Leg Curl", sets: 4, rec: 60 },
-        { name: "Calf Raise", sets: 4, rec: 60 },
-        { name: "Plank", sets: 3, rec: 60, isSpecial: true },
-        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
+    mer: { title: "Legs • Potenza Gambe", ex: [
+        {n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, 
+        {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60},
+        {n:"Plank", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
     ]},
-    gio: { title: "Push Beta • Richiamo & Braccia", exercises: [
-        { name: "Panca Piana Manubri", sets: 4, rec: 90 },
-        { name: "Croci ai Cavi High", sets: 3, rec: 60 },
-        { name: "Shoulder Press Macchina", sets: 3, rec: 90 },
-        { name: "French Press Manubri", sets: 3, rec: 60 },
-        { name: "Crunch Inverso", sets: 3, rec: 60, isSpecial: true },
-        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
+    gio: { title: "Push Beta • Richiamo & Spalle", ex: [
+        {n:"Panca Piana Manubri", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, 
+        {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60},
+        {n:"Crunch Inverso", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
     ]},
-    ven: { title: "Pull Beta • Trazioni Volume", exercises: [
-        { name: "Trazioni Zavorrate (Vol)", sets: 4, rec: 120 },
-        { name: "Lat Machine Inversa", sets: 3, rec: 90 },
-        { name: "Hammer Curl", sets: 3, rec: 60 },
-        { name: "Curl ai Cavi", sets: 3, rec: 60 },
-        { name: "Russian Twist", sets: 3, rec: 60, isSpecial: true },
-        { name: "Inclinata 5.5km/h (10')", sets: 1, rec: 600, isSpecial: true }
+    ven: { title: "Pull Beta • Trazioni Volume", ex: [
+        {n:"Trazioni Zavorrate (Vol)", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, 
+        {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60},
+        {n:"Russian Twist", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
     ]}
 };
 
-const charts = {};
-function render() {
-    const container = document.getElementById('days-container');
-    for (const [dayKey, dayObj] of Object.entries(workoutData)) {
-        let html = `<div id="${dayKey}" class="day-section ${dayKey === 'lun' ? 'active-day' : ''}">`;
-        html += `<div style="color:var(--text-dim); font-size:0.8rem; margin-bottom:20px; font-weight:600; text-transform:uppercase; letter-spacing:2px;">${dayObj.title}</div>`;
+let charts = {};
+
+function init() {
+    const main = document.getElementById('mainContainer');
+    for(let day in workout) {
+        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''}">`;
+        section += `<p style="color:var(--text-dim); font-weight:700; margin-bottom:20px;">${workout[day].title}</p>`;
         
-        dayObj.exercises.forEach((ex, iIdx) => {
-            const id = `${dayKey}_ex${iIdx}`;
-            html += `
-                <div class="card ${ex.isSpecial ? 'cardio-card' : ''}">
-                    <div class="card-header">
-                        <h3>${ex.name}</h3>
-                        <button class="timer-btn" onclick="startTimer(${ex.rec})">${ex.rec}S</button>
-                    </div>
-                    <div class="series-row">
-                        ${Array.from({length: ex.sets}).map((_, s) => `
-                            <div class="serie-box">
-                                <span>SET ${s+1}</span>
-                                <input type="number" id="${id}_s${s}" oninput="save('${id}', ${s}, this.value)">
+        workout[day].ex.forEach((e, idx) => {
+            const id = `${day}_${idx}`;
+            section += `
+            <div class="card">
+                <div class="card-header">
+                    <h3>${e.n}</h3>
+                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}S REC</button>
+                </div>
+                <div class="series-grid">
+                    ${Array.from({length:e.s}).map((_, s) => `
+                        <div class="serie-box">
+                            <span class="serie-label">SET ${s+1}</span>
+                            <div class="inputs">
+                                <input type="number" placeholder="KG" id="${id}_w${s}" onchange="saveData('${id}')">
+                                <span>|</span>
+                                <input type="number" placeholder="RE" id="${id}_r${s}" onchange="saveData('${id}')">
                             </div>
-                        `).join('')}
-                    </div>
-                    ${!ex.isSpecial ? `<div class="chart-wrap"><canvas id="c_${id}"></canvas></div>` : ''}
-                </div>`;
+                        </div>
+                    `).join('')}
+                </div>
+                ${!e.spec ? `<div class="chart-container"><canvas id="c_${id}"></canvas></div>` : ''}
+            </div>`;
         });
-        html += `</div>`;
-        container.innerHTML += html;
+        section += `</div>`;
+        main.innerHTML += section;
+    }
+    loadWeekData();
+}
+
+function saveData(exId) {
+    const week = document.getElementById('weekSelect').value;
+    const day = exId.split('_')[0];
+    const idx = exId.split('_')[1];
+    const sets = workout[day].ex[idx].s;
+    
+    let dataEntry = { w: [], r: [] };
+    for(let i=0; i<sets; i++) {
+        dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
+        dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
+    }
+    
+    localStorage.setItem(`Aura_W${week}_${exId}`, JSON.stringify(dataEntry));
+    updateSingleChart(exId);
+}
+
+function loadWeekData() {
+    const week = document.getElementById('weekSelect').value;
+    for(let day in workout) {
+        workout[day].ex.forEach((e, idx) => {
+            const id = `${day}_${idx}`;
+            const saved = JSON.parse(localStorage.getItem(`Aura_W${week}_${id}`));
+            for(let i=0; i<e.s; i++) {
+                const wIn = document.getElementById(`${id}_w${i}`);
+                const rIn = document.getElementById(`${id}_r${i}`);
+                if(saved) {
+                    wIn.value = saved.w[i] || "";
+                    rIn.value = saved.r[i] || "";
+                } else {
+                    wIn.value = ""; rIn.value = "";
+                }
+            }
+            if(!e.spec) updateSingleChart(id);
+        });
     }
 }
 
-let timerInt;
+function updateSingleChart(exId) {
+    const historyVol = [];
+    for(let w=1; w<=4; w++) {
+        const d = JSON.parse(localStorage.getItem(`Aura_W${w}_${exId}`));
+        let vol = 0;
+        if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
+        historyVol.push(vol);
+    }
+    
+    const ctx = document.getElementById(`c_${exId}`);
+    if(!ctx) return;
+    
+    if(charts[exId]) charts[exId].destroy();
+    charts[exId] = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['W1', 'W2', 'W3', 'W4'],
+            datasets: [{
+                data: historyVol,
+                borderColor: '#00d2ff',
+                backgroundColor: 'rgba(0, 210, 255, 0.05)',
+                fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#00d2ff'
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { 
+                x: { grid: { display: false }, ticks: { color: '#475569', font: { weight: 'bold' } } }, 
+                y: { display: false } 
+            }
+        }
+    });
+}
+
+let tInterval;
 function startTimer(s) {
-    const overlay = document.getElementById('timer-overlay');
-    const display = document.getElementById('timer-big');
-    overlay.style.display = 'flex';
-    let left = s;
-    timerInt = setInterval(() => {
-        let m = Math.floor(left / 60); let sec = left % 60;
-        display.innerText = `${m}:${sec < 10 ? '0' : ''}${sec}`;
-        if(left <= 0) { clearInterval(timerInt); display.innerText = "VIA!"; }
-        left--;
+    const ov = document.getElementById('timer-overlay');
+    const val = document.getElementById('timer-val');
+    ov.style.display = 'flex';
+    let time = s;
+    tInterval = setInterval(() => {
+        let m = Math.floor(time/60); let sec = time%60;
+        val.innerText = `${m}:${sec<10?'0':''}${sec}`;
+        if(time <= 0) { clearInterval(tInterval); val.innerText = "GO!"; }
+        time--;
     }, 1000);
 }
 
-function closeTimer() { clearInterval(timerInt); document.getElementById('timer-overlay').style.display = 'none'; }
-
-function save(id, s, v) {
-    localStorage.setItem(`${id}_s${s}`, v);
-    if(charts[id]) {
-        charts[id].data.datasets[0].data[4] = parseFloat(v) || 0;
-        charts[id].update();
-        localStorage.setItem(`h_${id}`, JSON.stringify(charts[id].data.datasets[0].data));
-    }
-    calc();
-}
-
-function calc() {
-    let t = 0; document.querySelectorAll('input').forEach(i => t += (parseFloat(i.value) || 0));
-    document.getElementById('total-vol').innerText = t;
-}
+function closeTimer() { clearInterval(tInterval); document.getElementById('timer-overlay').style.display = 'none'; }
 
 function switchDay(id) {
     document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active-day');
-    document.getElementById('nav-' + id).classList.add('active');
+    document.getElementById('n-'+id).classList.add('active');
 }
 
-window.onload = () => {
-    render();
-    Object.keys(workoutData).forEach(dk => {
-        workoutData[dk].exercises.forEach((ex, ei) => {
-            const id = `${dk}_ex${ei}`;
-            const ctx = document.getElementById(`c_${id}`);
-            if(ctx) {
-                const h = JSON.parse(localStorage.getItem(`h_${id}`)) || [0,0,0,0,0];
-                charts[id] = new Chart(ctx, {
-                    type: 'line',
-                    data: { labels:[1,2,3,4,5], datasets:[{ data:h, borderColor:'#00d2ff', borderWidth:2, tension:0.4, fill:true, backgroundColor:'rgba(0,210,255,0.05)', pointRadius:0 }] },
-                    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{display:false}} }
-                });
-            }
-            for(let s=0; s<ex.sets; s++) {
-                const v = localStorage.getItem(`${id}_s${s}`);
-                if(v) document.getElementById(`${id}_s${s}`).value = v;
-            }
-        });
-    });
-    calc();
-};
+window.onload = init;
 </script>
 </body>
 </html>

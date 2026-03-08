@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Pure Edition</title>
+    <title>Rayleigh Workout - Haki Conquistatore</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -13,6 +13,7 @@
             --primary: #00ffaa; 
             --silver: #f8fafc;
             --text-dim: #475569;
+            --haki-red: #ff0000;
         }
 
         body {
@@ -23,7 +24,45 @@
             color: var(--silver);
             margin: 0; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
+
+        /* Overlay per l'Haki del Re Totale */
+        #haki-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0); z-index: 10001; pointer-events: none;
+            transition: background 0.1s ease;
+        }
+        .haki-shockwave { animation: hakiShockwave 0.5s ease-out; }
+        @keyframes hakiShockwave {
+            0% { background: rgba(255, 0, 0, 0.3); filter: blur(0px); }
+            50% { background: rgba(255, 0, 0, 0.1); filter: blur(2px); }
+            100% { background: rgba(255, 0, 0, 0); filter: blur(0px); }
+        }
+
+        /* Animazione Fulmini Rossi */
+        .haki-lightning {
+            position: absolute; width: 200%; height: 200%;
+            top: -50%; left: -50%; pointer-events: none;
+            background-image: 
+                radial-gradient(circle at 50% 50%, transparent 40%, var(--haki-red) 50%, transparent 60%),
+                conic-gradient(from 0deg at 50% 50%, transparent 0deg, var(--haki-red) 10deg, transparent 20deg, var(--haki-red) 40deg, transparent 50deg, var(--haki-red) 70deg, transparent 80deg, var(--haki-red) 100deg, transparent 110deg);
+            background-size: 100% 100%, 10px 10px;
+            opacity: 0; transform: scale(0.5);
+            border-radius: 50%;
+        }
+        .haki-active { animation: hakiLightning 0.4s ease-out; }
+        @keyframes hakiLightning {
+            0% { opacity: 0.8; transform: scale(0.8); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        /* Stile base per pulsanti interattivi */
+        .interactive {
+            position: relative; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease, color 0.2s ease;
+            cursor: pointer; outline: none;
+        }
+        .interactive:active { transform: scale(1.1); background: #fff !important; color: #000 !important; box-shadow: 0 0 20px #fff; }
 
         header { 
             padding: 50px 25px 10px; 
@@ -43,7 +82,8 @@
         }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            padding: 5px 10px;
         }
         nav button.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
@@ -56,13 +96,14 @@
             background: var(--glass); backdrop-filter: blur(20px);
             border-radius: 8px; padding: 20px; margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.03);
+            overflow: hidden; /* Per contenere i fulmini */
         }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 
         .timer-btn {
             background: transparent; color: var(--primary); border: 1px solid var(--primary);
-            padding: 4px 10px; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+            padding: 6px 14px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
         }
 
         .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
@@ -70,6 +111,7 @@
         .input-box input {
             background: transparent; border: none; color: #fff; width: 100%;
             font-size: 1.1rem; outline: none; text-align: right;
+            font-family: inherit;
         }
         .input-box span { font-size: 0.55rem; color: var(--text-dim); font-weight: 700; }
 
@@ -85,22 +127,56 @@
 </head>
 <body>
 
+<div id="haki-overlay"></div>
+
 <header>
-    <h1>Rayleigh <span style="font-weight:300; opacity:0.5">Pure</span></h1>
-    <select class="week-selector" id="weekSelect" onchange="loadWeekData()"></select>
+    <h1>Rayleigh <span style="font-weight:300; opacity:0.5">Haki</span></h1>
+    <select class="week-selector interactive" id="weekSelect" onchange="loadWeekData()"></select>
 </header>
 
 <nav id="dayNav">
-    <button onclick="switchDay('lun')" id="n-lun" class="active">Lun</button>
-    <button onclick="switchDay('mar')" id="n-mar">Mar</button>
-    <button onclick="switchDay('mer')" id="n-mer">Mer</button>
-    <button onclick="switchDay('gio')" id="n-gio">Gio</button>
-    <button onclick="switchDay('ven')" id="n-ven">Ven</button>
+    <button onclick="switchDay('lun')" id="n-lun" class="active interactive">Lun</button>
+    <button onclick="switchDay('mar')" id="n-mar" class="interactive">Mar</button>
+    <button onclick="switchDay('mer')" id="n-mer" class="interactive">Mer</button>
+    <button onclick="switchDay('gio')" id="n-gio" class="interactive">Gio</button>
+    <button onclick="switchDay('ven')" id="n-ven" class="interactive">Ven</button>
 </nav>
 
 <div class="container" id="mainContainer"></div>
 
 <script>
+// Gestione Haki Visivo
+const hakiOverlay = document.getElementById('haki-overlay');
+
+function triggerHakiEffect(element) {
+    const lightning = document.createElement('div');
+    lightning.className = 'haki-lightning haki-active';
+    element.appendChild(lightning);
+    setTimeout(() => { element.removeChild(lightning); }, 400);
+}
+
+function triggerHakiShockwave() {
+    hakiOverlay.classList.add('haki-shockwave');
+    setTimeout(() => { hakiOverlay.classList.remove('haki-shockwave'); }, 500);
+}
+
+// Applica logica Haki a tutti gli elementi interattivi
+document.addEventListener('DOMContentLoaded', () => {
+    const interactives = document.querySelectorAll('.interactive');
+    interactives.forEach(el => {
+        el.addEventListener('mousedown', () => triggerHakiEffect(el));
+        el.addEventListener('touchstart', () => triggerHakiEffect(el)); // Per mobile
+        
+        // Logica Haki del Re totale (pressione prolungata)
+        let hakiTimer;
+        el.addEventListener('mousedown', () => { hakiTimer = setTimeout(triggerHakiShockwave, 500); });
+        el.addEventListener('touchstart', () => { hakiTimer = setTimeout(triggerHakiShockwave, 500); });
+        el.addEventListener('mouseup', () => clearTimeout(hakiTimer));
+        el.addEventListener('touchend', () => clearTimeout(hakiTimer));
+        el.addEventListener('mouseleave', () => clearTimeout(hakiTimer));
+    });
+});
+
 const weekSelect = document.getElementById('weekSelect');
 for (let i = 1; i <= 16; i++) {
     const opt = document.createElement('option');
@@ -124,7 +200,7 @@ function init() {
         let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day' : ''}">`;
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            section += `<div class="card"><div class="card-header"><h3>${e.n}</h3><button class="timer-btn" onclick="startTimer(${e.r})">${e.r}S</button></div>`;
+            section += `<div class="card"><div class="card-header"><h3>${e.n}</h3><button class="timer-btn interactive" onclick="startTimer(${e.r})">${e.r}S</button></div>`;
             for(let s=0; s<e.s; s++) {
                 section += `<div class="inputs"><div class="input-box"><input type="number" id="${id}_w${s}" onchange="saveData('${id}')" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" id="${id}_r${s}" onchange="saveData('${id}')" placeholder="0"><span>RE</span></div></div>`;
             }
@@ -135,6 +211,13 @@ function init() {
         main.innerHTML += section;
     }
     loadWeekData();
+    
+    // Riapplica la logica Haki ai pulsanti del timer generati dinamicamente
+    const timerBtns = document.querySelectorAll('.timer-btn.interactive');
+    timerBtns.forEach(btn => {
+        btn.addEventListener('mousedown', () => triggerHakiEffect(btn));
+        btn.addEventListener('touchstart', () => triggerHakiEffect(btn));
+    });
 }
 
 function saveData(exId) {
@@ -147,7 +230,7 @@ function saveData(exId) {
         entry.w.push(document.getElementById(`${exId}_w${i}`).value || 0);
         entry.r.push(document.getElementById(`${exId}_r${i}`).value || 0);
     }
-    localStorage.setItem(`Rayleigh_Pure_${week}_${exId}`, JSON.stringify(entry));
+    localStorage.setItem(`Rayleigh_Pure_Haki_${week}_${exId}`, JSON.stringify(entry));
     updateChart(exId);
 }
 
@@ -156,7 +239,7 @@ function loadWeekData() {
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Pure_${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Pure_Haki_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 document.getElementById(`${id}_w${i}`).value = saved ? saved.w[i] : "";
                 document.getElementById(`${id}_r${i}`).value = saved ? saved.r[i] : "";
@@ -169,7 +252,7 @@ function loadWeekData() {
 function updateChart(id) {
     const history = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Pure_${w}_${id}`));
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_Pure_Haki_${w}_${id}`));
         let vol = 0; if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         history.push(vol);
     }
@@ -189,9 +272,9 @@ function startTimer(s) {
     let time = s;
     const interval = setInterval(() => {
         document.getElementById('timer-val').innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2, '0')}`;
-        if(time-- <= 0) { clearInterval(interval); document.body.removeChild(ov); }
+        if(time-- <= 0) { clearInterval(interval); document.body.removeChild(ov); triggerHakiShockwave(); }
     }, 1000);
-    ov.onclick = () => { clearInterval(interval); document.body.removeChild(ov); };
+    ov.onclick = () => { clearInterval(interval); document.body.removeChild(ov); triggerHakiShockwave(); };
 }
 
 function switchDay(id) {

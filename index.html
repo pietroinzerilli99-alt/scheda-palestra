@@ -3,109 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Evolution - 16 Weeks Elite Log</title>
+    <title>Rayleigh Workout - Diario Leggendario</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #05070a;
-            --surface: rgba(255, 255, 255, 0.04);
-            --primary: #00d2ff;
-            --accent: #7a5cff;
+            --bg: #000000; 
+            --surface: #0a0a0a; 
+            --primary: #c5a059; /* Oro Rayleigh sutil */
             --text: #ffffff;
-            --text-dim: #64748b;
+            --text-dim: #555555;
+            --border: #151515;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(122, 92, 255, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(0, 210, 255, 0.08) 0%, transparent 40%);
-            background-attachment: fixed;
             color: var(--text);
-            margin: 0; padding-bottom: 60px;
+            margin: 0; padding-bottom: 40px;
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Header Minimale */
         header { 
-            padding: 30px 20px 10px; 
-            max-width: 700px; margin: 0 auto; 
-            display: flex; justify-content: space-between; align-items: center; 
+            padding: 45px 20px 15px; 
+            max-width: 650px; margin: 0 auto; 
+            display: flex; justify-content: space-between; align-items: baseline; 
+            border-bottom: 1px solid var(--border);
         }
-        h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: -1.5px; margin: 0; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem; font-weight: 600; letter-spacing: -0.5px; margin: 0; 
+            color: #fff;
+        }
 
         .week-selector {
-            background: var(--surface);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white; padding: 10px 14px; border-radius: 14px;
-            font-weight: 700; outline: none; cursor: pointer; font-family: inherit; font-size: 0.8rem;
+            background: transparent;
+            border: none;
+            color: var(--text-dim); padding: 0;
+            font-weight: 400; outline: none; cursor: pointer; font-family: inherit; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 1.5px;
         }
 
-        /* Navigazione Giorni (CARATTERI RIDOTTI) */
+        /* Navigazione Giorni Zen */
         nav {
-            display: flex; gap: 18px; padding: 10px 20px; overflow-x: auto;
-            max-width: 700px; margin: 0 auto; scrollbar-width: none;
+            display: flex; gap: 25px; padding: 25px; overflow-x: auto;
+            max-width: 650px; margin: 0 auto; scrollbar-width: none;
+            justify-content: center;
         }
         nav::-webkit-scrollbar { display: none; }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.3s;
-            padding: 5px 0; letter-spacing: 0.5px; text-transform: uppercase;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+            padding: 0; letter-spacing: 1.2px; text-transform: uppercase;
         }
         nav button.active { color: var(--primary); }
 
-        .container { padding: 15px; max-width: 700px; margin: 0 auto; }
+        /* Contenitore */
+        .container { padding: 10px; max-width: 650px; margin: 0 auto; }
         .day-section { display: none; animation: fadeIn 0.4s ease; }
         .active-day { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Schede Esercizi */
         .card {
             background: var(--surface);
-            backdrop-filter: blur(20px);
-            border-radius: 24px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 22px; margin-bottom: 18px;
+            border: 1px solid var(--border);
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-header h3 { margin: 0; font-size: 1.05rem; font-weight: 600; color: #fff; }
+        .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+        .card-header h3 { margin: 0; font-size: 0.95rem; font-weight: 600; color: #fff; letter-spacing: 0.2px;}
         
         .timer-btn {
-            background: rgba(0, 210, 255, 0.1); color: var(--primary); border: 1px solid var(--primary);
-            padding: 5px 10px; border-radius: 100px; font-weight: 800; font-size: 0.65rem; cursor: pointer;
+            background: transparent; color: var(--text-dim); border: none;
+            padding: 0; font-weight: 400; font-size: 0.65rem; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
         }
+        .timer-btn:hover { color: var(--primary); }
 
-        .series-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
-        .serie-box {
-            background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;
-            border: 1px solid rgba(255,255,255,0.03); text-align: center;
+        /* Input Progressivi */
+        .series-grid { display: flex; flex-direction: column; gap: 10px; }
+        .serie-row {
+            display: grid; grid-template-columns: 60px 1fr; align-items: center;
+            padding: 6px 0; border-bottom: 1px solid var(--border);
         }
-        .serie-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; display: block; font-weight: 700; }
-        .inputs { display: flex; justify-content: center; gap: 6px; align-items: center; }
+        .serie-row:last-child { border-bottom: none; }
+        .serie-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; }
+        
+        .inputs { display: flex; justify-content: flex-start; gap: 20px; align-items: center; }
+        .input-group { display: flex; align-items: baseline; gap: 5px; }
         .inputs input {
-            width: 38px; background: transparent; border: none; color: white;
-            font-weight: 800; font-size: 1rem; text-align: center; outline: none;
+            width: 40px; background: transparent; border: none; color: white;
+            font-weight: 400; font-size: 1.1rem; text-align: right; outline: none;
         }
-        .inputs span { color: rgba(255,255,255,0.15); font-weight: 300; }
+        .input-unit { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; }
 
-        .chart-container { height: 110px; margin-top: 20px; }
+        /* Grafico */
+        .chart-container { height: 75px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;}
 
+        /* Overlay Timer */
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.98); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.97); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
         }
-        #timer-val { font-size: 6rem; font-weight: 900; color: var(--primary); letter-spacing: -3px; }
+        #timer-val { font-size: 6rem; font-weight: 300; color: var(--primary); letter-spacing: -3px; }
     </style>
 </head>
 <body>
 
 <div id="timer-overlay" onclick="closeTimer()">
     <div id="timer-val">00:00</div>
-    <div style="color:var(--text-dim); font-size: 0.8rem; margin-top: 10px; letter-spacing: 2px;">TOCCA PER SALTARE</div>
+    <div style="color:var(--text-dim); font-size: 0.65rem; margin-top: 10px; letter-spacing: 3px;">TOCCA PER SALTARE</div>
 </div>
 
 <header>
-    <h1>Aura Evolution</h1>
+    <h1>Rayleigh Workout</h1>
     <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
         </select>
 </header>
@@ -121,7 +134,7 @@
 <div class="container" id="mainContainer"></div>
 
 <script>
-// Genera le 16 settimane nel selettore
+// Generatore di 16 settimane
 const weekSelect = document.getElementById('weekSelect');
 for (let i = 1; i <= 16; i++) {
     const opt = document.createElement('option');
@@ -131,30 +144,30 @@ for (let i = 1; i <= 16; i++) {
 }
 
 const workout = {
-    lun: { title: "Push Alpha • Petto & Spalle", ex: [
+    lun: { title: "Spinta Alpha • Petto e Spalle", ex: [
         {n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press Macchina", s:3, r:60}, 
-        {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown Tricipiti", s:4, r:60},
-        {n:"Crunch Addome", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
+        {n:"Alzate Laterali", s:4, r:60}, {n:"Spinte in basso Corda", s:4, r:60},
+        {n:"Crunch Addominali", s:3, r:60, spec:true}, {n:"Camminata in salita (10')", s:1, r:600, spec:true}
     ]},
-    mar: { title: "Pull Alpha • Trazioni Pesanti", ex: [
-        {n:"Trazioni Zavorrate (Heavy)", s:5, r:120}, {n:"Rematore Manubrio", s:3, r:90}, 
+    mar: { title: "Trazione Alpha • Trazioni Pesanti", ex: [
+        {n:"Trazioni Zavorrate (Forza)", s:5, r:120}, {n:"Rematore Manubrio", s:3, r:90}, 
         {n:"Curl Bilanciere EZ", s:4, r:60}, {n:"Facepull", s:3, r:60},
-        {n:"Leg Raise", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
+        {n:"Sollevamento Gambe", s:3, r:60, spec:true}, {n:"Camminata in salita (10')", s:1, r:600, spec:true}
     ]},
-    mer: { title: "Legs • Potenza Gambe", ex: [
+    mer: { title: "Gambe • Potenza", ex: [
         {n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, 
         {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60},
-        {n:"Plank", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
+        {n:"Plank", s:3, r:60, spec:true}, {n:"Camminata in salita (10')", s:1, r:600, spec:true}
     ]},
-    gio: { title: "Push Beta • Richiamo & Spalle", ex: [
+    gio: { title: "Spinta Beta • Petto e Spalle", ex: [
         {n:"Panca Piana Manubri", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, 
-        {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60},
-        {n:"Crunch Inverso", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
+        {n:"Shoulder Press Macchina", s:3, r:90}, {n:"French Press Manubri", s:3, r:60},
+        {n:"Crunch Inverso", s:3, r:60, spec:true}, {n:"Camminata in salita (10')", s:1, r:600, spec:true}
     ]},
-    ven: { title: "Pull Beta • Trazioni Volume", ex: [
-        {n:"Trazioni Zavorrate (Vol)", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, 
+    ven: { title: "Trazione Beta • Trazioni Volume", ex: [
+        {n:"Trazioni Zavorrate (Volume)", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, 
         {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60},
-        {n:"Russian Twist", s:3, r:60, spec:true}, {n:"Cardio Inclinata 10'", s:1, r:600, spec:true}
+        {n:"Russian Twist", s:3, r:60, spec:true}, {n:"Camminata in salita (10')", s:1, r:600, spec:true}
     ]}
 };
 
@@ -163,23 +176,28 @@ let charts = {};
 function init() {
     const main = document.getElementById('mainContainer');
     for(let day in workout) {
-        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day':''}">`;
+        let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day' : ''}">`;
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
             section += `
             <div class="card">
                 <div class="card-header">
                     <h3>${e.n}</h3>
-                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}s</button>
+                    <button class="timer-btn" onclick="startTimer(${e.r})">Recupero ${e.r}s</button>
                 </div>
                 <div class="series-grid">
                     ${Array.from({length:e.s}).map((_, s) => `
-                        <div class="serie-box">
-                            <span class="serie-label">SET ${s+1}</span>
+                        <div class="serie-row">
+                            <span class="serie-label">Serie ${s+1}</span>
                             <div class="inputs">
-                                <input type="number" placeholder="KG" id="${id}_w${s}" onchange="saveData('${id}')">
-                                <span>/</span>
-                                <input type="number" placeholder="RE" id="${id}_r${s}" onchange="saveData('${id}')">
+                                <div class="input-group">
+                                    <input type="number" placeholder="0" id="${id}_w${s}" onchange="saveData('${id}')">
+                                    <span class="input-unit">kg</span>
+                                </div>
+                                <div class="input-group">
+                                    <input type="number" placeholder="0" id="${id}_r${s}" onchange="saveData('${id}')">
+                                    <span class="input-unit">re</span>
+                                </div>
                             </div>
                         </div>
                     `).join('')}
@@ -203,7 +221,7 @@ function saveData(exId) {
         dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
         dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
     }
-    localStorage.setItem(`Aura_W${week}_${exId}`, JSON.stringify(dataEntry));
+    localStorage.setItem(`Rayleigh_W${week}_${exId}`, JSON.stringify(dataEntry));
     updateSingleChart(exId);
 }
 
@@ -212,7 +230,7 @@ function loadWeekData() {
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Aura_W${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_W${week}_${id}`));
             for(let i=0; i<e.s; i++) {
                 const wIn = document.getElementById(`${id}_w${i}`);
                 const rIn = document.getElementById(`${id}_r${i}`);
@@ -232,11 +250,11 @@ function updateSingleChart(exId) {
     const historyVol = [];
     const labels = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Aura_W${w}_${exId}`));
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_W${w}_${exId}`));
         let vol = 0;
         if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
         historyVol.push(vol);
-        labels.push(`S${w}`);
+        labels.push(w);
     }
     const ctx = document.getElementById(`c_${exId}`);
     if(!ctx) return;
@@ -247,16 +265,16 @@ function updateSingleChart(exId) {
             labels: labels,
             datasets: [{
                 data: historyVol,
-                borderColor: '#00d2ff',
-                backgroundColor: 'rgba(0, 210, 255, 0.05)',
-                fill: true, tension: 0.3, borderWidth: 2, pointRadius: 2, pointBackgroundColor: '#00d2ff'
+                borderColor: '#c5a059',
+                backgroundColor: 'transparent',
+                fill: false, tension: 0.3, borderWidth: 1, pointRadius: 1, pointBackgroundColor: '#c5a059'
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
             scales: { 
-                x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 8 } } }, 
+                x: { grid: { display: false }, ticks: { color: '#222', font: { size: 7 } } }, 
                 y: { display: false } 
             }
         }

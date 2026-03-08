@@ -3,144 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rayleigh Workout - Master Edition</title>
+    <title>Rayleigh Workout - Pure Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #010204;
-            --glass: rgba(10, 15, 20, 0.8);
+            --glass: rgba(15, 20, 25, 0.7);
             --primary: #00ffaa; 
-            --silver: #e2e8f0;
-            --text-dim: #3a4556;
-            --glow: rgba(0, 255, 170, 0.2);
+            --silver: #f8fafc;
+            --text-dim: #475569;
         }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% -20%, rgba(0, 255, 170, 0.08) 0%, transparent 50%),
-                linear-gradient(180deg, #010204 0%, #05080f 100%);
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 170, 0.03) 0%, transparent 50%);
             background-attachment: fixed;
             color: var(--silver);
-            margin: 0; padding-bottom: 80px;
+            margin: 0; padding-bottom: 60px;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        /* Barra di Progressione Superiore */
-        #progress-master {
-            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--primary));
-            box-shadow: 0 0 15px var(--primary); z-index: 10000; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         header { 
-            padding: 60px 25px 10px; 
-            max-width: 650px; margin: 0 auto; 
+            padding: 50px 25px 10px; 
+            max-width: 600px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center;
         }
-        h1 { 
-            font-size: 1rem; font-weight: 700; letter-spacing: 5px; margin: 0; 
-            text-transform: uppercase; color: var(--silver);
-            display: flex; align-items: center; gap: 10px;
-        }
-        h1::before { content: ''; width: 12px; height: 12px; background: var(--primary); border-radius: 2px; box-shadow: 0 0 10px var(--primary); }
-
+        h1 { font-size: 1rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
+        
         .week-selector {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--text-dim);
-            color: var(--primary); padding: 8px 16px; border-radius: 2px;
-            font-size: 0.7rem; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; outline: none; transition: 0.3s;
+            background: transparent; border: 1px solid var(--text-dim);
+            color: var(--primary); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;
         }
 
         nav {
-            display: flex; gap: 30px; padding: 30px 20px; overflow-x: auto;
-            max-width: 650px; margin: 0 auto; scrollbar-width: none;
-            justify-content: center;
+            display: flex; gap: 20px; padding: 25px 20px; overflow-x: auto;
+            max-width: 600px; margin: 0 auto; justify-content: center;
         }
         nav button {
             background: transparent; border: none; color: var(--text-dim);
-            font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.4s;
-            text-transform: uppercase; letter-spacing: 2px;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
         }
-        nav button.active { color: var(--primary); transform: scale(1.1); }
+        nav button.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
-        .container { padding: 15px; max-width: 650px; margin: 0 auto; }
-        .day-section { display: none; animation: hakiSense 0.5s ease-out; }
-        .active-day { display: block; }
-        @keyframes hakiSense { from { opacity: 0; transform: translateY(15px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        .container { padding: 10px; max-width: 600px; margin: 0 auto; }
+        .day-section { display: none; }
+        .active-day { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            border-radius: 4px; padding: 30px; margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.4s;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 8px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.03);
         }
-        .card:hover { border-color: rgba(0, 255, 170, 0.2); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h3 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #fff; }
-        
         .timer-btn {
-            background: transparent; color: var(--primary); border: 1px solid rgba(0, 255, 170, 0.3);
-            padding: 6px 14px; font-weight: 700; font-size: 0.6rem; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
+            background: transparent; color: var(--primary); border: 1px solid var(--primary);
+            padding: 4px 10px; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
         }
 
-        .serie-row {
-            display: grid; grid-template-columns: 90px 1fr; align-items: center;
-            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+        .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
+        .input-box { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .input-box input {
+            background: transparent; border: none; color: #fff; width: 100%;
+            font-size: 1.1rem; outline: none; text-align: right;
         }
-        .serie-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
-        
-        .inputs { display: flex; gap: 30px; }
-        .input-group { display: flex; align-items: center; gap: 10px; }
-        .inputs input {
-            width: 50px; background: transparent; border: none; color: var(--silver);
-            font-weight: 500; font-size: 1.3rem; text-align: right; outline: none;
-            transition: 0.3s;
-        }
-        .inputs input:focus { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-        .input-unit { color: var(--text-dim); font-size: 0.6rem; font-weight: 700; }
+        .input-box span { font-size: 0.55rem; color: var(--text-dim); font-weight: 700; }
 
-        /* Grafico Spirituale */
-        .chart-container { height: 80px; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 20px; }
+        .chart-container { height: 50px; margin-top: 15px; opacity: 0.4; }
 
         #timer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(1, 2, 4, 0.99); display: none; flex-direction: column;
+            background: rgba(1,2,4,0.98); display: none; flex-direction: column;
             align-items: center; justify-content: center; z-index: 9999;
         }
-        #timer-val { font-size: 9rem; font-weight: 300; color: var(--primary); text-shadow: 0 0 50px var(--glow); font-variant-numeric: tabular-nums; }
-        
-        .haki-pulse { animation: hakiPulse 0.4s ease; }
-        @keyframes hakiPulse { 0% { background: #fff; } 100% { background: rgba(1, 2, 4, 0.99); } }
-
-        /* Mobile Optimization */
-        @media (max-width: 480px) {
-            h1 { letter-spacing: 2px; font-size: 0.9rem; }
-            .card { padding: 20px; }
-            .inputs input { font-size: 1.1rem; width: 40px; }
-        }
+        #timer-val { font-size: 7rem; font-weight: 300; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="progress-master"></div>
-
-<div id="timer-overlay" onclick="closeTimer()">
-    <div style="font-size: 0.7rem; letter-spacing: 10px; color: var(--text-dim); margin-bottom: 30px; font-weight:700;">HAKI FOCUS</div>
-    <div id="timer-val">00:00</div>
-    <div style="color:var(--text-dim); font-size: 0.6rem; margin-top: 50px; letter-spacing: 4px;">ANNULLA SEQUENZA</div>
-</div>
-
 <header>
-    <h1>Rayleigh <span style="font-weight:300; opacity:0.5;">Master</span></h1>
-    <select class="week-selector" id="weekSelect" onchange="loadWeekData()">
-        </select>
+    <h1>Rayleigh <span style="font-weight:300; opacity:0.5">Pure</span></h1>
+    <select class="week-selector" id="weekSelect" onchange="loadWeekData()"></select>
 </header>
 
 <nav id="dayNav">
@@ -162,11 +109,11 @@ for (let i = 1; i <= 16; i++) {
 }
 
 const workout = {
-    lun: { ex: [{n:"Panca Inclinata Manubri", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
-    mar: { ex: [{n:"Trazioni Zavorrate", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl Bilanciere", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core Stability", s:3, r:60, spec:true}] },
+    lun: { ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}, {n:"Pushdown", s:4, r:60}, {n:"Addome", s:3, r:60, spec:true}] },
+    mar: { ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}, {n:"Facepull", s:3, r:60}, {n:"Core", s:3, r:60, spec:true}] },
     mer: { ex: [{n:"Hack Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Leg Curl", s:4, r:60}, {n:"Calf Raise", s:4, r:60}] },
-    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci ai Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
-    ven: { ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine Inversa", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl ai Cavi", s:3, r:60}] }
+    gio: { ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}, {n:"French Press", s:3, r:60}] },
+    ven: { ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}, {n:"Curl Cavi", s:3, r:60}] }
 };
 
 let charts = {};
@@ -177,31 +124,12 @@ function init() {
         let section = `<div id="${day}" class="day-section ${day==='lun'?'active-day' : ''}">`;
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            section += `
-            <div class="card">
-                <div class="card-header">
-                    <h3>${e.n}</h3>
-                    <button class="timer-btn" onclick="startTimer(${e.r})">${e.r}s rest</button>
-                </div>
-                <div class="series-grid">
-                    ${Array.from({length:e.s}).map((_, s) => `
-                        <div class="serie-row">
-                            <span class="serie-label">Set ${s+1}</span>
-                            <div class="inputs">
-                                <div class="input-group">
-                                    <input type="number" placeholder="0" id="${id}_w${s}" onchange="saveData('${id}')">
-                                    <span class="input-unit">KG</span>
-                                </div>
-                                <div class="input-group">
-                                    <input type="number" placeholder="0" id="${id}_r${s}" onchange="saveData('${id}')">
-                                    <span class="input-unit">RE</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                ${!e.spec ? `<div class="chart-container"><canvas id="c_${id}"></canvas></div>` : ''}
-            </div>`;
+            section += `<div class="card"><div class="card-header"><h3>${e.n}</h3><button class="timer-btn" onclick="startTimer(${e.r})">${e.r}S</button></div>`;
+            for(let s=0; s<e.s; s++) {
+                section += `<div class="inputs"><div class="input-box"><input type="number" id="${id}_w${s}" onchange="saveData('${id}')" placeholder="0"><span>KG</span></div><div class="input-box"><input type="number" id="${id}_r${s}" onchange="saveData('${id}')" placeholder="0"><span>RE</span></div></div>`;
+            }
+            if(!e.spec) section += `<div class="chart-container"><canvas id="c_${id}"></canvas></div>`;
+            section += `</div>`;
         });
         section += `</div>`;
         main.innerHTML += section;
@@ -209,109 +137,69 @@ function init() {
     loadWeekData();
 }
 
-function updateProgressBar() {
-    const inputs = document.querySelectorAll('.active-day input[type="number"]');
-    let filled = 0;
-    inputs.forEach(i => { if(i.value > 0) filled++; });
-    const percent = (filled / inputs.length) * 100;
-    document.getElementById('progress-master').style.width = percent + '%';
-}
-
 function saveData(exId) {
-    const week = document.getElementById('weekSelect').value;
+    const week = weekSelect.value;
     const day = exId.split('_')[0];
     const idx = exId.split('_')[1];
     const sets = workout[day].ex[idx].s;
-    let dataEntry = { w: [], r: [] };
+    let entry = { w: [], r: [] };
     for(let i=0; i<sets; i++) {
-        dataEntry.w.push(parseFloat(document.getElementById(`${exId}_w${i}`).value) || 0);
-        dataEntry.r.push(parseFloat(document.getElementById(`${exId}_r${i}`).value) || 0);
+        entry.w.push(document.getElementById(`${exId}_w${i}`).value || 0);
+        entry.r.push(document.getElementById(`${exId}_r${i}`).value || 0);
     }
-    localStorage.setItem(`Rayleigh_Master_${week}_${exId}`, JSON.stringify(dataEntry));
-    updateSingleChart(exId);
-    updateProgressBar();
+    localStorage.setItem(`Rayleigh_Pure_${week}_${exId}`, JSON.stringify(entry));
+    updateChart(exId);
 }
 
 function loadWeekData() {
-    const week = document.getElementById('weekSelect').value;
+    const week = weekSelect.value;
     for(let day in workout) {
         workout[day].ex.forEach((e, idx) => {
             const id = `${day}_${idx}`;
-            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Master_${week}_${id}`));
+            const saved = JSON.parse(localStorage.getItem(`Rayleigh_Pure_${week}_${id}`));
             for(let i=0; i<e.s; i++) {
-                const wIn = document.getElementById(`${id}_w${i}`);
-                const rIn = document.getElementById(`${id}_r${i}`);
-                if(saved) {
-                    wIn.value = saved.w[i] || "";
-                    rIn.value = saved.r[i] || "";
-                } else {
-                    wIn.value = ""; rIn.value = "";
-                }
+                document.getElementById(`${id}_w${i}`).value = saved ? saved.w[i] : "";
+                document.getElementById(`${id}_r${i}`).value = saved ? saved.r[i] : "";
             }
-            if(!e.spec) updateSingleChart(id);
+            if(!e.spec) updateChart(id);
         });
     }
-    updateProgressBar();
 }
 
-function updateSingleChart(exId) {
-    const historyVol = [];
+function updateChart(id) {
+    const history = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`Rayleigh_Master_${w}_${exId}`));
-        let vol = 0;
-        if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
-        historyVol.push(vol);
+        const d = JSON.parse(localStorage.getItem(`Rayleigh_Pure_${w}_${id}`));
+        let vol = 0; if(d) d.w.forEach((weight, i) => vol += (weight * (d.r[i] || 0)));
+        history.push(vol);
     }
-    const ctx = document.getElementById(`c_${exId}`);
+    const ctx = document.getElementById(`c_${id}`);
     if(!ctx) return;
-    if(charts[exId]) charts[exId].destroy();
-    charts[exId] = new Chart(ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: Array.from({length:16}, (_, i) => i+1),
-            datasets: [{
-                data: historyVol,
-                borderColor: '#00ffaa',
-                backgroundColor: 'transparent',
-                fill: false, tension: 0.4, borderWidth: 1.5, pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { display: false }, y: { display: false } }
-        }
+    if(charts[id]) charts[id].destroy();
+    charts[id] = new Chart(ctx, {
+        type: 'line', data: { labels: history.map((_, i) => i + 1), datasets: [{ data: history, borderColor: '#00ffaa', fill: false, tension: 0.4, borderWidth: 1, pointRadius: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
     });
 }
 
-let tInterval;
 function startTimer(s) {
-    const ov = document.getElementById('timer-overlay');
-    const val = document.getElementById('timer-val');
+    const ov = document.createElement('div'); ov.id = 'timer-overlay';
+    ov.innerHTML = `<div id="timer-val">00:00</div>`; document.body.appendChild(ov);
     ov.style.display = 'flex';
     let time = s;
-    tInterval = setInterval(() => {
-        let m = Math.floor(time/60); let sec = time%60;
-        val.innerText = `${m}:${sec.toString().padStart(2, '0')}`;
-        if(time <= 0) { 
-            clearInterval(tInterval); 
-            val.innerText = "GO!";
-            ov.classList.add('haki-pulse');
-            setTimeout(() => ov.classList.remove('haki-pulse'), 400);
-        }
-        time--;
+    const interval = setInterval(() => {
+        document.getElementById('timer-val').innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2, '0')}`;
+        if(time-- <= 0) { clearInterval(interval); document.body.removeChild(ov); }
     }, 1000);
+    ov.onclick = () => { clearInterval(interval); document.body.removeChild(ov); };
 }
-
-function closeTimer() { clearInterval(tInterval); document.getElementById('timer-overlay').style.display = 'none'; }
 
 function switchDay(id) {
     document.querySelectorAll('.day-section').forEach(d => d.classList.remove('active-day'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active-day');
     document.getElementById('n-'+id).classList.add('active');
-    updateProgressBar();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0,0);
 }
 
 window.onload = init;

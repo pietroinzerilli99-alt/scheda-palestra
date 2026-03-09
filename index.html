@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OGNI SINGOLO GIORNO - APPLE STYLE</title>
+    <title>OGNI SINGOLO GIORNO - FINAL UX</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --card-bg: #0d0d0f; --primary: #00ffaa; --zoro: #00ff88; --shanks: #ff1100; --luffy: #ffcc00; }
         body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* ANIMAZIONI */
         @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
         .quake-active { animation: quake 0.08s infinite !important; }
 
@@ -25,7 +24,6 @@
         .char-frame { width: 70px; height: 95px; border-radius: 18px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .active .char-frame { border-color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
 
-        /* EFFETTI HAKI E SHANKS */
         .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
         .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 3px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
         .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
@@ -40,29 +38,26 @@
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin-bottom: 25px; border: 1px solid #1a1a1a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
+        .card-header h3 { margin: 0; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 10px; font-weight: 700; flex-grow: 1; }
         
-        /* CONTROLLI GRANDI (APPLE LOGIC) */
-        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.2rem; }
+        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.2rem; flex-shrink: 0; }
         .action-btn:active { transform: scale(0.9); background: #333; }
         
-        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; }
+        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; flex-shrink: 0; }
         .timer-display { font-family: monospace; font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 50px; text-align: center; cursor: pointer; }
 
         .set-row { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
-        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; transition: 0.3s; }
-        .input-box:focus-within { border-color: #444; background: #222; }
+        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 700; font-size: 1.2rem; }
         .input-box span { font-size: 0.65rem; color: #555; margin-left: 6px; font-weight: 800; text-transform: uppercase; }
         
-        /* GRAFICO */
         .chart-box { height: 110px; margin-top: 25px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
 
-        /* MODALE APPLE STYLE */
+        /* MODALE AGGIORNATA */
         .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
-        .modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px 20px 50px 20px; box-sizing: border-box; border-top: 1px solid #333; }
+        .modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px 20px 50px 20px; box-sizing: border-box; border-top: 1px solid #333; position: relative; }
         .modal-handle { width: 40px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 25px auto; }
         .modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 25px; text-align: center; }
         .modal-input-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
@@ -73,7 +68,7 @@
         .quote-box { padding: 60px 30px; text-align: center; }
     </style>
 </head>
-<body>
+<body onclick="handleGlobalClick(event)">
 
 <header>
     <div class="main-title">OGNI SINGOLO GIORNO</div>
@@ -91,7 +86,7 @@
 </div>
 
 <div class="modal" id="addModal">
-    <div class="modal-content">
+    <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-handle" onclick="closeModal()"></div>
         <div class="modal-title">Nuovo Esercizio</div>
         <div class="modal-input-group">
@@ -103,7 +98,6 @@
 </div>
 
 <script>
-// Logica Timer Persistente e Workout (Data v6)
 const quotesDB = {
     zoro: ["Settimana 1: Se non riesci a proteggere il tuo capitano, la tua ambizione è nulla.", "Settimana 16: ORA SONO IO L'INFERNO."],
     shanks: ["Settimana 1: Scommetto sul futuro.", "Settimana 16: Il mondo è pronto per te?"],
@@ -118,7 +112,7 @@ const defaultData = {
     ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: 'Cable Crunch', ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('workout_structure_v6')) || defaultData;
+let workoutData = JSON.parse(localStorage.getItem('workout_structure_v8')) || defaultData;
 let activeTimer = null;
 let currentDay = 'lun';
 
@@ -154,7 +148,6 @@ function triggerHaki(day) {
     const frame = document.getElementById('frame-'+day);
     wrap.classList.add('quake-active');
     if(char === 'shanks') document.getElementById('scars-'+day).classList.add('animate-scars');
-    
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("class", "haki-svg-container");
     frame.appendChild(svg);
@@ -176,7 +169,7 @@ function renderWorkout(day = currentDay) {
     area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:40px 0; font-weight:900;">DAILY FINISHERS</div>`;
     area.appendChild(createCard({n: workoutData[day].abs, s:3, r:60}, 'abs', day));
     area.appendChild(createCard({n: "Cardio LISS", s:1, r:600}, 'cardio', day));
-    area.innerHTML += `<button class="add-ex-btn" onclick="openAddModal()">+ AGGIUNGI ESERCIZIO</button>`;
+    area.innerHTML += `<button class="add-ex-btn" onclick="openAddModal(event)">+ AGGIUNGI ESERCIZIO</button>`;
     const char = workoutData[day].char;
     document.getElementById('quote-text').innerText = quotesDB[char][week-1] || quotesDB[char][0];
     document.getElementById('quote-author').innerText = char;
@@ -186,16 +179,14 @@ function createCard(ex, idx, day) {
     const week = document.getElementById('weekSelector').value;
     const card = document.createElement('div'); card.className = 'card';
     let isSpecial = (idx === 'abs' || idx === 'cardio');
-
     let html = `<div class="card-header">
-        <h3>${ex.n} ${!isSpecial ? `<button class="action-btn" style="width:30px; height:30px; font-size:0.8rem;" onclick="editExName('${day}', ${idx})">✎</button>` : ''}</h3>
+        <h3>${ex.n} ${!isSpecial ? `<button class="action-btn" style="width:34px; height:34px; font-size:0.9rem; margin-left:10px;" onclick="editExName('${day}', ${idx})">✎</button>` : ''}</h3>
         <div class="timer-group">
             <button class="action-btn" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
             <span class="timer-display" id="t-val-${idx}" onclick="editTimerVal('${day}', '${idx}')">${ex.r}s</span>
             <button class="action-btn" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
         </div>
     </div>`;
-
     for(let i=1; i<=ex.s; i++) {
         const key = `w${week}-${day}-${idx}-s${i}`;
         const saved = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
@@ -211,13 +202,28 @@ function createCard(ex, idx, day) {
     return card;
 }
 
-// TIMER PERSISTENTE
+// LOGICA CHIUSURA MODALE AL TOCCO ESTERNO
+function handleGlobalClick(e) {
+    const modal = document.getElementById('addModal');
+    if (modal.classList.contains('active') && e.target === modal) {
+        closeModal();
+    }
+}
+
+function openAddModal(e) {
+    e.stopPropagation();
+    document.getElementById('addModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('addModal').classList.remove('active');
+}
+
 function startTimer(idx, seconds) {
     if(activeTimer && activeTimer.idx !== idx) return;
     const btn = document.getElementById(`t-btn-${idx}`);
     if(activeTimer && activeTimer.idx === idx) {
         if(activeTimer.running) { clearInterval(activeTimer.int); activeTimer.running = false; btn.innerText = "▶"; localStorage.removeItem('persistent_timer'); }
-        else { resumeTimer(idx, seconds); }
         return;
     }
     document.querySelectorAll('.action-btn').forEach(b => { if(b.id && b.id.startsWith('t-btn') && b.id !== `t-btn-${idx}`) b.disabled = true; });
@@ -256,15 +262,12 @@ function resetTimer(idx, original) {
     if(display) display.innerText = original + "s"; if(btn) btn.innerText = "▶";
 }
 
-// MODALE AGGIUNGI (LOGICA APPLE)
-function openAddModal() { document.getElementById('addModal').classList.add('active'); }
-function closeModal() { document.getElementById('addModal').classList.remove('active'); }
 function confirmAddEx() {
     const name = document.getElementById('newExName').value;
     const sets = document.getElementById('newExSets').value;
     if(name && sets) {
         workoutData[currentDay].ex.push({n: name, s: parseInt(sets), r: 90});
-        localStorage.setItem('workout_structure_v6', JSON.stringify(workoutData));
+        localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData));
         closeModal(); renderWorkout(currentDay);
         document.getElementById('newExName').value = ''; document.getElementById('newExSets').value = '';
     }
@@ -272,12 +275,17 @@ function confirmAddEx() {
 
 function editTimerVal(day, idx) {
     const newVal = prompt("Nuovo tempo recupero (secondi):");
-    if(newVal) { workoutData[day].ex[idx].r = parseInt(newVal); localStorage.setItem('workout_structure_v6', JSON.stringify(workoutData)); renderWorkout(day); }
+    if(newVal) { 
+        if(idx==='abs'||idx==='cardio') return;
+        workoutData[day].ex[idx].r = parseInt(newVal); 
+        localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData)); 
+        renderWorkout(day); 
+    }
 }
 
 function editExName(day, idx) {
     const n = prompt("Nuovo nome esercizio:", workoutData[day].ex[idx].n);
-    if(n) { workoutData[day].ex[idx].n = n; localStorage.setItem('workout_structure_v6', JSON.stringify(workoutData)); renderWorkout(day); }
+    if(n) { workoutData[day].ex[idx].n = n; localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData)); renderWorkout(day); }
 }
 
 function saveSet(day, exIdx, setIdx, type, val) {

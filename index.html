@@ -10,163 +10,108 @@
         :root { --bg: #000; --card-bg: #0d0d0f; --primary: #00ffaa; --zoro: #00ff88; --shanks: #ff1100; --luffy: #ffcc00; }
         body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* --- ANIMAZIONI --- */
-        @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
-        .quake-active { animation: quake 0.08s infinite !important; }
-
-        .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
-        /* MODIFICA: 3 TAGLI PER SHANKS */
-        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 2px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
-        .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
-        .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
-        @keyframes slashDown { from { height: 0; } to { height: 60px; } }
-        @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
-
-        .haki-svg-container { position: absolute; inset: -40px; pointer-events: none; z-index: 20; width: 150px; height: 175px; }
-        .lightning-path { fill: none; stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(0 0 5px currentColor); animation: flash 0.4s ease-out forwards; }
-        @keyframes flash { 0% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { opacity: 0; stroke-dashoffset: 0; } }
-
-        /* --- MENU --- */
-        #sideMenu { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: rgba(10, 10, 12, 0.98); backdrop-filter: blur(20px); z-index: 3000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #222; padding: 60px 20px; box-sizing: border-box; }
-        #sideMenu.active { left: 0; }
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
-        .menu-overlay.active { display: block; }
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+        /* --- FRASI MOTIVAZIONALI (VISIBILI) --- */
+        #quote-container { 
+            margin: 15px 20px; 
+            padding: 15px; 
+            background: rgba(255,255,255,0.03); 
+            border-left: 4px solid var(--primary); 
+            border-radius: 10px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+        #quote-text { 
+            font-size: 0.9rem; 
+            font-style: italic; 
+            color: #ccc; 
+            line-height: 1.4; 
+            margin: 0;
+            width: 100%;
+        }
 
         /* --- UI ELEMENTS --- */
         header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; }
-        .burger-btn { font-size: 1.8rem; background: none; border: none; color: #fff; cursor: pointer; }
         .main-title { font-weight: 900; letter-spacing: 5px; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; position: absolute; left: 50%; transform: translateX(-50%); }
-        
-        .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; appearance: none; font-size: 1rem; text-align: center; }
         
         nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
         .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
         .nav-item.active { opacity: 1; transform: scale(1.1); }
         .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 
-        /* --- CARDS --- */
+        /* --- CARDS & TIMER --- */
         .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin: 0 20px 25px; border: 1px solid #1a1a1a; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .edit-trigger { background: #1a1a1c; border: 1px solid #333; color: var(--primary); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
         
-        /* MODIFICA: TASTO MODIFICA PIU GRANDE E INTUITIVO */
-        .edit-trigger { background: #222; border: 1px solid #444; color: var(--primary); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; margin-left: 10px; }
-        
-        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .timer-group { display: flex; align-items: center; gap: 6px; background: #151518; padding: 5px; border-radius: 16px; border: 1px solid #222; }
-        .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); min-width: 45px; text-align: center; }
+        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 16px; border: 1px solid #222; }
+        .timer-display { font-family: monospace; font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 50px; text-align: center; }
+        .action-btn { background: #222; border: 1px solid #333; color: #fff; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        .set-row { display: flex; gap: 10px; margin-bottom: 12px; }
-        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
-        .input-box span { font-size: 0.6rem; color: #555; margin-left: 5px; font-weight: 900; }
-
-        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; }
+        /* --- ANIMAZIONI SHANKS --- */
+        .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
+        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 2px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
+        .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
+        .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
+        @keyframes slashDown { from { height: 0; } to { height: 60px; } }
+        @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
 
         /* --- MODALE --- */
-        .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
+        .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s; display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
-        .modal-content { background: #111; width: 100%; border-radius: 32px 32px 0 0; padding: 35px 25px 60px; border-top: 1px solid #333; box-sizing: border-box; }
-        .modal-handle { width: 45px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 30px; }
-        
-        /* MODIFICA: ETICHETTE INPUT CHIARI PER MODIFICA */
-        .modal-field { margin-bottom: 15px; }
-        .modal-field label { display: block; font-size: 0.7rem; font-weight: 900; color: #555; margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
-        .modal-field input { width: 100%; background: #1a1a1c; border: 1px solid #333; padding: 18px; border-radius: 16px; color: #fff; font-weight: 700; outline: none; box-sizing: border-box; }
-
-        #page-bio { display: none; padding: 20px; }
+        .modal-content { background: #111; width: 100%; border-radius: 32px 32px 0 0; padding: 30px; border-top: 1px solid #333; }
+        .modal-field { margin-bottom: 20px; }
+        .modal-field label { display: block; font-size: 0.7rem; color: #666; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
+        .modal-field input { width: 100%; background: #1a1a1c; border: 1px solid #333; padding: 15px; border-radius: 12px; color: #fff; outline: none; box-sizing: border-box; }
     </style>
 </head>
-<body onclick="handleGlobalClick(event)">
-
-<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
-<div id="sideMenu">
-    <div style="font-weight: 900; font-size: 1.4rem; margin-bottom: 40px; color: var(--primary); letter-spacing: 2px;">LOG POSE</div>
-    <div class="menu-item" onclick="switchPage('workout')">🏋️ Scheda Palestra</div>
-    <div class="menu-item" onclick="switchPage('bio')">🧬 Bio & Nutrizione</div>
-</div>
+<body onclick="if(event.target.id==='editModal') closeModal()">
 
 <header>
-    <button class="burger-btn" onclick="toggleMenu()">☰</button>
-    <div class="main-title">OGNI SINGOLO GIORNO</div>
+    <div class="main-title">ONE PIECE FIT</div>
 </header>
 
 <div id="page-workout">
-    <select id="weekSelector" class="week-select" onchange="renderWorkout()"></select>
+    <div id="quote-container"><p id="quote-text">"Caricamento..."</p></div>
     <nav id="navbar"></nav>
-    <div id="shake-wrapper">
-        <div id="workout-area"></div>
-    </div>
-</div>
-
-<div id="page-bio">
-    <div class="card">
-        <div style="display:flex; flex-direction:column; gap:15px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;"><span>Peso (kg)</span><input type="number" id="weight" value="75" oninput="calculateMacros()" style="background:#1a1a1c; border:1px solid #333; color:#fff; padding:10px; border-radius:12px; width:80px; text-align:center;"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center;"><span>Altezza (cm)</span><input type="number" id="height" value="180" oninput="calculateMacros()" style="background:#1a1a1c; border:1px solid #333; color:#fff; padding:10px; border-radius:12px; width:80px; text-align:center;"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center;"><span>Età</span><input type="number" id="age" value="25" oninput="calculateMacros()" style="background:#1a1a1c; border:1px solid #333; color:#fff; padding:10px; border-radius:12px; width:80px; text-align:center;"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center;"><span>Obiettivo</span>
-                <select id="goal" onchange="calculateMacros()" style="background:#1a1a1c; border:1px solid #333; color:#fff; padding:10px; border-radius:12px;"><option value="cut">Definizione</option><option value="maintain">Mantenimento</option><option value="bulk">Massa</option></select>
-            </div>
-        </div>
-    </div>
-    <div class="card" style="text-align:center; border-color:var(--primary); background:rgba(0,255,170,0.05)">
-        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL TARGET</span>
-        <div id="totalCalories" style="font-size:2.8rem; font-weight:900; margin:10px 0;">--</div>
-        <div style="display:flex; justify-content:space-around; margin-top:20px;">
-            <div><div id="p-val" style="color:#ff4444; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
-            <div><div id="c-val" style="color:#44aaff; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
-            <div><div id="f-val" style="color:#ffcc00; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
-        </div>
-    </div>
+    <div id="workout-area"></div>
 </div>
 
 <div class="modal" id="editModal">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <div class="modal-handle" onclick="closeModal()"></div>
-        <div id="modalTitle" style="text-align:center; font-weight:900; font-size:1.3rem; margin-bottom:25px;">MODIFICA SLOT</div>
-        
-        <div class="modal-field">
-            <label>Nome Esercizio</label>
-            <input type="text" id="exNameInput" placeholder="es: Panca Piana">
+    <div class="modal-content">
+        <h2 id="modalTitle" style="margin-top:0; font-size:1.2rem; color:var(--primary)">MODIFICA</h2>
+        <div class="modal-field"><label>Nome Esercizio</label><input type="text" id="exNameInput"></div>
+        <div style="display:flex; gap:15px">
+            <div class="modal-field" style="flex:1"><label>Serie</label><input type="number" id="exSetsInput"></div>
+            <div class="modal-field" style="flex:1"><label>Recupero (s)</label><input type="number" id="exRestInput"></div>
         </div>
-        
-        <div style="display:flex; gap:10px; margin-bottom:30px;">
-            <div class="modal-field" style="flex:1">
-                <label>Serie</label>
-                <input type="number" id="exSetsInput" placeholder="es: 4">
-            </div>
-            <div class="modal-field" style="flex:1">
-                <label>Timer (sec)</label>
-                <input type="number" id="exRestInput" placeholder="es: 90">
-            </div>
-        </div>
-
-        <div style="display:flex; gap:10px;">
-            <button id="modalActionBtn" style="flex:2; padding:20px; border-radius:18px; border:none; background:var(--primary); color:#000; font-weight:900;">SALVA</button>
-            <button id="modalDeleteBtn" style="flex:1; padding:20px; border-radius:18px; border:none; background:#ff1100; color:#fff; font-weight:900;">ELIMINA</button>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button onclick="saveChanges()" style="flex:2; padding:18px; border-radius:15px; background:var(--primary); font-weight:900; border:none;">SALVA</button>
+            <button id="delBtn" onclick="deleteEx()" style="flex:1; padding:18px; border-radius:15px; background:#ff1100; color:#fff; font-weight:900; border:none;">ELIMINA</button>
         </div>
     </div>
 </div>
 
 <script>
-const defaultData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: {n:'Ab Wheel', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Squat", s:4, r:120}, {n:"Stacchi", s:4, r:120}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
+const quotes = {
+    zoro: ["Non è fortuna, è forza di volontà.", "Se morirò qui, significa che non potevo andare oltre.", "Il dolore è un'illusione della mente."],
+    shanks: ["Non c'è gloria nel vincere una sfida facile.", "Scommetto questa forza sulla nuova era.", "Vivi la tua vita senza rimpianti."],
+    luffy: ["Se non rischio la vita, non posso creare il mio futuro!", "Diventerò il più forte di tutti!", "Mangia, allenati, ripeti!"]
 };
 
-let workoutData = JSON.parse(localStorage.getItem('OP_Fit_Final_V2')) || defaultData;
+const defaultData = {
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Chest Press", s:3, r:60}], abs: {n:'Crunch', s:3, r:60}, cardio: {n:'Camminata', s:1, r:600} },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni", s:4, r:90}], abs: {n:'Plank', s:3, r:60}, cardio: {n:'Corsa', s:1, r:600} },
+    mer: { char: 'luffy', icon: '🍖', ex: [{n:"Squat", s:4, r:120}], abs: {n:'Leg Raise', s:3, r:60}, cardio: {n:'Salti', s:1, r:600} }
+};
+
+let workoutData = JSON.parse(localStorage.getItem('OP_Fit_V4')) || defaultData;
 let currentDay = 'lun';
-let activeTimer = null;
+let timers = {}; // OGGETTO PER TIMER INDIPENDENTI
 let editingIdx = null;
 
 function init() {
     const nav = document.getElementById('navbar');
-    const sel = document.getElementById('weekSelector');
-    for(let i=1; i<=16; i++) sel.innerHTML += `<option value="${i}">SETTIMANA ${i}</option>`;
     for(let day in workoutData) {
         nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item">
             <div class="char-frame" id="frame-${day}">
@@ -175,193 +120,116 @@ function init() {
             </div>
             <span style="font-size:0.6rem; font-weight:900; color:#555">${day.toUpperCase()}</span></button>`;
     }
-    loadBio();
     setDay('lun');
-    checkPersistentTimer();
 }
 
 function setDay(day) {
     currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
-    triggerHaki(day);
-    renderWorkout();
-}
-
-function triggerHaki(day) {
-    const wrap = document.getElementById('shake-wrapper');
-    const frame = document.getElementById('frame-'+day);
-    wrap.classList.add('quake-active');
-    if(workoutData[day].char === 'shanks') document.getElementById('scars-'+day).classList.add('animate-scars');
     
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "haki-svg-container");
-    frame.appendChild(svg);
-    for(let i=0; i<6; i++) {
-        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        p.setAttribute("class", "lightning-path"); p.setAttribute("stroke", workoutData[day].color);
-        let d = `M 75 85 `;
-        for(let j=0; j<3; j++) d += `L ${75+(Math.random()-0.5)*120} ${85+(Math.random()-0.5)*120} `;
-        p.setAttribute("d", d); svg.appendChild(p);
+    // Frasi Motivazionali
+    const char = workoutData[day].char || 'luffy';
+    const qList = quotes[char];
+    document.getElementById('quote-text').innerText = `"${qList[Math.floor(Math.random()*qList.length)]}"`;
+    document.getElementById('quote-container').style.borderColor = workoutData[day].color || '#ffcc00';
+
+    if(char === 'shanks') {
+        const sc = document.getElementById('scars-'+day);
+        sc.classList.add('animate-scars');
+        setTimeout(() => sc.classList.remove('animate-scars'), 800);
     }
-    setTimeout(() => { wrap.classList.remove('quake-active'); if(workoutData[day].char === 'shanks') document.getElementById('scars-'+day).classList.remove('animate-scars'); svg.remove(); }, 800);
+    renderWorkout();
 }
 
 function renderWorkout() {
     const area = document.getElementById('workout-area');
     area.innerHTML = '';
-    workoutData[currentDay].ex.forEach((ex, idx) => area.appendChild(createCard(ex, idx)));
-    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:20px 0; font-weight:900;">DAILY FINISHERS</div>`;
+    
+    workoutData[currentDay].ex.forEach((ex, i) => area.appendChild(createCard(ex, i)));
+    area.innerHTML += `<div style="text-align:center; color:#333; font-size:0.6rem; letter-spacing:4px; margin:20px 0; font-weight:900;">DAILY FINISHERS</div>`;
     area.appendChild(createCard(workoutData[currentDay].abs, 'abs'));
     area.appendChild(createCard(workoutData[currentDay].cardio, 'cardio'));
-    area.innerHTML += `<button class="add-ex-btn" onclick="openAddModal()">+ AGGIUNGI ESERCIZIO</button>`;
 }
 
 function createCard(ex, idx) {
-    const week = document.getElementById('weekSelector').value;
     const card = document.createElement('div'); card.className = 'card';
     card.innerHTML = `<div class="card-header">
-        <h3 style="display:flex; align-items:center;">${ex.n} <div class="edit-trigger" onclick="openEditModal('${idx}')">✎</div></h3>
+        <div class="edit-trigger" onclick="openEdit('${idx}')">✎</div>
+        <h3 style="flex:1; margin:0 15px; font-size:0.9rem">${ex.n}</h3>
         <div class="timer-group">
-            <button class="action-btn" style="width:32px; height:32px" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
-            <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
-            <button class="action-btn" style="width:32px; height:32px" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
+            <button class="action-btn" onclick="resetT('${idx}', ${ex.r})">↺</button>
+            <span class="timer-display" id="disp-${idx}">${ex.r}s</span>
+            <button class="action-btn" id="btn-t-${idx}" onclick="toggleT('${idx}', ${ex.r})" style="color:var(--primary)">▶</button>
         </div>
     </div>`;
-
+    
     for(let i=1; i<=ex.s; i++) {
-        const key = `w${week}-${currentDay}-${idx}-s${i}`;
-        const val = JSON.parse(localStorage.getItem(key)) || {k:'', r:''};
-        card.innerHTML += `<div class="set-row">
-            <div style="font-size:0.7rem; font-weight:900; color:#333; width:15px;">${i}</div>
-            <div class="input-box"><input type="number" value="${val.k}" oninput="saveSet('${idx}', ${i}, 'k', this.value)"><span>KG</span></div>
-            <div class="input-box"><input type="number" value="${val.r}" oninput="saveSet('${idx}', ${i}, 'r', this.value)"><span>REPS</span></div>
+        card.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:10px; opacity:0.8">
+            <div style="font-size:0.6rem; width:15px; color:#444">${i}</div>
+            <div style="flex:1; background:#1a1a1c; border-radius:10px; padding:10px; text-align:right; font-size:0.9rem">--- KG</div>
+            <div style="flex:1; background:#1a1a1c; border-radius:10px; padding:10px; text-align:right; font-size:0.9rem">--- REPS</div>
         </div>`;
     }
-    card.innerHTML += `<div style="height:100px; margin-top:20px;"><canvas id="chart-${idx}"></canvas></div>`;
-    setTimeout(() => drawChart(idx), 50);
     return card;
 }
 
-function saveSet(exIdx, setIdx, type, val) {
-    const week = document.getElementById('weekSelector').value;
-    const key = `w${week}-${currentDay}-${exIdx}-s${setIdx}`;
-    let d = JSON.parse(localStorage.getItem(key)) || {k:'', r:''};
-    d[type] = val; localStorage.setItem(key, JSON.stringify(d)); drawChart(exIdx);
-}
-
-function drawChart(idx) {
-    const canvas = document.getElementById(`chart-${idx}`); if(!canvas) return;
-    const pts = [];
-    for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}-s1`));
-        pts.push(d && d.k ? parseFloat(d.k) : 0);
+// LOGICA TIMER INDIPENDENTI
+function toggleT(id, sec) {
+    if(timers[id]) {
+        clearInterval(timers[id].int);
+        delete timers[id];
+        document.getElementById('btn-t-'+id).innerText = "▶";
+    } else {
+        const end = Date.now() + (sec * 1000);
+        document.getElementById('btn-t-'+id).innerText = "Ⅱ";
+        timers[id] = {
+            int: setInterval(() => {
+                let rem = Math.round((end - Date.now())/1000);
+                document.getElementById('disp-'+id).innerText = (rem > 0 ? rem : sec) + "s";
+                if(rem <= 0) {
+                    toggleT(id, sec);
+                    new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();
+                }
+            }, 1000)
+        };
     }
-    if(window['c_'+idx]) window['c_'+idx].destroy();
-    window['c_'+idx] = new Chart(canvas.getContext('2d'), {
-        type: 'line',
-        data: { labels: Array.from({length:16},(_,i)=>i+1), datasets: [{ data: pts, borderColor: workoutData[currentDay].color, tension: 0.4, pointRadius: 0, fill: false, borderWidth: 2 }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-    });
 }
 
-function openAddModal() {
-    editingIdx = 'new';
-    document.getElementById('modalTitle').innerText = "NUOVO ESERCIZIO";
-    document.getElementById('exNameInput').value = "";
-    document.getElementById('exSetsInput').value = "3";
-    document.getElementById('exRestInput').value = "90";
-    document.getElementById('modalDeleteBtn').style.display = "none";
-    document.getElementById('editModal').classList.add('active');
+function resetT(id, sec) {
+    if(timers[id]) toggleT(id, sec);
+    document.getElementById('disp-'+id).innerText = sec + "s";
 }
 
-function openEditModal(idx) {
+// GESTIONE MODIFICA
+function openEdit(idx) {
     editingIdx = idx;
     const ex = (idx==='abs'||idx==='cardio') ? workoutData[currentDay][idx] : workoutData[currentDay].ex[idx];
-    document.getElementById('modalTitle').innerText = "MODIFICA ESERCIZIO";
     document.getElementById('exNameInput').value = ex.n;
     document.getElementById('exSetsInput').value = ex.s;
     document.getElementById('exRestInput').value = ex.r;
-    document.getElementById('modalDeleteBtn').style.display = (idx==='abs'||idx==='cardio') ? "none" : "block";
+    document.getElementById('delBtn').style.display = (idx==='abs'||idx==='cardio') ? 'none' : 'block';
     document.getElementById('editModal').classList.add('active');
 }
 
 function closeModal() { document.getElementById('editModal').classList.remove('active'); }
 
-document.getElementById('modalActionBtn').onclick = () => {
-    const name = document.getElementById('exNameInput').value || "Esercizio";
-    const sets = parseInt(document.getElementById('exSetsInput').value) || 3;
-    const rest = parseInt(document.getElementById('exRestInput').value) || 90;
+function saveChanges() {
+    const ex = (editingIdx==='abs'||editingIdx==='cardio') ? workoutData[currentDay][editingIdx] : workoutData[currentDay].ex[editingIdx];
+    ex.n = document.getElementById('exNameInput').value;
+    ex.s = parseInt(document.getElementById('exSetsInput').value);
+    ex.r = parseInt(document.getElementById('exRestInput').value);
+    localStorage.setItem('OP_Fit_V4', JSON.stringify(workoutData));
+    closeModal(); renderWorkout();
+}
 
-    if(editingIdx === 'new') {
-        workoutData[currentDay].ex.push({n: name, s: sets, r: rest});
-    } else if(editingIdx === 'abs' || editingIdx === 'cardio') {
-        workoutData[currentDay][editingIdx] = {n: name, s: sets, r: rest};
-    } else {
-        workoutData[currentDay].ex[editingIdx] = {n: name, s: sets, r: rest};
+function deleteEx() {
+    if(confirm('Eliminare?')) {
+        workoutData[currentDay].ex.splice(editingIdx, 1);
+        localStorage.setItem('OP_Fit_V4', JSON.stringify(workoutData));
+        closeModal(); renderWorkout();
     }
-    saveData();
-};
-
-document.getElementById('modalDeleteBtn').onclick = () => {
-    if(confirm("Eliminare?")) { workoutData[currentDay].ex.splice(editingIdx, 1); saveData(); }
-};
-
-function saveData() { localStorage.setItem('OP_Fit_Final_V2', JSON.stringify(workoutData)); closeModal(); renderWorkout(); }
-
-// --- TIMER ---
-function startTimer(idx, sec) {
-    if(activeTimer && activeTimer.idx === idx) { stopTimer(); return; }
-    const end = Date.now() + (sec * 1000);
-    localStorage.setItem('OP_Timer_Active', JSON.stringify({idx, end, orig: sec}));
-    runTimer(idx, sec, end);
 }
-function runTimer(idx, orig, end) {
-    if(activeTimer) clearInterval(activeTimer.int);
-    const btn = document.getElementById(`t-btn-${idx}`); if(btn) btn.innerText = "Ⅱ";
-    activeTimer = { idx, int: setInterval(() => {
-        let rem = Math.round((end - Date.now()) / 1000);
-        const disp = document.getElementById(`t-val-${idx}`);
-        if(disp) disp.innerText = (rem > 0 ? rem : orig) + "s";
-        if(rem <= 0) { stopTimer(); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
-    }, 1000)};
-}
-function stopTimer() { 
-    if(activeTimer) {
-        const b = document.getElementById(`t-btn-${activeTimer.idx}`); if(b) b.innerText = "▶";
-        clearInterval(activeTimer.int); activeTimer = null; 
-    }
-    localStorage.removeItem('OP_Timer_Active'); 
-}
-function checkPersistentTimer() {
-    const d = JSON.parse(localStorage.getItem('OP_Timer_Active'));
-    if(d) { let rem = Math.round((d.end - Date.now()) / 1000); if(rem > 0) runTimer(d.idx, d.orig, d.end); }
-}
-function resetTimer(idx, orig) { stopTimer(); const d = document.getElementById(`t-val-${idx}`); if(d) d.innerText = orig + "s"; }
-
-// --- BIO ---
-function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
-function switchPage(p) { document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); toggleMenu(); }
-function loadBio() {
-    const saved = JSON.parse(localStorage.getItem('OP_Bio_Data'));
-    if(saved) {
-        document.getElementById('weight').value = saved.w; document.getElementById('height').value = saved.h;
-        document.getElementById('age').value = saved.a; document.getElementById('goal').value = saved.g;
-    }
-    calculateMacros();
-}
-function calculateMacros() {
-    const w = parseFloat(document.getElementById('weight').value), h = parseFloat(document.getElementById('height').value), a = parseFloat(document.getElementById('age').value), g = document.getElementById('goal').value;
-    let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
-    let tdee = bmr * 1.5;
-    if(g==='cut') tdee-=400; if(g==='bulk') tdee+=300;
-    document.getElementById('totalCalories').innerText = Math.round(tdee);
-    document.getElementById('p-val').innerText = Math.round(w*2.1)+'g';
-    document.getElementById('f-val').innerText = Math.round(w*0.9)+'g';
-    document.getElementById('c-val').innerText = Math.round((tdee - (w*2.1*4) - (w*0.9*9))/4)+'g';
-    localStorage.setItem('OP_Bio_Data', JSON.stringify({w,h,a,g}));
-}
-function handleGlobalClick(e) { if(e.target.id === 'editModal') closeModal(); }
 
 window.onload = init;
 </script>

@@ -3,212 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ONE PIECE FIT - OMNI EDITION</title>
+    <title>ONE PIECE FIT - RESTORED</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --card-bg: #0d0d0f; --primary: #00ffaa; --zoro: #00ff88; --shanks: #ff1100; --luffy: #ffcc00; }
-        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* --- HAKI ANIMATIONS --- */
-        @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-4px, 4px); } 50% { transform: translate(4px, -4px); } 100% { transform: translate(0,0); } }
-        .quake-active { animation: quake 0.07s infinite !important; }
-        .haki-svg { position: absolute; inset: -50px; pointer-events: none; z-index: 20; width: 170px; height: 200px; }
-        .lightning { fill: none; stroke-width: 3; stroke-linecap: round; animation: flash 0.5s ease-out forwards; }
+        /* --- ANIMAZIONI ORIGINALI --- */
+        @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
+        .quake-active { animation: quake 0.08s infinite !important; }
+
+        .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; z-index: 10; }
+        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 3px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
+        .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
+        .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
+        @keyframes slashDown { from { height: 0; } to { height: 60px; } }
+        @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+        .haki-svg-container { position: absolute; inset: -40px; pointer-events: none; z-index: 20; width: 150px; height: 175px; }
+        .lightning-path { fill: none; stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(0 0 5px currentColor); animation: flash 0.4s ease-out forwards; }
         @keyframes flash { 0% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { opacity: 0; stroke-dashoffset: 0; } }
 
-        /* --- UI CORE --- */
-        header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .burger { font-size: 2rem; background: none; border: none; color: #fff; cursor: pointer; }
+        /* --- UI ELEMENTS --- */
+        header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; }
+        .burger-btn { font-size: 1.8rem; background: none; border: none; color: #fff; cursor: pointer; }
+        .main-title { font-weight: 900; letter-spacing: 5px; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; position: absolute; left: 50%; transform: translateX(-50%); }
         
-        #sideMenu { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: rgba(10,10,12,0.98); backdrop-filter: blur(20px); z-index: 4000; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #222; padding: 60px 20px; }
+        #sideMenu { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: rgba(10, 10, 12, 0.98); backdrop-filter: blur(20px); z-index: 3000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #222; padding: 60px 20px; }
         #sideMenu.active { left: 0; }
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3500; display: none; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
         .menu-overlay.active { display: block; }
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
-        .menu-item:active { background: #1a1a1c; }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; margin-bottom: 12px; cursor: pointer; }
 
-        .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 18px; border-radius: 20px; font-weight: 800; width: 90%; margin: 0 auto 20px; display: block; outline: none; text-align: center; font-size: 1rem; }
+        .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; text-align: center; }
         
-        nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a; }
-        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.4s; }
-        .nav-item.active { opacity: 1; transform: scale(1.15); }
-        .char-frame { width: 75px; height: 100px; border-radius: 22px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; }
+        nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
+        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: scale(1.1); }
+        .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 
-        /* --- CARDS --- */
-        .card { background: var(--card-bg); border-radius: 30px; padding: 25px; margin: 0 20px 25px; border: 1px solid #1a1a1a; position: relative; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 8px; border-radius: 20px; border: 1px solid #222; }
-        .timer-val { font-family: monospace; font-size: 1.2rem; font-weight: 800; color: var(--primary); min-width: 50px; text-align: center; }
-        .btn-mini { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        /* --- CARD & INPUTS --- */
+        .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin: 0 20px 25px; border: 1px solid #1a1a1a; position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; }
+        .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); min-width: 45px; text-align: center; }
 
-        .set-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
-        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 14px; display: flex; align-items: center; border: 1px solid #222; }
+        .set-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
-        .input-box span { font-size: 0.6rem; color: #555; margin-left: 6px; font-weight: 900; }
+        .input-box span { font-size: 0.6rem; color: #555; margin-left: 5px; font-weight: 900; }
 
-        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 25px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; }
+        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; }
 
-        /* --- BIO & MACROS --- */
+        /* --- BIO --- */
         #page-bio { display: none; padding: 20px; }
-        .bio-card { background: #0d0d0f; border-radius: 30px; padding: 25px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
-        .bio-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .bio-row label { font-weight: 700; color: #666; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        .bio-row input, .bio-row select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 14px; width: 120px; text-align: center; font-weight: 800; outline: none; }
-        
-        .macro-display { text-align: center; padding: 35px; border-radius: 35px; background: linear-gradient(145deg, #111, #050505); border: 1px solid #222; margin-bottom: 25px; }
+        .bio-input-card { background: #0d0d0f; border-radius: 28px; padding: 25px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
+        .bio-field { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .bio-field input, .bio-field select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 14px; width: 110px; text-align: center; font-weight: 800; }
 
-        /* --- MODAL --- */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; display: none; align-items: flex-end; }
-        .modal.active { display: flex; }
-        .modal-content { background: #111; width: 100%; border-radius: 35px 35px 0 0; padding: 40px 25px; border-top: 1px solid #333; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
+        .modal.active { bottom: 0; }
+        .modal-content { background: #111; width: 100%; border-radius: 32px 32px 0 0; padding: 35px 25px 60px; border-top: 1px solid #333; }
+        .modal-handle { width: 45px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 30px; }
     </style>
 </head>
-<body onclick="closeAll(event)">
+<body onclick="handleGlobalClick(event)">
 
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div id="sideMenu">
-    <div style="font-weight: 900; font-size: 1.5rem; margin-bottom: 40px; color: var(--primary); letter-spacing: 2px;">LOG POSE</div>
+    <div style="font-weight: 900; font-size: 1.4rem; margin-bottom: 40px; color: var(--primary); letter-spacing: 2px;">LOG POSE</div>
     <div class="menu-item" onclick="switchPage('workout')">🏋️ ALLENAMENTO</div>
     <div class="menu-item" onclick="switchPage('bio')">🧬 BIO & MACROS</div>
 </div>
 
 <header>
-    <button class="burger" onclick="toggleMenu()">☰</button>
-    <div style="font-weight: 900; letter-spacing: 4px; font-size: 0.7rem; opacity: 0.4;">NEW WORLD PROTOCOL</div>
+    <button class="burger-btn" onclick="toggleMenu()">☰</button>
+    <div class="main-title">OGNI SINGOLO GIORNO</div>
 </header>
 
 <div id="page-workout">
     <select id="weekSelector" class="week-select" onchange="renderWorkout()"></select>
     <nav id="navbar"></nav>
-    <div id="shake-wrapper"><div id="workout-area"></div></div>
+    <div id="shake-wrapper">
+        <div id="workout-area"></div>
+    </div>
 </div>
 
 <div id="page-bio">
-    <div class="macro-display">
-        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:3px;">CALORIE TARGET</span>
-        <div id="totalCalories" style="font-size:3.8rem; font-weight:900; margin:10px 0;">--</div>
-        <div style="display:flex; justify-content:space-around; margin-top:30px;">
-            <div><div id="p-val" style="color:#ff4444; font-weight:900; font-size:1.3rem;">--</div><div style="font-size:0.6rem; color:#555; font-weight:900;">PRO</div></div>
-            <div><div id="c-val" style="color:#44aaff; font-weight:900; font-size:1.3rem;">--</div><div style="font-size:0.6rem; color:#555; font-weight:900;">CHO</div></div>
-            <div><div id="f-val" style="color:#ffcc00; font-weight:900; font-size:1.3rem;">--</div><div style="font-size:0.6rem; color:#555; font-weight:900;">FAT</div></div>
+    <div class="bio-input-card">
+        <div class="bio-field"><label>Peso (kg)</label><input type="number" id="weight" value="75" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Altezza (cm)</label><input type="number" id="height" value="180" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Attività</label>
+            <select id="activity" onchange="calculateMacros()"><option value="1.2">Sedentario</option><option value="1.55">Moderato</option><option value="1.725">Intenso</option></select>
+        </div>
+        <div class="bio-field"><label>Obiettivo</label>
+            <select id="goal" onchange="calculateMacros()"><option value="cut">Definizione</option><option value="maintain">Mantenimento</option><option value="bulk">Massa</option></select>
         </div>
     </div>
-
-    <div class="bio-card">
-        <div class="bio-row"><label>Peso Attuale (kg)</label><input type="number" id="weight" value="75" oninput="calculateMacros()"></div>
-        <div class="bio-row"><label>Altezza (cm)</label><input type="number" id="height" value="180" oninput="calculateMacros()"></div>
-        <div class="bio-row"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
-        <div class="bio-row"><label>Livello Attività</label>
-            <select id="activity" onchange="calculateMacros()">
-                <option value="1.2">Sedentario</option>
-                <option value="1.55">Moderato (3-5 allenamenti)</option>
-                <option value="1.725">Intenso (Atleta)</option>
-            </select>
-        </div>
-        <div class="bio-row"><label>Obiettivo</label>
-            <select id="goal" onchange="calculateMacros()">
-                <option value="cut">Definizione (-400 kcal)</option>
-                <option value="maintain">Mantenimento</option>
-                <option value="bulk">Massa (+300 kcal)</option>
-            </select>
+    <div class="card" style="text-align:center; border-color:var(--primary); background: rgba(0,255,170,0.05);">
+        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL GIORNALIERE</span>
+        <div id="totalCalories" style="font-size:3rem; font-weight:900; margin:10px 0;">--</div>
+        <div style="display:flex; justify-content:space-around; margin-top:20px;">
+            <div><div id="p-val" style="color:#ff4444; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
+            <div><div id="c-val" style="color:#44aaff; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
+            <div><div id="f-val" style="color:#ffcc00; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
         </div>
     </div>
 </div>
 
-<div class="modal" id="addModal" onclick="closeModal()">
+<div class="modal" id="editModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="text-align:center; font-weight:900; margin-bottom:30px; letter-spacing:1px;">NUOVO ESERCIZIO</h3>
-        <input type="text" id="exInput" placeholder="Esempio: Panca Piana 4" style="width:100%; background:#1a1a1c; border:1px solid #333; padding:22px; border-radius:20px; color:#fff; font-weight:700; outline:none; box-sizing:border-box; margin-bottom:25px; font-size:1rem;">
-        <button onclick="confirmAdd()" style="width:100%; padding:22px; border-radius:20px; border:none; background:var(--primary); color:#000; font-weight:900; font-size:1rem; letter-spacing:1px;">AGGIUNGI ALLA SCHEDA</button>
+        <div class="modal-handle" onclick="closeModal()"></div>
+        <div style="text-align:center; font-weight:900; margin-bottom:25px;">NUOVO ESERCIZIO</div>
+        <input type="text" id="exQuickInput" placeholder="Nome Esercizio e Serie (es: Panca 4)" style="width:100%; background:#1a1a1c; border:1px solid #333; padding:20px; border-radius:18px; color:#fff; font-weight:700; outline:none; box-sizing:border-box; margin-bottom:20px;">
+        <button onclick="confirmQuickAdd()" style="width:100%; padding:20px; border-radius:18px; border:none; background:var(--primary); color:#000; font-weight:900;">AGGIUNGI</button>
     </div>
 </div>
 
 <script>
-// --- DATA STORAGE ---
-const baseWorkout = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Dips", s:3, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni", s:4, r:120}, {n:"Rematore", s:4, r:90}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: [{n:"Squat", s:4, r:120}, {n:"Leg Press", s:4, r:90}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Military Press", s:4, r:90}, {n:"Alzate Lat", s:3, r:60}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Curl", s:3, r:60}, {n:"Pushdown", s:3, r:60}] }
+const baseData = {
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', finishers: [{n:'Leg Raises', s:3, r:60}], ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', finishers: [{n:'Cable Crunch', s:3, r:60}], ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
+    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', finishers: [{n:'Ab Wheel', s:3, r:60}], ex: [{n:"Squat", s:4, r:120}, {n:"Leg Press", s:4, r:90}] },
+    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', finishers: [{n:'Plank', s:3, r:60}], ex: [{n:"Military Press", s:4, r:90}, {n:"Alzate Laterali", s:3, r:60}] },
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', finishers: [{n:'Bicep Curl', s:3, r:60}], ex: [{n:"Lat Machine", s:3, r:90}, {n:"Pushdown", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('OP_Workout_VFinal')) || baseWorkout;
+let workoutData = JSON.parse(localStorage.getItem('OP_Workout_V14')) || baseData;
 let currentDay = 'lun';
 let activeTimer = null;
 
-// --- INITIALIZE ---
 window.onload = () => {
+    initUI();
+    loadBio();
+    setDay('lun');
+    checkPersistentTimer();
+};
+
+function initUI() {
     const nav = document.getElementById('navbar');
     const sel = document.getElementById('weekSelector');
     for(let i=1; i<=16; i++) sel.innerHTML += `<option value="${i}">SETTIMANA ${i}</option>`;
     for(let day in workoutData) {
         nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item">
-            <div class="char-frame" id="frame-${day}"><span>${workoutData[day].icon}</span></div>
+            <div class="char-frame" id="frame-${day}">
+                <div class="scar-container" id="scars-${day}"><div class="scar-line"></div><div class="scar-line"></div></div>
+                <span style="font-size:1.8rem">${workoutData[day].icon}</span>
+            </div>
             <span style="font-size:0.6rem; font-weight:900; color:#555">${day.toUpperCase()}</span></button>`;
     }
-    loadBio();
-    setDay('lun');
-    checkGlobalTimer();
-};
-
-// --- BIO LOGIC ---
-function loadBio() {
-    const saved = JSON.parse(localStorage.getItem('OP_Bio_VFinal'));
-    if(saved) {
-        Object.keys(saved).forEach(key => { if(document.getElementById(key)) document.getElementById(key).value = saved[key]; });
-    }
-    calculateMacros();
 }
 
-function calculateMacros() {
-    const w = parseFloat(document.getElementById('weight').value) || 70;
-    const h = parseFloat(document.getElementById('height').value) || 175;
-    const a = parseFloat(document.getElementById('age').value) || 25;
-    const act = parseFloat(document.getElementById('activity').value);
-    const goal = document.getElementById('goal').value;
-
-    let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
-    let tdee = bmr * act;
-    if(goal === 'cut') tdee -= 400; else if(goal === 'bulk') tdee += 300;
-
-    document.getElementById('totalCalories').innerText = Math.round(tdee);
-    document.getElementById('p-val').innerText = Math.round(w * 2.2) + "g";
-    document.getElementById('f-val').innerText = Math.round(w * 0.9) + "g";
-    document.getElementById('c-val').innerText = Math.round((tdee - (w*2.2*4) - (w*0.9*9))/4) + "g";
-
-    localStorage.setItem('OP_Bio_VFinal', JSON.stringify({weight:w, height:h, age:a, activity:act, goal}));
-}
-
-// --- WORKOUT & HAKI ---
 function setDay(day) {
     currentDay = day;
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
     triggerHaki(day);
     renderWorkout();
 }
 
 function triggerHaki(day) {
-    const frame = document.getElementById('frame-'+day);
     const wrap = document.getElementById('shake-wrapper');
+    const frame = document.getElementById('frame-'+day);
     wrap.classList.add('quake-active');
+    if(workoutData[day].char === 'shanks') document.getElementById('scars-'+day).classList.add('animate-scars');
     
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "haki-svg");
+    svg.setAttribute("class", "haki-svg-container");
     frame.appendChild(svg);
 
-    for(let i=0; i<8; i++) {
+    for(let i=0; i<6; i++) {
         const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        p.setAttribute("class", "lightning");
-        p.setAttribute("stroke", workoutData[day].color);
-        let d = `M 85 100 `;
-        for(let j=0; j<3; j++) d += `L ${85+(Math.random()-0.5)*120} ${100+(Math.random()-0.5)*120} `;
+        p.setAttribute("class", "lightning-path"); p.setAttribute("stroke", workoutData[day].color);
+        let d = `M 75 85 `;
+        for(let j=0; j<3; j++) d += `L ${75+(Math.random()-0.5)*120} ${85+(Math.random()-0.5)*120} `;
         p.setAttribute("d", d); svg.appendChild(p);
     }
-    setTimeout(() => { wrap.classList.remove('quake-active'); svg.remove(); }, 700);
+    setTimeout(() => { 
+        wrap.classList.remove('quake-active'); 
+        if(workoutData[day].char === 'shanks') document.getElementById('scars-'+day).classList.remove('animate-scars');
+        svg.remove(); 
+    }, 800);
 }
 
 function renderWorkout() {
@@ -216,50 +194,52 @@ function renderWorkout() {
     const week = document.getElementById('weekSelector').value;
     area.innerHTML = '';
     
-    workoutData[currentDay].ex.forEach((ex, idx) => {
+    // Esercizi normali + Finishers
+    const allEx = [...workoutData[currentDay].ex, ...workoutData[currentDay].finishers.map(f => ({...f, isFinisher: true}))];
+
+    allEx.forEach((ex, idx) => {
+        if(ex.isFinisher && idx === workoutData[currentDay].ex.length) {
+            area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:20px 0; font-weight:900;">DAILY FINISHERS</div>`;
+        }
         const card = document.createElement('div'); card.className = 'card';
         card.innerHTML = `<div class="card-header">
-            <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase;">${ex.n}</h3>
+            <h3 style="font-size:0.9rem; font-weight:800;">${ex.n}</h3>
             <div class="timer-group">
-                <button class="btn-mini" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
-                <span class="timer-val" id="t-val-${idx}">${ex.r}s</span>
-                <button class="btn-mini" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
+                <button class="action-btn" style="width:34px;height:34px" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
+                <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
+                <button class="action-btn" style="width:34px;height:34px" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
             </div>
         </div>`;
 
         for(let i=1; i<=ex.s; i++) {
-            const key = `W${week}_${currentDay}_${idx}_S${i}`;
-            const val = JSON.parse(localStorage.getItem(key)) || {k:'', r:''};
+            const key = `w${week}-${currentDay}-${idx}-s${i}`;
+            const val = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
             card.innerHTML += `<div class="set-row">
                 <div style="font-size:0.7rem; font-weight:900; color:#333; width:15px;">${i}</div>
-                <div class="input-box"><input type="number" value="${val.k}" oninput="saveSet('${idx}',${i},'k',this.value)"><span>KG</span></div>
-                <div class="input-box"><input type="number" value="${val.r}" oninput="saveSet('${idx}',${i},'r',this.value)"><span>REPS</span></div>
+                <div class="input-box"><input type="number" value="${val.kg}" oninput="saveSet('${idx}',${i},'kg',this.value)"><span>KG</span></div>
+                <div class="input-box"><input type="number" value="${val.reps}" oninput="saveSet('${idx}',${i},'reps',this.value)"><span>REPS</span></div>
             </div>`;
         }
-        card.innerHTML += `<div style="height:90px; margin-top:20px; border-top:1px solid #1a1a1a; padding-top:10px;"><canvas id="chart-${idx}"></canvas></div>`;
+        card.innerHTML += `<div style="height:100px; margin-top:20px;"><canvas id="chart-${idx}"></canvas></div>`;
         area.appendChild(card);
-        setTimeout(() => drawChart(idx), 20);
+        setTimeout(() => drawChart(idx), 10);
     });
     area.innerHTML += `<button class="add-ex-btn" onclick="openModal()">+ AGGIUNGI ESERCIZIO</button>`;
 }
 
-// --- SAVE & CHARTS ---
 function saveSet(exIdx, setIdx, type, val) {
     const week = document.getElementById('weekSelector').value;
-    const key = `W${week}_${currentDay}_${exIdx}_S${setIdx}`;
-    let d = JSON.parse(localStorage.getItem(key)) || {k:'', r:''};
-    d[type] = val;
-    localStorage.setItem(key, JSON.stringify(d));
-    drawChart(exIdx);
+    const key = `w${week}-${currentDay}-${exIdx}-s${setIdx}`;
+    let d = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
+    d[type] = val; localStorage.setItem(key, JSON.stringify(d)); drawChart(exIdx);
 }
 
 function drawChart(idx) {
-    const canvas = document.getElementById(`chart-${idx}`);
-    if(!canvas) return;
+    const canvas = document.getElementById(`chart-${idx}`); if(!canvas) return;
     const pts = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`W${w}_${currentDay}_${idx}_S1`));
-        pts.push(d && d.k ? parseFloat(d.k) : 0);
+        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}-s1`));
+        pts.push(d && d.kg ? parseFloat(d.kg) : 0);
     }
     if(window['c_'+idx]) window['c_'+idx].destroy();
     window['c_'+idx] = new Chart(canvas.getContext('2d'), {
@@ -269,59 +249,68 @@ function drawChart(idx) {
     });
 }
 
-// --- TIMER SYSTEM ---
+// --- TIMER PERSISTENTE ---
 function startTimer(idx, sec) {
     if(activeTimer && activeTimer.idx === idx) { stopTimer(); return; }
     const end = Date.now() + (sec * 1000);
-    localStorage.setItem('OP_GlobalTimer', JSON.stringify({idx, end, orig: sec}));
+    localStorage.setItem('OP_Timer', JSON.stringify({idx, end, orig: sec}));
     runTimer(idx, sec, end);
 }
 function runTimer(idx, orig, end) {
     if(activeTimer) clearInterval(activeTimer.int);
-    const btn = document.getElementById(`t-btn-${idx}`);
-    if(btn) btn.innerText = "Ⅱ";
+    const btn = document.getElementById(`t-btn-${idx}`); if(btn) btn.innerText = "Ⅱ";
     activeTimer = { idx, int: setInterval(() => {
         let rem = Math.round((end - Date.now()) / 1000);
-        const display = document.getElementById(`t-val-${idx}`);
-        if(display) display.innerText = (rem > 0 ? rem : orig) + "s";
+        const disp = document.getElementById(`t-val-${idx}`);
+        if(disp) disp.innerText = (rem > 0 ? rem : orig) + "s";
         if(rem <= 0) { stopTimer(); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
     }, 1000)};
 }
 function stopTimer() { 
     if(activeTimer) {
-        const btn = document.getElementById(`t-btn-${activeTimer.idx}`);
-        if(btn) btn.innerText = "▶";
-        clearInterval(activeTimer.int); 
-        activeTimer = null; 
+        const b = document.getElementById(`t-btn-${activeTimer.idx}`); if(b) b.innerText = "▶";
+        clearInterval(activeTimer.int); activeTimer = null; 
     }
-    localStorage.removeItem('OP_GlobalTimer'); 
+    localStorage.removeItem('OP_Timer'); 
 }
-function checkGlobalTimer() {
-    const d = JSON.parse(localStorage.getItem('OP_GlobalTimer'));
+function checkPersistentTimer() {
+    const d = JSON.parse(localStorage.getItem('OP_Timer'));
     if(d) { let rem = Math.round((d.end - Date.now()) / 1000); if(rem > 0) runTimer(d.idx, d.orig, d.end); }
 }
 function resetTimer(idx, orig) { stopTimer(); const d = document.getElementById(`t-val-${idx}`); if(d) d.innerText = orig + "s"; }
 
-// --- MODALS & MENU ---
-function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
-function switchPage(p) { 
-    document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); 
-    document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); 
-    toggleMenu(); 
+// --- BIO LOGIC ---
+function loadBio() {
+    const saved = JSON.parse(localStorage.getItem('OP_Bio_V14'));
+    if(saved) Object.keys(saved).forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = saved[k]; });
+    calculateMacros();
 }
-function openModal() { document.getElementById('addModal').classList.add('active'); }
-function closeModal() { document.getElementById('addModal').classList.remove('active'); }
-function confirmAdd() {
-    const input = document.getElementById('exInput').value;
-    const parts = input.split(' ');
+function calculateMacros() {
+    const w = parseFloat(document.getElementById('weight').value) || 70, h = parseFloat(document.getElementById('height').value) || 175, a = parseFloat(document.getElementById('age').value) || 25, act = parseFloat(document.getElementById('activity').value), g = document.getElementById('goal').value;
+    let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5, tdee = bmr * act;
+    if(g==='cut') tdee-=400; if(g==='bulk') tdee+=300;
+    document.getElementById('totalCalories').innerText = Math.round(tdee);
+    document.getElementById('p-val').innerText = Math.round(w*2.2)+'g';
+    document.getElementById('f-val').innerText = Math.round(w*0.9)+'g';
+    document.getElementById('c-val').innerText = Math.round((tdee - (w*2.2*4) - (w*0.9*9))/4)+'g';
+    localStorage.setItem('OP_Bio_V14', JSON.stringify({weight:w, height:h, age:a, activity:act, goal:g}));
+}
+
+// --- UTILS ---
+function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
+function switchPage(p) { document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); toggleMenu(); }
+function openModal() { document.getElementById('editModal').classList.add('active'); }
+function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+function confirmQuickAdd() {
+    const val = document.getElementById('exQuickInput').value;
+    const parts = val.split(' ');
     const sets = parseInt(parts.pop()) || 3;
     const name = parts.join(' ') || "Esercizio";
     workoutData[currentDay].ex.push({n: name, s: sets, r: 90});
-    localStorage.setItem('OP_Workout_VFinal', JSON.stringify(workoutData));
-    closeModal();
-    renderWorkout();
+    localStorage.setItem('OP_Workout_V14', JSON.stringify(workoutData));
+    closeModal(); renderWorkout();
 }
-function closeAll(e) { if(e.target.id === 'addModal') closeModal(); }
+function handleGlobalClick(e) { if(e.target.id === 'editModal') closeModal(); }
 </script>
 </body>
 </html>

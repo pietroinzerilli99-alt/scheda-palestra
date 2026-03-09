@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONE PIECE FIT - ULTIMATE</title>
+    <title>ONE PIECE FIT - BIOMETRIC PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -13,14 +13,12 @@
         /* --- ANIMAZIONI --- */
         @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
         .quake-active { animation: quake 0.08s infinite !important; }
-
         .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
         .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 3px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
         .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
         .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
         @keyframes slashDown { from { height: 0; } to { height: 60px; } }
         @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
-
         .haki-svg-container { position: absolute; inset: -40px; pointer-events: none; z-index: 20; width: 150px; height: 175px; }
         .lightning-path { fill: none; stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(0 0 5px currentColor); animation: flash 0.4s ease-out forwards; }
         @keyframes flash { 0% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { opacity: 0; stroke-dashoffset: 0; } }
@@ -37,9 +35,7 @@
         header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; }
         .burger-btn { font-size: 1.8rem; background: none; border: none; color: #fff; cursor: pointer; }
         .main-title { font-weight: 900; letter-spacing: 5px; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; position: absolute; left: 50%; transform: translateX(-50%); }
-        
         .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; appearance: none; font-size: 1rem; text-align: center; }
-        
         nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
         nav::-webkit-scrollbar { display: none; }
         .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
@@ -47,27 +43,24 @@
         .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .active .char-frame { border-color: #fff; }
 
+        /* --- CARDS & BIO --- */
         .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin-bottom: 25px; border: 1px solid #1a1a1a; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; flex-grow: 1; }
-        
         .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; }
         .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); min-width: 45px; text-align: center; }
-
-        .set-row { display: flex; gap: 10px; margin-bottom: 12px; }
         .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
         .input-box span { font-size: 0.6rem; color: #555; margin-left: 5px; font-weight: 900; }
-
         .add-ex-btn { width: 100%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin-top: 10px; cursor: pointer; font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* --- BIO PAGE --- */
         #page-bio { display: none; padding: 20px; max-width: 500px; margin: 0 auto; }
-        .bio-input-card { background: #0d0d0f; border-radius: 28px; padding: 25px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
-        .bio-field { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-        .bio-field label { font-weight: 700; color: #666; font-size: 0.9rem; }
-        .bio-field input, .bio-field select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 14px; width: 110px; text-align: center; font-weight: 800; outline: none; }
+        .bio-input-card { background: #0d0d0f; border-radius: 28px; padding: 20px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
+        .bio-field { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .bio-field label { font-weight: 700; color: #666; font-size: 0.8rem; text-transform: uppercase; }
+        .bio-field input, .bio-field select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 12px; width: 100px; text-align: center; font-weight: 800; outline: none; }
+
+        .stat-ring { text-align: center; padding: 20px; border-radius: 28px; background: #111; border: 1px solid #222; margin-bottom: 20px; }
 
         .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
@@ -80,8 +73,8 @@
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div id="sideMenu">
     <div style="font-weight: 900; font-size: 1.4rem; margin-bottom: 40px; color: var(--primary); letter-spacing: 2px;">MENU</div>
-    <div class="menu-item" onclick="switchPage('workout')">🏋️ Scheda Palestra</div>
-    <div class="menu-item" onclick="switchPage('bio')">🧬 Bio & Nutrizione</div>
+    <div class="menu-item" onclick="switchPage('workout')">🏋️ SCHEDA WORKOUT</div>
+    <div class="menu-item" onclick="switchPage('bio')">🧬 BIO & MACROS</div>
 </div>
 
 <header>
@@ -92,31 +85,42 @@
 <div id="page-workout">
     <select id="weekSelector" class="week-select" onchange="renderWorkout()"></select>
     <nav id="navbar"></nav>
-    <div id="shake-wrapper">
-        <div class="container" id="workout-area"></div>
-    </div>
+    <div id="shake-wrapper"><div class="container" id="workout-area"></div></div>
 </div>
 
 <div id="page-bio">
-    <h2 style="font-weight: 800; margin-bottom: 30px; letter-spacing: -1px;">Bio & Macros</h2>
+    <h2 style="font-weight: 800; margin-bottom: 25px;">Bio-Dati & Macros</h2>
+    
+    <div class="stat-ring">
+        <span style="font-size:0.6rem; font-weight:900; color:var(--shanks); letter-spacing:2px;">MASSA GRASSA STIMATA</span>
+        <div id="bf-display" style="font-size:2.5rem; font-weight:900; margin:5px 0; color:#fff;">--%</div>
+        <div id="status-display" style="font-size:0.7rem; font-weight:800; color:#555;">COMPILA I DATI SOTTO</div>
+    </div>
+
     <div class="bio-input-card">
-        <div class="bio-field"><label>Obiettivo</label>
-            <select id="goal" onchange="calculateMacros()"><option value="cut">Definizione</option><option value="maintain">Mantenimento</option><option value="bulk">Massa</option></select>
+        <div class="bio-field"><label>Sesso</label>
+            <select id="gender" onchange="calculateMacros()"><option value="m">Uomo</option><option value="f">Donna</option></select>
         </div>
+        <div class="bio-field"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
         <div class="bio-field"><label>Peso (kg)</label><input type="number" id="weight" value="75" oninput="calculateMacros()"></div>
         <div class="bio-field"><label>Altezza (cm)</label><input type="number" id="height" value="180" oninput="calculateMacros()"></div>
-        <div class="bio-field"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Vita (cm)</label><input type="number" id="waist" value="85" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Collo (cm)</label><input type="number" id="neck" value="38" oninput="calculateMacros()"></div>
         <div class="bio-field"><label>Attività</label>
-            <select id="activity" onchange="calculateMacros()"><option value="1.2">Sedentario</option><option value="1.55">Moderato</option><option value="1.725">Intenso</option></select>
+            <select id="activity" onchange="calculateMacros()"><option value="1.2">Sedentario</option><option value="1.375">Leggero</option><option value="1.55">Moderato</option><option value="1.725">Intenso</option></select>
+        </div>
+        <div class="bio-field"><label>Obiettivo</label>
+            <select id="goal" onchange="calculateMacros()"><option value="cut">Cut (-400)</option><option value="maintain">Mantenimento</option><option value="bulk">Bulk (+300)</option></select>
         </div>
     </div>
+
     <div class="card" style="text-align:center; border-color:var(--primary); background: rgba(0,255,170,0.05);">
-        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL GIORNALIERE</span>
+        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL TARGET</span>
         <div id="totalCalories" style="font-size:2.8rem; font-weight:900; margin:10px 0;">2400</div>
         <div style="display:flex; justify-content:space-around; margin-top:20px;">
-            <div><div id="p-val" style="color:#ff4444; font-weight:800;">150g</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
-            <div><div id="c-val" style="color:#44aaff; font-weight:800;">300g</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
-            <div><div id="f-val" style="color:#ffcc00; font-weight:800;">70g</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
+            <div><div id="p-val" style="color:#ff4444; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
+            <div><div id="c-val" style="color:#44aaff; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
+            <div><div id="f-val" style="color:#ffcc00; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
         </div>
     </div>
 </div>
@@ -134,21 +138,16 @@
 </div>
 
 <script>
-const quotesDB = {
-    zoro: ["Settimana 1: Se non riesci a proteggere il tuo capitano, la tua ambizione è nulla.", "Settimana 16: ORA SONO IO L'INFERNO."],
-    shanks: ["Settimana 1: Scommetto sul futuro.", "Settimana 16: Il mondo è pronto per te?"],
-    luffy: ["Settimana 1: Diventerò il Re dei Pirati!", "Settimana 16: GEAR FIFTH! QUESTO È IL MIO APICE!"]
-};
-
+// --- DATABASE ---
 const defaultData = {
     lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
     mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
     mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: {n:'Ab Wheel', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Squat", s:4, r:120}, {n:"Stacchi", s:4, r:120}] },
     gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Lat Machine', s:3, r:90}, cardio: {n:'Hammer Curl', s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('workout_v10')) || defaultData;
+let workoutData = JSON.parse(localStorage.getItem('workout_v11')) || defaultData;
 let activeTimer = null;
 let currentDay = 'lun';
 let editingContext = null;
@@ -167,22 +166,72 @@ function init() {
             </div>
             <span style="font-size:0.6rem; font-weight:900; color:#555">${day.toUpperCase()}</span></button>`;
     }
-    const savedBio = JSON.parse(localStorage.getItem('bio_v10'));
+    
+    // Caricamento Bio Dati
+    const savedBio = JSON.parse(localStorage.getItem('bio_v11'));
     if(savedBio) {
-        document.getElementById('weight').value = savedBio.w; document.getElementById('height').value = savedBio.h;
-        document.getElementById('age').value = savedBio.a; document.getElementById('activity').value = savedBio.act;
-        document.getElementById('goal').value = savedBio.goal;
+        Object.keys(savedBio).forEach(key => {
+            const el = document.getElementById(key);
+            if(el) el.value = savedBio[key];
+        });
     }
+
     setDay('lun');
     checkPersistentTimer();
 }
 
+// --- LOGICA BIO & MACROS ---
+function calculateMacros() {
+    const gender = document.getElementById('gender').value;
+    const age = parseFloat(document.getElementById('age').value);
+    const w = parseFloat(document.getElementById('weight').value);
+    const h = parseFloat(document.getElementById('height').value);
+    const waist = parseFloat(document.getElementById('waist').value);
+    const neck = parseFloat(document.getElementById('neck').value);
+    const act = parseFloat(document.getElementById('activity').value);
+    const goal = document.getElementById('goal').value;
+
+    // 1. MASSA GRASSA (Navy Formula)
+    let bf = 0;
+    if(gender === 'm') {
+        bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(h)) - 450;
+    } else {
+        bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + 80 - neck) + 0.221 * Math.log10(h)) - 450;
+    }
+    
+    document.getElementById('bf-display').innerText = bf.toFixed(1) + "%";
+    document.getElementById('status-display').innerText = bf < 15 ? "DEFINITO" : bf < 20 ? "IN FORMA" : "MESSA A FUOCO";
+
+    // 2. METABOLISMO (Mifflin-St Jeor)
+    let bmr = (10 * w) + (6.25 * h) - (5 * age) + (gender === 'm' ? 5 : -161);
+    let tdee = bmr * act;
+
+    if(goal === 'cut') tdee -= 400;
+    if(goal === 'bulk') tdee += 300;
+
+    document.getElementById('totalCalories').innerText = Math.round(tdee);
+    
+    // 3. MACROS
+    const p = w * 2.2;
+    const f = w * 0.9;
+    const c = (tdee - (p * 4) - (f * 9)) / 4;
+
+    document.getElementById('p-val').innerText = Math.round(p) + "g";
+    document.getElementById('f-val').innerText = Math.round(f) + "g";
+    document.getElementById('c-val').innerText = Math.round(c) + "g";
+
+    // Salvataggio Persistente
+    const bioData = { gender, age, weight:w, height:h, waist, neck, activity:act, goal };
+    localStorage.setItem('bio_v11', JSON.stringify(bioData));
+}
+
+// --- LOGICA WORKOUT ---
 function setDay(day) {
     currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
     triggerHaki(day);
-    renderWorkout(day);
+    renderWorkout();
 }
 
 function triggerHaki(day) {
@@ -261,20 +310,22 @@ function drawChart(idx) {
     });
 }
 
-// --- LOGICA MODALE ---
-function openAddModal(e) { e.stopPropagation(); editingContext = 'add'; document.getElementById('modalTitle').innerText = "Nuovo Esercizio"; document.getElementById('exNameInput').value = ''; document.getElementById('exSetsInput').value = ''; document.getElementById('modalActionBtn').onclick = confirmAddEx; document.getElementById('editModal').classList.add('active'); }
-function openEditModal(e, idx) { e.stopPropagation(); editingContext = idx; let data = (idx==='abs'||idx==='cardio')?workoutData[currentDay][idx]:workoutData[currentDay].ex[idx]; document.getElementById('modalTitle').innerText = "Modifica"; document.getElementById('exNameInput').value = data.n; document.getElementById('exSetsInput').value = data.s; document.getElementById('modalActionBtn').onclick = confirmEditEx; document.getElementById('editModal').classList.add('active'); }
+// --- UTILS ---
+function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
+function switchPage(p) { document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); if(p==='bio') calculateMacros(); toggleMenu(); }
 function closeModal() { document.getElementById('editModal').classList.remove('active'); }
 function handleGlobalClick(e) { if(e.target.id === 'editModal') closeModal(); }
+function openAddModal(e) { e.stopPropagation(); editingContext = 'add'; document.getElementById('modalTitle').innerText = "Nuovo Esercizio"; document.getElementById('exNameInput').value = ''; document.getElementById('exSetsInput').value = ''; document.getElementById('modalActionBtn').onclick = confirmAddEx; document.getElementById('editModal').classList.add('active'); }
+function openEditModal(e, idx) { e.stopPropagation(); editingContext = idx; let data = (idx==='abs'||idx==='cardio')?workoutData[currentDay][idx]:workoutData[currentDay].ex[idx]; document.getElementById('modalTitle').innerText = "Modifica"; document.getElementById('exNameInput').value = data.n; document.getElementById('exSetsInput').value = data.s; document.getElementById('modalActionBtn').onclick = confirmEditEx; document.getElementById('editModal').classList.add('active'); }
 function confirmAddEx() { const n = document.getElementById('exNameInput').value, s = document.getElementById('exSetsInput').value; if(n && s) { workoutData[currentDay].ex.push({n, s:parseInt(s), r:90}); saveAll(); } }
 function confirmEditEx() { const n = document.getElementById('exNameInput').value, s = document.getElementById('exSetsInput').value; if(n && s) { let t = (editingContext==='abs'||editingContext==='cardio')?workoutData[currentDay][editingContext]:workoutData[currentDay].ex[editingContext]; t.n = n; t.s = parseInt(s); saveAll(); } }
-function saveAll() { localStorage.setItem('workout_v10', JSON.stringify(workoutData)); closeModal(); renderWorkout(); }
+function saveAll() { localStorage.setItem('workout_v11', JSON.stringify(workoutData)); closeModal(); renderWorkout(); }
 
 // --- TIMER ---
 function startTimer(idx, sec) {
-    if(activeTimer && activeTimer.idx === idx) { clearInterval(activeTimer.int); activeTimer = null; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v10'); return; }
+    if(activeTimer && activeTimer.idx === idx) { clearInterval(activeTimer.int); activeTimer = null; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v11'); return; }
     const end = Date.now() + (sec * 1000);
-    localStorage.setItem('pt_v10', JSON.stringify({idx, end, orig: sec}));
+    localStorage.setItem('pt_v11', JSON.stringify({idx, end, orig: sec}));
     runTimer(idx, sec, end);
 }
 function runTimer(idx, orig, end) {
@@ -283,28 +334,14 @@ function runTimer(idx, orig, end) {
     activeTimer = { idx, int: setInterval(() => {
         let rem = Math.round((end - Date.now()) / 1000);
         document.getElementById(`t-val-${idx}`).innerText = (rem > 0 ? rem : orig) + "s";
-        if(rem <= 0) { clearInterval(activeTimer.int); activeTimer = null; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v10'); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
+        if(rem <= 0) { clearInterval(activeTimer.int); activeTimer = null; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v11'); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
     }, 1000)};
 }
 function checkPersistentTimer() {
-    const d = JSON.parse(localStorage.getItem('pt_v10'));
-    if(d) { let rem = Math.round((d.end - Date.now()) / 1000); if(rem > 0) runTimer(d.idx, d.orig, d.end); else localStorage.removeItem('pt_v10'); }
+    const d = JSON.parse(localStorage.getItem('pt_v11'));
+    if(d) { let rem = Math.round((d.end - Date.now()) / 1000); if(rem > 0) runTimer(d.idx, d.orig, d.end); else localStorage.removeItem('pt_v11'); }
 }
-function resetTimer(idx, orig) { if(activeTimer && activeTimer.idx === idx) { clearInterval(activeTimer.int); activeTimer = null; } document.getElementById(`t-val-${idx}`).innerText = orig + "s"; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v10'); }
-
-// --- BIO LOGIC ---
-function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
-function switchPage(p) { document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); if(p==='bio') calculateMacros(); toggleMenu(); }
-function calculateMacros() {
-    const w = parseFloat(document.getElementById('weight').value), h = parseFloat(document.getElementById('height').value), a = parseFloat(document.getElementById('age').value), act = parseFloat(document.getElementById('activity').value), g = document.getElementById('goal').value;
-    let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5, tdee = bmr * act;
-    if(g==='cut') tdee-=400; if(g==='bulk') tdee+=300;
-    document.getElementById('totalCalories').innerText = Math.round(tdee);
-    document.getElementById('p-val').innerText = Math.round(w*2.1)+'g';
-    document.getElementById('f-val').innerText = Math.round(w*0.9)+'g';
-    document.getElementById('c-val').innerText = Math.round((tdee - (w*2.1*4) - (w*0.9*9))/4)+'g';
-    localStorage.setItem('bio_v10', JSON.stringify({w,h,a,act,goal:g}));
-}
+function resetTimer(idx, orig) { if(activeTimer && activeTimer.idx === idx) { clearInterval(activeTimer.int); activeTimer = null; } document.getElementById(`t-val-${idx}`).innerText = orig + "s"; document.getElementById(`t-btn-${idx}`).innerText = "▶"; localStorage.removeItem('pt_v11'); }
 
 window.onload = init;
 </script>

@@ -3,218 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONE PIECE FIT - REBORN</title>
+    <title>ONE PIECE FIT - OMNI VERSION</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --card-bg: #0d0d0f; --primary: #00ffaa; --zoro: #00ff88; --shanks: #ff1100; --luffy: #ffcc00; }
         body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 120px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* --- MENU LATERALE --- */
-        #sideMenu { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: rgba(10, 10, 12, 0.98); backdrop-filter: blur(20px); z-index: 3000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #222; padding: 60px 20px; box-sizing: border-box; }
-        #sideMenu.active { left: 0; }
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
-        .menu-overlay.active { display: block; }
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
-
-        /* --- UI ELEMENTS --- */
-        header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; }
-        .burger-btn { font-size: 1.8rem; background: none; border: none; color: #fff; cursor: pointer; }
-        .main-title { font-weight: 900; letter-spacing: 5px; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; position: absolute; left: 50%; transform: translateX(-50%); }
-        
-        .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; appearance: none; font-size: 1rem; text-align: center; }
-        
-        nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
-        nav::-webkit-scrollbar { display: none; }
-        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
-        .nav-item.active { opacity: 1; transform: scale(1.1); }
-        .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-
-        /* --- CARDS --- */
-        .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin-bottom: 25px; border: 1px solid #1a1a1a; }
-        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; }
-        .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); min-width: 45px; text-align: center; }
-        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
-        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
-        .add-ex-btn { width: 100%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin-top: 10px; cursor: pointer; }
-
-        /* --- BIO PAGE --- */
-        #page-bio { display: none; padding: 20px; max-width: 500px; margin: 0 auto; }
-        .bio-input-card { background: #0d0d0f; border-radius: 28px; padding: 20px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
-        .bio-field { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .bio-field label { font-weight: 700; color: #666; font-size: 0.8rem; text-transform: uppercase; }
-        .bio-field input, .bio-field select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 12px; width: 100px; text-align: center; font-weight: 800; }
-        .stat-ring { text-align: center; padding: 25px; border-radius: 28px; background: #111; border: 1px solid #222; margin-bottom: 20px; }
-
-        /* --- ANIMAZIONI HAKI (Ripristinate) --- */
+        /* --- ANIMAZIONI HAKI --- */
         @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
         .quake-active { animation: quake 0.08s infinite !important; }
         .haki-svg-container { position: absolute; inset: -40px; pointer-events: none; z-index: 20; width: 150px; height: 175px; }
         .lightning-path { fill: none; stroke-width: 2.5; stroke-linecap: round; animation: flash 0.4s ease-out forwards; }
         @keyframes flash { 0% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+
+        /* --- MENU --- */
+        #sideMenu { position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: rgba(10, 10, 12, 0.98); backdrop-filter: blur(20px); z-index: 3000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #222; padding: 60px 20px; box-sizing: border-box; }
+        #sideMenu.active { left: 0; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
+        .menu-overlay.active { display: block; }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; cursor: pointer; margin-bottom: 10px; }
+
+        /* --- UI --- */
+        header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .burger-btn { font-size: 1.8rem; background: none; border: none; color: #fff; cursor: pointer; }
+        .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; text-align: center; }
         
-        /* --- MODALE --- */
+        nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
+        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: scale(1.1); }
+        .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+
+        /* --- CARDS & WORKOUT --- */
+        .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin: 0 20px 25px; border: 1px solid #1a1a1a; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .timer-group { display: flex; align-items: center; gap: 8px; background: #151518; padding: 6px; border-radius: 18px; border: 1px solid #222; }
+        .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); min-width: 45px; text-align: center; }
+        
+        .set-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .input-box { flex: 1; background: #1a1a1c; border-radius: 16px; padding: 12px; display: flex; align-items: center; border: 1px solid #222; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
+        .input-box span { font-size: 0.6rem; color: #555; margin-left: 5px; font-weight: 900; }
+
+        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; }
+
+        /* --- BIO & MACROS --- */
+        #page-bio { display: none; padding: 20px; }
+        .bio-input-card { background: #0d0d0f; border-radius: 28px; padding: 20px; border: 1px solid #1a1a1a; margin-bottom: 20px; }
+        .bio-field { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .bio-field label { font-weight: 700; color: #666; font-size: 0.8rem; text-transform: uppercase; }
+        .bio-field input, .bio-field select { background: #1a1a1c; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 12px; width: 110px; text-align: center; font-weight: 800; }
+        .stat-ring { text-align: center; padding: 30px; border-radius: 32px; background: #111; border: 1px solid #222; margin-bottom: 25px; }
+
+        /* --- MODAL --- */
         .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
         .modal-content { background: #111; width: 100%; border-radius: 32px 32px 0 0; padding: 35px 25px 60px; border-top: 1px solid #333; }
+        .modal-handle { width: 45px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 30px; }
     </style>
 </head>
-<body>
+<body onclick="handleGlobalClick(event)">
 
 <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div id="sideMenu">
     <div style="font-weight: 900; font-size: 1.4rem; margin-bottom: 40px; color: var(--primary); letter-spacing: 2px;">MENU</div>
-    <div class="menu-item" onclick="switchPage('workout')">🏋️ WORKOUT</div>
+    <div class="menu-item" onclick="switchPage('workout')">🏋️ ALLENAMENTO</div>
     <div class="menu-item" onclick="switchPage('bio')">🧬 BIO & MACROS</div>
 </div>
 
 <header>
     <button class="burger-btn" onclick="toggleMenu()">☰</button>
-    <div class="main-title">OGNI SINGOLO GIORNO</div>
+    <div style="font-weight: 900; letter-spacing: 5px; font-size: 0.7rem; opacity: 0.5;">ONE PIECE FIT</div>
 </header>
 
 <div id="page-workout">
     <select id="weekSelector" class="week-select" onchange="renderWorkout()"></select>
     <nav id="navbar"></nav>
-    <div id="shake-wrapper"><div class="container" id="workout-area"></div></div>
+    <div id="shake-wrapper"><div id="workout-area"></div></div>
 </div>
 
 <div id="page-bio">
     <div class="stat-ring">
-        <span style="font-size:0.6rem; font-weight:900; color:var(--shanks); letter-spacing:2px;">MASSA GRASSA STIMATA</span>
-        <div id="bf-display" style="font-size:3rem; font-weight:900; margin:10px 0; color:#fff;">--%</div>
-        <div id="status-display" style="font-size:0.7rem; font-weight:800; color:#555; text-transform:uppercase;">Dati mancanti</div>
+        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL GIORNALIERE</span>
+        <div id="totalCalories" style="font-size:3.5rem; font-weight:900; margin:10px 0;">--</div>
+        <div style="display:flex; justify-content:space-around; margin-top:20px;">
+            <div><div id="p-val" style="color:#ff4444; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
+            <div><div id="c-val" style="color:#44aaff; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
+            <div><div id="f-val" style="color:#ffcc00; font-weight:800;">--</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
+        </div>
     </div>
 
     <div class="bio-input-card">
-        <div class="bio-field"><label>Sesso</label><select id="gender" onchange="calculateMacros()"><option value="m">Uomo</option><option value="f">Donna</option></select></div>
-        <div class="bio-field"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
         <div class="bio-field"><label>Peso (kg)</label><input type="number" id="weight" value="75" oninput="calculateMacros()"></div>
         <div class="bio-field"><label>Altezza (cm)</label><input type="number" id="height" value="180" oninput="calculateMacros()"></div>
-        <div class="bio-field"><label>Vita (cm)</label><input type="number" id="waist" value="85" oninput="calculateMacros()"></div>
-        <div class="bio-field"><label>Collo (cm)</label><input type="number" id="neck" value="38" oninput="calculateMacros()"></div>
-        <div class="bio-field"><label>Attività</label><select id="activity" onchange="calculateMacros()"><option value="1.2">Sedentario</option><option value="1.55">Moderato</option><option value="1.725">Intenso</option></select></div>
-        <div class="bio-field"><label>Obiettivo</label><select id="goal" onchange="calculateMacros()"><option value="cut">Definizione</option><option value="maintain">Mantenimento</option><option value="bulk">Massa</option></select></div>
-    </div>
-
-    <div class="card" style="text-align:center; border-color:var(--primary); background: rgba(0,255,170,0.05);">
-        <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL TARGET</span>
-        <div id="totalCalories" style="font-size:3rem; font-weight:900; margin:10px 0;">--</div>
-        <div style="display:flex; justify-content:space-around; margin-top:20px;">
-            <div><div id="p-val" style="color:#ff4444; font-weight:800; font-size:1.2rem;">--</div><div style="font-size:0.6rem; color:#555;">PRO</div></div>
-            <div><div id="c-val" style="color:#44aaff; font-weight:800; font-size:1.2rem;">--</div><div style="font-size:0.6rem; color:#555;">CHO</div></div>
-            <div><div id="f-val" style="color:#ffcc00; font-weight:800; font-size:1.2rem;">--</div><div style="font-size:0.6rem; color:#555;">FAT</div></div>
+        <div class="bio-field"><label>Età</label><input type="number" id="age" value="25" oninput="calculateMacros()"></div>
+        <div class="bio-field"><label>Attività</label>
+            <select id="activity" onchange="calculateMacros()"><option value="1.2">Sedentario</option><option value="1.55">Moderato</option><option value="1.725">Intenso</option></select>
+        </div>
+        <div class="bio-field"><label>Obiettivo</label>
+            <select id="goal" onchange="calculateMacros()"><option value="cut">Definizione</option><option value="maintain">Mantenimento</option><option value="bulk">Massa</option></select>
         </div>
     </div>
 </div>
 
+<div class="modal" id="editModal">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-handle" onclick="closeModal()"></div>
+        <h3 style="text-align:center; font-weight:900; margin-bottom:25px;">NUOVO ESERCIZIO</h3>
+        <input type="text" id="exNameInput" placeholder="Nome esercizio e Serie (es: Panca 4)" style="width:100%; background:#1a1a1c; border:1px solid #333; padding:20px; border-radius:18px; color:#fff; font-weight:700; outline:none; box-sizing:border-box; margin-bottom:20px;">
+        <button onclick="confirmAddEx()" style="width:100%; padding:20px; border-radius:18px; border:none; background:var(--primary); color:#000; font-weight:900;">AGGIUNGI</button>
+    </div>
+</div>
+
 <script>
-// --- LOGICA DATA ---
+// --- DATABASE ---
 const defaultData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: {n:'Ab Wheel', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Squat", s:4, r:120}, {n:"Stacchi", s:4, r:120}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Lat Machine', s:3, r:90}, cardio: {n:'Hammer Curl', s:3, r:60}] }
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
+    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: [{n:"Squat", s:4, r:120}, {n:"Leg Extension", s:4, r:60}] },
+    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Lento Avanti", s:4, r:90}, {n:"Alzate Laterali", s:3, r:60}] },
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Curl Bilanciere", s:3, r:90}, {n:"Dip", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('workout_v12')) || defaultData;
+let workoutData = JSON.parse(localStorage.getItem('workout_v13')) || defaultData;
+let activeTimer = null;
 let currentDay = 'lun';
 
-// --- INIZIALIZZAZIONE ---
+// --- INIZIO ---
 window.onload = function() {
+    initUI();
+    loadBio();
+    setDay('lun');
+    checkPersistentTimer();
+};
+
+function initUI() {
     const nav = document.getElementById('navbar');
+    const selector = document.getElementById('weekSelector');
     for(let i=1; i<=16; i++) {
         let opt = document.createElement('option'); opt.value = i; opt.innerText = `SETTIMANA ${i}`;
-        document.getElementById('weekSelector').appendChild(opt);
+        selector.appendChild(opt);
     }
     for(let day in workoutData) {
         nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item">
             <div class="char-frame" id="frame-${day}"><span>${workoutData[day].icon}</span></div>
             <span style="font-size:0.6rem; font-weight:900; color:#555">${day.toUpperCase()}</span></button>`;
     }
-    
-    // Caricamento BIO sicuro
-    const savedBio = JSON.parse(localStorage.getItem('bio_v12'));
-    if(savedBio) {
-        Object.keys(savedBio).forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.value = savedBio[id];
+}
+
+// --- BIO & MACROS (PERSISTENTI) ---
+function loadBio() {
+    const saved = JSON.parse(localStorage.getItem('bio_v13'));
+    if(saved) {
+        ['weight', 'height', 'age', 'activity', 'goal'].forEach(id => {
+            if(document.getElementById(id)) document.getElementById(id).value = saved[id];
         });
     }
-    
-    setDay('lun');
     calculateMacros();
-};
+}
 
-// --- BIO LOGIC ---
 function calculateMacros() {
-    const gender = document.getElementById('gender').value;
-    const weight = parseFloat(document.getElementById('weight').value) || 70;
-    const height = parseFloat(document.getElementById('height').value) || 175;
-    const waist = parseFloat(document.getElementById('waist').value) || 80;
-    const neck = parseFloat(document.getElementById('neck').value) || 37;
-    const age = parseFloat(document.getElementById('age').value) || 25;
+    const w = parseFloat(document.getElementById('weight').value) || 70;
+    const h = parseFloat(document.getElementById('height').value) || 175;
+    const a = parseFloat(document.getElementById('age').value) || 25;
     const act = parseFloat(document.getElementById('activity').value);
     const goal = document.getElementById('goal').value;
 
-    // Formula Marina Americana
-    let bf = (gender === 'm') 
-        ? (495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450)
-        : (495 / (1.29579 - 0.35004 * Math.log10(waist + 80 - neck) + 0.221 * Math.log10(height)) - 450);
-
-    document.getElementById('bf-display').innerText = Math.max(2, bf).toFixed(1) + "%";
-    document.getElementById('status-display').innerText = bf < 14 ? "Definito" : bf < 20 ? "Atletico" : "In Massa";
-
-    // Calorie (Mifflin-St Jeor)
-    let bmr = (10 * weight) + (6.25 * height) - (5 * age) + (gender === 'm' ? 5 : -161);
+    let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5; // Basale Uomo standard
     let tdee = bmr * act;
     if(goal === 'cut') tdee -= 400; if(goal === 'bulk') tdee += 300;
 
     document.getElementById('totalCalories').innerText = Math.round(tdee);
-    document.getElementById('p-val').innerText = Math.round(weight * 2.2) + "g";
-    document.getElementById('f-val').innerText = Math.round(weight * 0.9) + "g";
-    document.getElementById('c-val').innerText = Math.round((tdee - (weight*2.2*4) - (weight*0.9*9))/4) + "g";
+    document.getElementById('p-val').innerText = Math.round(w * 2.2) + "g";
+    document.getElementById('f-val').innerText = Math.round(w * 0.9) + "g";
+    document.getElementById('c-val').innerText = Math.round((tdee - (w*2.2*4) - (w*0.9*9))/4) + "g";
 
-    localStorage.setItem('bio_v12', JSON.stringify({gender, weight, height, waist, neck, age, activity:act, goal}));
+    localStorage.setItem('bio_v13', JSON.stringify({weight:w, height:h, age:a, activity:act, goal}));
 }
 
-// --- WORKOUT LOGIC ---
+// --- WORKOUT & HAKI ---
 function setDay(day) {
     currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
+    triggerHaki(day);
     renderWorkout();
+}
+
+function triggerHaki(day) {
+    const frame = document.getElementById('frame-'+day);
+    const wrap = document.getElementById('shake-wrapper');
+    wrap.classList.add('quake-active');
+    
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "haki-svg-container");
+    frame.appendChild(svg);
+
+    for(let i=0; i<6; i++) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "lightning-path");
+        path.setAttribute("stroke", workoutData[day].color);
+        let d = `M 75 85 `;
+        for(let j=0; j<3; j++) d += `L ${75+(Math.random()-0.5)*100} ${85+(Math.random()-0.5)*100} `;
+        path.setAttribute("d", d);
+        svg.appendChild(path);
+    }
+    setTimeout(() => { wrap.classList.remove('quake-active'); svg.remove(); }, 600);
 }
 
 function renderWorkout() {
     const area = document.getElementById('workout-area');
+    const week = document.getElementById('weekSelector').value;
     area.innerHTML = '';
+    
     workoutData[currentDay].ex.forEach((ex, idx) => {
         const card = document.createElement('div'); card.className = 'card';
-        card.innerHTML = `<h3 style="font-size:0.9rem; margin:0 0 15px 0; text-transform:uppercase;">${ex.n}</h3>`;
+        card.innerHTML = `<div class="card-header">
+            <h3 style="font-size:0.9rem; font-weight:800;">${ex.n}</h3>
+            <div class="timer-group">
+                <button class="action-btn" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
+                <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
+                <button class="action-btn" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
+            </div>
+        </div>`;
+
         for(let i=1; i<=ex.s; i++) {
-            card.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:10px;">
-                <div class="input-box"><input type="number" placeholder="KG"></div>
-                <div class="input-box"><input type="number" placeholder="REPS"></div>
+            const key = `w${week}-${currentDay}-${idx}-s${i}`;
+            const val = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
+            card.innerHTML += `<div class="set-row">
+                <div class="input-box"><input type="number" value="${val.kg}" oninput="saveSet('${idx}',${i},'kg',this.value)"><span>KG</span></div>
+                <div class="input-box"><input type="number" value="${val.reps}" oninput="saveSet('${idx}',${i},'reps',this.value)"><span>REPS</span></div>
             </div>`;
         }
+        card.innerHTML += `<div style="height:80px; margin-top:15px;"><canvas id="chart-${idx}"></canvas></div>`;
         area.appendChild(card);
+        setTimeout(() => drawChart(idx), 10);
     });
-    area.innerHTML += `<button class="add-ex-btn">+ AGGIUNGI ESERCIZIO</button>`;
+
+    area.innerHTML += `<button class="add-ex-btn" onclick="openModal()">+ AGGIUNGI ESERCIZIO</button>`;
 }
 
-function toggleMenu() {
-    document.getElementById('sideMenu').classList.toggle('active');
-    document.getElementById('menuOverlay').classList.toggle('active');
+// --- LOGICA SALVATAGGIO & GRAFICI ---
+function saveSet(exIdx, setIdx, type, val) {
+    const week = document.getElementById('weekSelector').value;
+    const key = `w${week}-${currentDay}-${exIdx}-s${setIdx}`;
+    let data = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
+    data[type] = val;
+    localStorage.setItem(key, JSON.stringify(data));
+    drawChart(exIdx);
 }
 
-function switchPage(p) {
-    document.getElementById('page-workout').style.display = (p==='workout' ? 'block' : 'none');
-    document.getElementById('page-bio').style.display = (p==='bio' ? 'block' : 'none');
-    toggleMenu();
+function drawChart(idx) {
+    const canvas = document.getElementById(`chart-${idx}`);
+    if(!canvas) return;
+    const points = [];
+    for(let w=1; w<=16; w++) {
+        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}-s1`));
+        points.push(d && d.kg ? parseFloat(d.kg) : 0);
+    }
+    if(window['chart_'+idx]) window['chart_'+idx].destroy();
+    window['chart_'+idx] = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: { labels: Array.from({length:16},(_,i)=>i+1), datasets: [{ data: points, borderColor: workoutData[currentDay].color, tension: 0.4, pointRadius: 0, fill: false, borderWidth: 2 }] },
+        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+    });
 }
+
+// --- TIMER (PERSISTENTE) ---
+function startTimer(idx, sec) {
+    if(activeTimer && activeTimer.idx === idx) { stopTimer(); return; }
+    const end = Date.now() + (sec * 1000);
+    localStorage.setItem('timer_v13', JSON.stringify({idx, end, orig: sec}));
+    runTimer(idx, sec, end);
+}
+function runTimer(idx, orig, end) {
+    if(activeTimer) clearInterval(activeTimer.int);
+    document.getElementById(`t-btn-${idx}`).innerText = "Ⅱ";
+    activeTimer = { idx, int: setInterval(() => {
+        let rem = Math.round((end - Date.now()) / 1000);
+        const display = document.getElementById(`t-val-${idx}`);
+        if(display) display.innerText = (rem > 0 ? rem : orig) + "s";
+        if(rem <= 0) { stopTimer(); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
+    }, 1000)};
+}
+function stopTimer() { 
+    if(activeTimer) {
+        const oldIdx = activeTimer.idx;
+        clearInterval(activeTimer.int); 
+        activeTimer = null; 
+        document.getElementById(`t-btn-${oldIdx}`).innerText = "▶";
+    }
+    localStorage.removeItem('timer_v13'); 
+}
+function checkPersistentTimer() {
+    const d = JSON.parse(localStorage.getItem('timer_v13'));
+    if(d) { let rem = Math.round((d.end - Date.now()) / 1000); if(rem > 0) runTimer(d.idx, d.orig, d.end); }
+}
+function resetTimer(idx, orig) { stopTimer(); document.getElementById(`t-val-${idx}`).innerText = orig + "s"; }
+
+// --- UTILS ---
+function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
+function switchPage(p) { 
+    document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); 
+    document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); 
+    toggleMenu(); 
+}
+function openModal() { document.getElementById('editModal').classList.add('active'); }
+function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+function confirmAddEx() {
+    const input = document.getElementById('exNameInput').value;
+    const parts = input.split(' ');
+    const name = parts.slice(0, -1).join(' ') || "Esercizio";
+    const sets = parseInt(parts[parts.length - 1]) || 3;
+    workoutData[currentDay].ex.push({n: name, s: sets, r: 90});
+    localStorage.setItem('workout_v13', JSON.stringify(workoutData));
+    closeModal();
+    renderWorkout();
+}
+function handleGlobalClick(e) { if(e.target.id === 'editModal') closeModal(); }
 </script>
 </body>
 </html>

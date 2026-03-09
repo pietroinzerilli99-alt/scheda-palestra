@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OGNI SINGOLO GIORNO - PRO</title>
+    <title>OGNI SINGOLO GIORNO - DEFINITIVE</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #000; --card-bg: #0d0d0f; --primary: #00ffaa; --zoro: #00ff88; --shanks: #ff1100; --luffy: #ffcc00; }
         body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
 
-        /* ANIMAZIONI */
+        /* ANIMAZIONI TREMORE E GRAFFI */
         @keyframes quake { 0% { transform: translate(0,0); } 25% { transform: translate(-3px, 3px); } 50% { transform: translate(3px, -3px); } 100% { transform: translate(0,0); } }
         .quake-active { animation: quake 0.08s infinite !important; }
         
@@ -19,42 +19,46 @@
         .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 12px; border-radius: 12px; font-weight: 800; width: 90%; text-align: center; outline: none; }
 
         nav { display: flex; gap: 15px; padding: 15px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-bottom: 1px solid #1a1a1a; }
-        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 5px; opacity: 0.5; transition: 0.3s; }
+        nav::-webkit-scrollbar { display: none; }
+        .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 5px; opacity: 0.5; transition: 0.3s; cursor: pointer; }
         .nav-item.active { opacity: 1; transform: scale(1.1); }
         .char-frame { width: 60px; height: 80px; border-radius: 12px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .active .char-frame { border-color: #fff; }
 
-        /* GRAFFI SHANKS */
+        /* EFFETTI HAKI E GRAFFI */
         .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
-        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 2px; transform: rotate(20deg); }
-        .animate-scars { opacity: 1; }
+        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 2px; transform: rotate(20deg); box-shadow: 0 0 8px var(--shanks); }
+        .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
         .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
         @keyframes slashDown { from { height: 0; } to { height: 50px; } }
+        @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+        .haki-svg-container { position: absolute; inset: -30px; pointer-events: none; z-index: 20; width: 120px; height: 140px; }
+        .lightning-path { fill: none; stroke-width: 2.5; stroke-linecap: round; animation: flash 0.4s ease-out forwards; }
+        @keyframes flash { 0% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 100; } 100% { opacity: 0; stroke-dashoffset: 0; } }
 
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 20px; border: 1px solid #1a1a1a; position: relative; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .card-header h3 { margin: 0; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: #efefef; max-width: 60%; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header h3 { margin: 0; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: #efefef; }
         
-        /* TIMER COMPATTO */
-        .timer-inline { background: #1a1a1c; border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; min-width: 100px; border: 1px solid #333; }
-        .timer-display { font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--primary); min-width: 35px; }
-        .timer-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 0; font-size: 0.8rem; }
-        .timer-btn:disabled { opacity: 0.3; }
+        /* TIMER */
+        .timer-inline { background: #1a1a1c; border-radius: 10px; padding: 5px 10px; display: flex; align-items: center; gap: 8px; border: 1px solid #333; }
+        .timer-display { font-family: monospace; font-size: 1rem; font-weight: bold; color: var(--primary); min-width: 30px; }
+        .timer-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 0.8rem; }
+        .timer-btn:disabled { opacity: 0.2; }
 
         .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         .input-box { flex: 1; background: #151518; border-radius: 10px; padding: 8px; display: flex; align-items: center; border: 1px solid #222; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 700; font-size: 1rem; }
         .input-box span { font-size: 0.5rem; color: #555; margin-left: 4px; font-weight: 800; }
         
-        .chart-box { height: 80px; margin-top: 15px; opacity: 0.6; }
-        
-        .edit-btn { background: none; border: none; color: #555; cursor: pointer; padding: 5px; font-size: 0.9rem; }
-        .add-ex-btn { width: 100%; padding: 15px; background: #111; border: 2px dashed #333; color: #555; border-radius: 15px; font-weight: 800; margin-top: 10px; transition: 0.3s; }
-        .add-ex-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .chart-box { height: 80px; margin-top: 15px; }
+        .edit-btn { background: none; border: none; color: #444; cursor: pointer; font-size: 0.8rem; margin-left: 5px; }
+        .add-ex-btn { width: 100%; padding: 15px; background: #080808; border: 2px dashed #222; color: #444; border-radius: 15px; font-weight: 800; margin-top: 10px; cursor: pointer; }
 
-        .quote-box { padding: 40px 20px; text-align: center; opacity: 0.7; }
-        #quote-text { font-style: italic; font-size: 1rem; color: #ccc; }
+        .quote-box { padding: 40px 20px; text-align: center; }
+        #quote-text { font-style: italic; font-size: 1rem; color: #888; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -70,28 +74,26 @@
     <div class="container" id="workout-area"></div>
     <div class="quote-box">
         <p id="quote-text"></p>
-        <span id="quote-author" style="font-weight: 800; font-size: 0.7rem; color: var(--primary); text-transform: uppercase;"></span>
+        <span id="quote-author" style="font-weight: 800; font-size: 0.7rem; color: var(--primary); text-transform: uppercase; letter-spacing: 3px;"></span>
     </div>
 </div>
 
 <script>
-// Database Iniziale (se il localStorage è vuoto)
-const defaultData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', ex: [{n:"Pendulum Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Stacchi", s:4, r:120}, {n:"Leg Extension", s:3, r:60}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
+const quotesDB = {
+    zoro: ["Settimana 1: Se non riesci a proteggere il tuo capitano, la tua ambizione è nulla.", "Settimana 16: ORA SONO IO L'INFERNO."],
+    shanks: ["Settimana 1: Scommetto sul futuro.", "Settimana 16: Il mondo è pronto per te?"],
+    luffy: ["Settimana 1: Diventerò il Re dei Pirati!", "Settimana 16: GEAR FIFTH! QUESTO È IL MIO APICE!"]
 };
 
-const quotes = {
-    zoro: ["Settimana 1: Se non riesci a proteggere il tuo capitano, la tua ambizione è nulla.", "Settimana 2: Il dolore è mio compagno di viaggio.", "Settimana 3: Solo chi ha sofferto può diventare veramente forte.", "Settimana 16: ORA SONO IO L'INFERNO."],
-    shanks: ["Settimana 1: Scommetto sul futuro.", "Settimana 2: Una ferita al braccio non è nulla rispetto all'onore.", "Settimana 16: Il mondo è pronto per te?"],
-    luffy: ["Settimana 1: Diventerò il Re dei Pirati!", "Settimana 11: Gear Fourth!", "Settimana 16: GEAR FIFTH! QUESTO È IL MIO APICE!"]
+const defaultWorkout = {
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: 'Leg Raises', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}, {n:"Alzate Laterali", s:4, r:60}] },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: 'Cable Crunch', ex: [{n:"Trazioni Zavorra", s:5, r:120}, {n:"Rematore", s:3, r:90}, {n:"Curl EZ", s:4, r:60}] },
+    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: 'Ab Wheel', ex: [{n:"Pendulum Squat", s:4, r:120}, {n:"Leg Press", s:3, r:90}, {n:"Stacchi", s:4, r:120}, {n:"Leg Extension", s:3, r:60}] },
+    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: 'Leg Raises', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci Cavi", s:3, r:60}, {n:"Shoulder Press", s:3, r:90}] },
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: 'Cable Crunch', ex: [{n:"Trazioni Volume", s:4, r:120}, {n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('workout_structure')) || defaultData;
-let currentDay = 'lun';
+let workoutData = JSON.parse(localStorage.getItem('workout_structure_v3')) || defaultWorkout;
 let activeTimer = null;
 
 function init() {
@@ -101,185 +103,146 @@ function init() {
         document.getElementById('weekSelector').appendChild(opt);
     }
     for(let day in workoutData) {
-        nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item ${day==='lun'?'active':''}">
-            <div class="char-frame" id="frame-${day}"><div class="scar-container" id="scars-${day}"><div class="scar-line"></div><div class="scar-line"></div><div class="scar-line"></div></div><span>${workoutData[day].icon}</span></div>
+        nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item">
+            <div class="char-frame" id="frame-${day}">
+                <div class="scar-container" id="scars-${day}"><div class="scar-line"></div><div class="scar-line"></div><div class="scar-line"></div></div>
+                <span>${workoutData[day].icon}</span>
+            </div>
             <span style="font-size:0.5rem; font-weight:800;">${day.toUpperCase()}</span></button>`;
     }
     setDay('lun');
 }
 
 function setDay(day) {
-    currentDay = day;
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-'+day).classList.add('active');
     triggerHaki(day);
-    renderWorkout();
+    renderWorkout(day);
 }
 
 function triggerHaki(day) {
     const wrap = document.getElementById('shake-wrapper');
     const char = workoutData[day].char;
+    const frame = document.getElementById('frame-'+day);
     wrap.classList.add('quake-active');
     if(char === 'shanks') document.getElementById('scars-'+day).classList.add('animate-scars');
+    
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "haki-svg-container");
+    frame.appendChild(svg);
+    for(let i=0; i<(char==='luffy'?10:5); i++) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "lightning-path"); path.setAttribute("stroke", workoutData[day].color);
+        let x=60, y=70, d=`M ${x} ${y} `;
+        for(let j=0; j<3; j++) { x+=(Math.random()-0.5)*80; y+=(Math.random()-0.5)*80; d+=`L ${x} ${y} `; }
+        path.setAttribute("d", d); svg.appendChild(path);
+    }
     setTimeout(() => { 
         wrap.classList.remove('quake-active'); 
         if(char === 'shanks') document.getElementById('scars-'+day).classList.remove('animate-scars');
-    }, char === 'luffy' ? 1200 : 500);
+        svg.remove();
+    }, char === 'luffy' ? 1200 : 600);
 }
 
-function renderWorkout() {
+function renderWorkout(day = document.querySelector('.nav-item.active').id.split('-')[1]) {
     const area = document.getElementById('workout-area');
     const week = document.getElementById('weekSelector').value;
     area.innerHTML = '';
     
-    workoutData[currentDay].ex.forEach((ex, idx) => {
-        area.appendChild(createCard(ex, idx));
-    });
-
-    area.innerHTML += `<button class="add-ex-btn" onclick="addNewExercise()">+ AGGIUNGI ESERCIZIO</button>`;
+    // Esercizi principali
+    workoutData[day].ex.forEach((ex, idx) => area.appendChild(createCard(ex, idx, day)));
     
-    const char = workoutData[currentDay].char;
-    document.getElementById('quote-text').innerText = quotes[char][week-1] || quotes[char][0];
+    // Finisher fissi
+    area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:30px 0; font-weight:900;">DAILY FINISHERS</div>`;
+    area.appendChild(createCard({n: workoutData[day].abs, s:3, r:60}, 'abs', day));
+    area.appendChild(createCard({n: "Cardio LISS (10 min)", s:1, r:600}, 'cardio', day));
+    
+    area.innerHTML += `<button class="add-ex-btn" onclick="addNewExercise('${day}')">+ AGGIUNGI ESERCIZIO</button>`;
+    
+    const char = workoutData[day].char;
+    document.getElementById('quote-text').innerText = quotesDB[char][week-1] || quotesDB[char][0];
     document.getElementById('quote-author').innerText = char;
 }
 
-function createCard(ex, idx) {
+function createCard(ex, idx, day) {
     const week = document.getElementById('weekSelector').value;
-    const card = document.createElement('div');
-    card.className = 'card';
-    
-    let html = `
-        <div class="card-header">
-            <h3>${ex.n} <button class="edit-btn" onclick="editExercise(${idx})">✎</button></h3>
-            <div class="timer-inline" id="t-box-${idx}">
-                <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
-                <button class="timer-btn" id="t-btn-${idx}" onclick="startTimer(${idx}, ${ex.r})">▶</button>
-            </div>
-        </div>`;
-
+    const card = document.createElement('div'); card.className = 'card';
+    let html = `<div class="card-header">
+        <h3>${ex.n} ${idx!=='abs'&&idx!=='cardio'?`<button class="edit-btn" onclick="editEx('${day}', ${idx})">✎</button>`:''}</h3>
+        <div class="timer-inline">
+            <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
+            <button class="timer-btn" id="t-btn-${idx}" onclick="startTimer('${idx}', ${ex.r})">▶</button>
+        </div>
+    </div>`;
     for(let i=1; i<=ex.s; i++) {
-        const key = `w${week}-${currentDay}-${idx}-s${i}`;
+        const key = `w${week}-${day}-${idx}-s${i}`;
         const saved = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
-        html += `
-        <div class="set-row">
+        html += `<div class="set-row">
             <div style="font-size:0.5rem; width:12px; opacity:0.3;">${i}</div>
-            <div class="input-box"><input type="number" placeholder="0" value="${saved.kg}" oninput="saveSet(${idx}, ${i}, 'kg', this.value)"><span>KG</span></div>
-            <div class="input-box"><input type="number" placeholder="0" value="${saved.reps}" oninput="saveSet(${idx}, ${i}, 'reps', this.value)"><span>REPS</span></div>
+            <div class="input-box"><input type="number" value="${saved.kg}" oninput="saveSet('${day}', '${idx}', ${i}, 'kg', this.value)"><span>KG</span></div>
+            <div class="input-box"><input type="number" value="${saved.reps}" oninput="saveSet('${day}', '${idx}', ${i}, 'reps', this.value)"><span>REPS</span></div>
         </div>`;
     }
-    
-    html += `<div class="chart-box"><canvas id="chart-${idx}"></canvas></div>`;
+    html += `<div class="chart-box"><canvas id="chart-${day}-${idx}"></canvas></div>`;
     card.innerHTML = html;
-    setTimeout(() => drawChart(idx), 50);
+    setTimeout(() => drawChart(day, idx), 50);
     return card;
 }
 
 function startTimer(idx, seconds) {
-    if(activeTimer && activeTimer.idx !== idx) return; // Blocca se un altro è attivo
-
+    if(activeTimer && activeTimer.idx !== idx) return;
     const btn = document.getElementById(`t-btn-${idx}`);
     const display = document.getElementById(`t-val-${idx}`);
-    
     if(activeTimer && activeTimer.idx === idx) {
-        if(activeTimer.running) {
-            clearInterval(activeTimer.interval);
-            activeTimer.running = false;
-            btn.innerText = "▶";
-        } else {
-            resumeTimer(idx);
-        }
+        if(activeTimer.running) { clearInterval(activeTimer.int); activeTimer.running = false; btn.innerText = "▶"; }
+        else { activeTimer.running = true; btn.innerText = "Ⅱ"; activeTimer.int = setInterval(tick, 1000); }
         return;
     }
-
-    // Disabilita altri pulsanti timer
     document.querySelectorAll('.timer-btn').forEach(b => { if(b.id !== `t-btn-${idx}`) b.disabled = true; });
-
-    let timeLeft = seconds;
     btn.innerText = "Ⅱ";
-    activeTimer = {
-        idx: idx,
-        timeLeft: timeLeft,
-        running: true,
-        interval: setInterval(() => {
-            activeTimer.timeLeft--;
-            display.innerText = activeTimer.timeLeft + "s";
-            if(activeTimer.timeLeft <= 0) {
-                clearInterval(activeTimer.interval);
-                display.innerText = seconds + "s";
-                btn.innerText = "▶";
-                activeTimer = null;
-                document.querySelectorAll('.timer-btn').forEach(b => b.disabled = false);
-                new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();
-            }
-        }, 1000)
-    };
-}
-
-function resumeTimer(idx) {
-    const btn = document.getElementById(`t-btn-${idx}`);
-    const display = document.getElementById(`t-val-${idx}`);
-    activeTimer.running = true;
-    btn.innerText = "Ⅱ";
-    activeTimer.interval = setInterval(() => {
-        activeTimer.timeLeft--;
-        display.innerText = activeTimer.timeLeft + "s";
-        if(activeTimer.timeLeft <= 0) {
-            clearInterval(activeTimer.interval);
-            activeTimer = null;
+    activeTimer = { idx: idx, time: seconds, running: true, int: setInterval(tick, 1000) };
+    function tick() {
+        activeTimer.time--; display.innerText = activeTimer.time + "s";
+        if(activeTimer.time <= 0) {
+            clearInterval(activeTimer.int); display.innerText = seconds + "s"; btn.innerText = "▶"; activeTimer = null;
             document.querySelectorAll('.timer-btn').forEach(b => b.disabled = false);
-            btn.innerText = "▶";
+            new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();
         }
-    }, 1000);
-}
-
-function addNewExercise() {
-    const name = prompt("Nome esercizio:");
-    const sets = prompt("Numero serie:", "4");
-    if(name && sets) {
-        workoutData[currentDay].ex.push({n: name, s: parseInt(sets), r: 90});
-        saveStructure();
-        renderWorkout();
     }
 }
 
-function editExercise(idx) {
-    const ex = workoutData[currentDay].ex[idx];
-    const newName = prompt("Modifica nome:", ex.n);
-    const newRest = prompt("Modifica recupero (secondi):", ex.r);
-    if(newName) ex.n = newName;
-    if(newRest) ex.r = parseInt(newRest);
-    saveStructure();
-    renderWorkout();
-}
-
-function saveSet(exIdx, setIdx, type, val) {
+function saveSet(day, exIdx, setIdx, type, val) {
     const week = document.getElementById('weekSelector').value;
-    const key = `w${week}-${currentDay}-${exIdx}-s${setIdx}`;
-    let data = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
-    data[type] = val;
-    localStorage.setItem(key, JSON.stringify(data));
-    drawChart(exIdx);
+    const key = `w${week}-${day}-${exIdx}-s${setIdx}`;
+    let d = JSON.parse(localStorage.getItem(key)) || {kg:'', reps:''};
+    d[type] = val; localStorage.setItem(key, JSON.stringify(d)); drawChart(day, exIdx);
 }
 
-function saveStructure() {
-    localStorage.setItem('workout_structure', JSON.stringify(workoutData));
+function addNewExercise(day) {
+    const n = prompt("Nome:"); const s = prompt("Serie:", "4");
+    if(n && s) { workoutData[day].ex.push({n:n, s:parseInt(s), r:90}); localStorage.setItem('workout_structure_v3', JSON.stringify(workoutData)); renderWorkout(day); }
 }
 
-function drawChart(idx) {
-    const ctx = document.getElementById(`chart-${idx}`).getContext('2d');
+function editEx(day, idx) {
+    const ex = workoutData[day].ex[idx];
+    const n = prompt("Nuovo nome:", ex.n); const r = prompt("Nuovo recupero (sec):", ex.r);
+    if(n) ex.n = n; if(r) ex.r = parseInt(r);
+    localStorage.setItem('workout_structure_v3', JSON.stringify(workoutData)); renderWorkout(day);
+}
+
+function drawChart(day, idx) {
+    const ctx = document.getElementById(`chart-${day}-${idx}`).getContext('2d');
     const pts = [];
     for(let w=1; w<=16; w++) {
-        const d = JSON.parse(localStorage.getItem(`w${w}-${currentDay}-${idx}-s1`));
+        const d = JSON.parse(localStorage.getItem(`w${w}-${day}-${idx}-s1`));
         pts.push(d && d.kg ? parseFloat(d.kg) : 0);
     }
-    if(window['c'+idx]) window['c'+idx].destroy();
-    window['c'+idx] = new Chart(ctx, {
-        type: 'line',
-        data: { labels: Array.from({length:16},(_,i)=>i+1), datasets: [{ data: pts, borderColor: workoutData[currentDay].color, borderWidth: 2, tension: 0.4, pointRadius: 0, fill: false }] },
+    if(window['c'+day+idx]) window['c'+day+idx].destroy();
+    window['c'+day+idx] = new Chart(ctx, {
+        type: 'line', data: { labels: Array.from({length:16},(_,i)=>i+1), datasets: [{ data: pts, borderColor: workoutData[day].color, borderWidth: 1.5, tension: 0.4, pointRadius: 0, fill: false }] },
         options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
     });
 }
-
 window.onload = init;
 </script>
 </body>

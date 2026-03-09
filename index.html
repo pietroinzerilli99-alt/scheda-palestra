@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OGNI SINGOLO GIORNO - FINAL UX</title>
+    <title>OGNI SINGOLO GIORNO - APPLE PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -39,7 +39,7 @@
         .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin-bottom: 25px; border: 1px solid #1a1a1a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
-        .card-header h3 { margin: 0; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 10px; font-weight: 700; flex-grow: 1; }
+        .card-header h3 { margin: 0; font-size: 0.95rem; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 5px; font-weight: 700; flex-grow: 1; }
         
         .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 1.2rem; flex-shrink: 0; }
         .action-btn:active { transform: scale(0.9); background: #333; }
@@ -54,10 +54,10 @@
         
         .chart-box { height: 110px; margin-top: 25px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
 
-        /* MODALE AGGIORNATA */
+        /* MODALE APPLE STYLE */
         .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
-        .modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px 20px 50px 20px; box-sizing: border-box; border-top: 1px solid #333; position: relative; }
+        .modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px 20px 50px 20px; box-sizing: border-box; border-top: 1px solid #333; }
         .modal-handle { width: 40px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 25px auto; }
         .modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 25px; text-align: center; }
         .modal-input-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
@@ -85,15 +85,15 @@
     </div>
 </div>
 
-<div class="modal" id="addModal">
+<div class="modal" id="editModal">
     <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-handle" onclick="closeModal()"></div>
-        <div class="modal-title">Nuovo Esercizio</div>
+        <div class="modal-title" id="modalTitle">Nuovo Esercizio</div>
         <div class="modal-input-group">
-            <input type="text" id="newExName" class="modal-input" placeholder="Nome (es: Panca Piana)">
-            <input type="number" id="newExSets" class="modal-input" placeholder="Numero di Serie">
+            <input type="text" id="exNameInput" class="modal-input" placeholder="Nome Esercizio">
+            <input type="number" id="exSetsInput" class="modal-input" placeholder="Numero di Serie">
         </div>
-        <button class="modal-save-btn" onclick="confirmAddEx()">Aggiungi alla scheda</button>
+        <button class="modal-save-btn" id="modalActionBtn">Salva</button>
     </div>
 </div>
 
@@ -105,16 +105,17 @@ const quotesDB = {
 };
 
 const defaultData = {
-    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: 'Leg Raises', ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
-    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: 'Cable Crunch', ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
-    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: 'Ab Wheel', ex: [{n:"Squat", s:4, r:120}, {n:"Stacchi", s:4, r:120}] },
-    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: 'Leg Raises', ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}] },
-    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: 'Cable Crunch', ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
+    lun: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Inclinata", s:4, r:90}, {n:"Chest Press", s:3, r:60}] },
+    mar: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Trazioni", s:5, r:120}, {n:"Rematore", s:3, r:90}] },
+    mer: { char: 'luffy', icon: '🍖', color: '#ffcc00', abs: {n:'Ab Wheel', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Squat", s:4, r:120}, {n:"Stacchi", s:4, r:120}] },
+    gio: { char: 'zoro', icon: '⚔️', color: '#00ff88', abs: {n:'Leg Raises', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Panca Piana", s:4, r:90}, {n:"Croci", s:3, r:60}] },
+    ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('workout_structure_v8')) || defaultData;
+let workoutData = JSON.parse(localStorage.getItem('workout_structure_v9')) || defaultData;
 let activeTimer = null;
 let currentDay = 'lun';
+let editingContext = null;
 
 function init() {
     const nav = document.getElementById('navbar');
@@ -167,8 +168,8 @@ function renderWorkout(day = currentDay) {
     area.innerHTML = '';
     workoutData[day].ex.forEach((ex, idx) => area.appendChild(createCard(ex, idx, day)));
     area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:40px 0; font-weight:900;">DAILY FINISHERS</div>`;
-    area.appendChild(createCard({n: workoutData[day].abs, s:3, r:60}, 'abs', day));
-    area.appendChild(createCard({n: "Cardio LISS", s:1, r:600}, 'cardio', day));
+    area.appendChild(createCard(workoutData[day].abs, 'abs', day));
+    area.appendChild(createCard(workoutData[day].cardio, 'cardio', day));
     area.innerHTML += `<button class="add-ex-btn" onclick="openAddModal(event)">+ AGGIUNGI ESERCIZIO</button>`;
     const char = workoutData[day].char;
     document.getElementById('quote-text').innerText = quotesDB[char][week-1] || quotesDB[char][0];
@@ -178,9 +179,8 @@ function renderWorkout(day = currentDay) {
 function createCard(ex, idx, day) {
     const week = document.getElementById('weekSelector').value;
     const card = document.createElement('div'); card.className = 'card';
-    let isSpecial = (idx === 'abs' || idx === 'cardio');
     let html = `<div class="card-header">
-        <h3>${ex.n} ${!isSpecial ? `<button class="action-btn" style="width:34px; height:34px; font-size:0.9rem; margin-left:10px;" onclick="editExName('${day}', ${idx})">✎</button>` : ''}</h3>
+        <h3>${ex.n} <button class="action-btn" style="width:34px; height:34px; font-size:0.9rem; margin-left:10px;" onclick="openEditModal(event, '${idx}')">✎</button></h3>
         <div class="timer-group">
             <button class="action-btn" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
             <span class="timer-display" id="t-val-${idx}" onclick="editTimerVal('${day}', '${idx}')">${ex.r}s</span>
@@ -202,23 +202,61 @@ function createCard(ex, idx, day) {
     return card;
 }
 
-// LOGICA CHIUSURA MODALE AL TOCCO ESTERNO
+// LOGICA MODALE (APPLE STYLE)
+function openAddModal(e) {
+    e.stopPropagation();
+    editingContext = 'add';
+    document.getElementById('modalTitle').innerText = "Nuovo Esercizio";
+    document.getElementById('exNameInput').value = '';
+    document.getElementById('exSetsInput').value = '';
+    document.getElementById('modalActionBtn').onclick = confirmAddEx;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function openEditModal(e, idx) {
+    e.stopPropagation();
+    editingContext = idx;
+    let data = (idx === 'abs' || idx === 'cardio') ? workoutData[currentDay][idx] : workoutData[currentDay].ex[idx];
+    document.getElementById('modalTitle').innerText = "Modifica Esercizio";
+    document.getElementById('exNameInput').value = data.n;
+    document.getElementById('exSetsInput').value = data.s;
+    document.getElementById('modalActionBtn').onclick = confirmEditEx;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+
 function handleGlobalClick(e) {
-    const modal = document.getElementById('addModal');
-    if (modal.classList.contains('active') && e.target === modal) {
-        closeModal();
+    const modal = document.getElementById('editModal');
+    if (modal.classList.contains('active') && e.target === modal) closeModal();
+}
+
+function confirmAddEx() {
+    const n = document.getElementById('exNameInput').value;
+    const s = document.getElementById('exSetsInput').value;
+    if(n && s) {
+        workoutData[currentDay].ex.push({n: n, s: parseInt(s), r: 90});
+        saveAndRefresh();
     }
 }
 
-function openAddModal(e) {
-    e.stopPropagation();
-    document.getElementById('addModal').classList.add('active');
+function confirmEditEx() {
+    const n = document.getElementById('exNameInput').value;
+    const s = document.getElementById('exSetsInput').value;
+    if(n && s) {
+        let target = (editingContext === 'abs' || editingContext === 'cardio') ? workoutData[currentDay][editingContext] : workoutData[currentDay].ex[editingContext];
+        target.n = n; target.s = parseInt(s);
+        saveAndRefresh();
+    }
 }
 
-function closeModal() {
-    document.getElementById('addModal').classList.remove('active');
+function saveAndRefresh() {
+    localStorage.setItem('workout_structure_v9', JSON.stringify(workoutData));
+    closeModal();
+    renderWorkout(currentDay);
 }
 
+// TIMER E PERSISTENZA
 function startTimer(idx, seconds) {
     if(activeTimer && activeTimer.idx !== idx) return;
     const btn = document.getElementById(`t-btn-${idx}`);
@@ -262,30 +300,14 @@ function resetTimer(idx, original) {
     if(display) display.innerText = original + "s"; if(btn) btn.innerText = "▶";
 }
 
-function confirmAddEx() {
-    const name = document.getElementById('newExName').value;
-    const sets = document.getElementById('newExSets').value;
-    if(name && sets) {
-        workoutData[currentDay].ex.push({n: name, s: parseInt(sets), r: 90});
-        localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData));
-        closeModal(); renderWorkout(currentDay);
-        document.getElementById('newExName').value = ''; document.getElementById('newExSets').value = '';
-    }
-}
-
 function editTimerVal(day, idx) {
-    const newVal = prompt("Nuovo tempo recupero (secondi):");
-    if(newVal) { 
-        if(idx==='abs'||idx==='cardio') return;
-        workoutData[day].ex[idx].r = parseInt(newVal); 
-        localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData)); 
-        renderWorkout(day); 
+    const newVal = prompt("Tempo recupero (sec):");
+    if(newVal) {
+        let target = (idx === 'abs' || idx === 'cardio') ? workoutData[day][idx] : workoutData[day].ex[idx];
+        target.r = parseInt(newVal);
+        localStorage.setItem('workout_structure_v9', JSON.stringify(workoutData));
+        renderWorkout(day);
     }
-}
-
-function editExName(day, idx) {
-    const n = prompt("Nuovo nome esercizio:", workoutData[day].ex[idx].n);
-    if(n) { workoutData[day].ex[idx].n = n; localStorage.setItem('workout_structure_v8', JSON.stringify(workoutData)); renderWorkout(day); }
 }
 
 function saveSet(day, exIdx, setIdx, type, val) {

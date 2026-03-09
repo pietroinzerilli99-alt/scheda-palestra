@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ONE PIECE FIT - ULTIMATE RESTORED</title>
+    <title>ONE PIECE FIT - ULTIMATE</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -15,7 +15,8 @@
         .quake-active { animation: quake 0.08s infinite !important; }
 
         .scar-container { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; pointer-events: none; opacity: 0; }
-        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 3px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
+        /* MODIFICA: 3 TAGLI PER SHANKS */
+        .scar-line { width: 2px; height: 0; background: var(--shanks); margin: 0 2px; transform: rotate(20deg); box-shadow: 0 0 10px var(--shanks); }
         .animate-scars { opacity: 1; animation: fadeOut 0.8s forwards; }
         .animate-scars .scar-line { animation: slashDown 0.3s ease-out forwards; }
         @keyframes slashDown { from { height: 0; } to { height: 60px; } }
@@ -31,7 +32,6 @@
         .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2500; display: none; }
         .menu-overlay.active { display: block; }
         .menu-item { display: flex; align-items: center; gap: 15px; padding: 20px; border-radius: 18px; color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
-        .menu-item:active { background: #1a1a1c; transform: scale(0.95); }
 
         /* --- UI ELEMENTS --- */
         header { padding: 25px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; }
@@ -41,7 +41,6 @@
         .week-select { background: #111; border: 1px solid #333; color: var(--primary); padding: 16px; border-radius: 18px; font-weight: 800; width: 92%; margin: 0 auto 20px; display: block; outline: none; appearance: none; font-size: 1rem; text-align: center; }
         
         nav { display: flex; gap: 15px; padding: 15px 20px; overflow-x: auto; position: sticky; top: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid #1a1a1a; }
-        nav::-webkit-scrollbar { display: none; }
         .nav-item { flex: 0 0 auto; background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.3; transition: 0.3s; }
         .nav-item.active { opacity: 1; transform: scale(1.1); }
         .char-frame { width: 70px; height: 95px; border-radius: 20px; border: 2px solid #222; background: #050505; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
@@ -49,7 +48,9 @@
         /* --- CARDS --- */
         .card { background: var(--card-bg); border-radius: 28px; padding: 22px; margin: 0 20px 25px; border: 1px solid #1a1a1a; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-header h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; flex-grow: 1; }
+        
+        /* MODIFICA: TASTO MODIFICA PIU GRANDE E INTUITIVO */
+        .edit-trigger { background: #222; border: 1px solid #444; color: var(--primary); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; margin-left: 10px; }
         
         .action-btn { background: #1a1a1c; border: 1px solid #333; color: #fff; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .timer-group { display: flex; align-items: center; gap: 6px; background: #151518; padding: 5px; border-radius: 16px; border: 1px solid #222; }
@@ -60,13 +61,18 @@
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; text-align: right; outline: none; font-weight: 800; font-size: 1.1rem; }
         .input-box span { font-size: 0.6rem; color: #555; margin-left: 5px; font-weight: 900; }
 
-        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; font-size: 0.9rem; letter-spacing: 1px; }
+        .add-ex-btn { width: 90%; padding: 25px; background: #0a0a0a; border: 2px dashed #333; color: #666; border-radius: 24px; font-weight: 800; margin: 10px auto; display: block; cursor: pointer; }
 
-        /* --- MODAL --- */
+        /* --- MODALE --- */
         .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 4000; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: flex-end; }
         .modal.active { bottom: 0; }
         .modal-content { background: #111; width: 100%; border-radius: 32px 32px 0 0; padding: 35px 25px 60px; border-top: 1px solid #333; box-sizing: border-box; }
         .modal-handle { width: 45px; height: 5px; background: #333; border-radius: 10px; margin: 0 auto 30px; }
+        
+        /* MODIFICA: ETICHETTE INPUT CHIARI PER MODIFICA */
+        .modal-field { margin-bottom: 15px; }
+        .modal-field label { display: block; font-size: 0.7rem; font-weight: 900; color: #555; margin-bottom: 8px; margin-left: 5px; text-transform: uppercase; }
+        .modal-field input { width: 100%; background: #1a1a1c; border: 1px solid #333; padding: 18px; border-radius: 16px; color: #fff; font-weight: 700; outline: none; box-sizing: border-box; }
 
         #page-bio { display: none; padding: 20px; }
     </style>
@@ -104,7 +110,7 @@
             </div>
         </div>
     </div>
-    <div class="card" style="text-align:center; border-color:var(--primary);">
+    <div class="card" style="text-align:center; border-color:var(--primary); background:rgba(0,255,170,0.05)">
         <span style="font-size:0.7rem; font-weight:900; color:var(--primary); letter-spacing:2px;">KCAL TARGET</span>
         <div id="totalCalories" style="font-size:2.8rem; font-weight:900; margin:10px 0;">--</div>
         <div style="display:flex; justify-content:space-around; margin-top:20px;">
@@ -118,14 +124,27 @@
 <div class="modal" id="editModal">
     <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-handle" onclick="closeModal()"></div>
-        <div id="modalTitle" style="text-align:center; font-weight:900; font-size:1.3rem; margin-bottom:25px;">GESTIONE</div>
-        <div style="display:flex; flex-direction:column; gap:15px; margin-bottom:30px;">
-            <input type="text" id="exNameInput" style="background:#1a1a1c; border:1px solid #333; padding:20px; border-radius:18px; color:#fff; font-weight:700; outline:none;" placeholder="Esempio: Panca Piana 4">
-            <input type="number" id="exRestInput" style="background:#1a1a1c; border:1px solid #333; padding:20px; border-radius:18px; color:#fff; font-weight:700; outline:none;" placeholder="Recupero (secondi)">
+        <div id="modalTitle" style="text-align:center; font-weight:900; font-size:1.3rem; margin-bottom:25px;">MODIFICA SLOT</div>
+        
+        <div class="modal-field">
+            <label>Nome Esercizio</label>
+            <input type="text" id="exNameInput" placeholder="es: Panca Piana">
         </div>
+        
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
+            <div class="modal-field" style="flex:1">
+                <label>Serie</label>
+                <input type="number" id="exSetsInput" placeholder="es: 4">
+            </div>
+            <div class="modal-field" style="flex:1">
+                <label>Timer (sec)</label>
+                <input type="number" id="exRestInput" placeholder="es: 90">
+            </div>
+        </div>
+
         <div style="display:flex; gap:10px;">
-            <button id="modalActionBtn" style="flex:2; padding:20px; border-radius:18px; border:none; background:var(--primary); color:#000; font-weight:900;">Salva</button>
-            <button id="modalDeleteBtn" style="flex:1; padding:20px; border-radius:18px; border:none; background:#ff1100; color:#fff; font-weight:900;">Elimina</button>
+            <button id="modalActionBtn" style="flex:2; padding:20px; border-radius:18px; border:none; background:var(--primary); color:#000; font-weight:900;">SALVA</button>
+            <button id="modalDeleteBtn" style="flex:1; padding:20px; border-radius:18px; border:none; background:#ff1100; color:#fff; font-weight:900;">ELIMINA</button>
         </div>
     </div>
 </div>
@@ -139,7 +158,7 @@ const defaultData = {
     ven: { char: 'shanks', icon: '🍷', color: '#ff1100', abs: {n:'Cable Crunch', s:3, r:60}, cardio: {n:'Cardio LISS', s:1, r:600}, ex: [{n:"Lat Machine", s:3, r:90}, {n:"Hammer Curl", s:3, r:60}] }
 };
 
-let workoutData = JSON.parse(localStorage.getItem('OP_Fit_Final')) || defaultData;
+let workoutData = JSON.parse(localStorage.getItem('OP_Fit_Final_V2')) || defaultData;
 let currentDay = 'lun';
 let activeTimer = null;
 let editingIdx = null;
@@ -151,7 +170,7 @@ function init() {
     for(let day in workoutData) {
         nav.innerHTML += `<button onclick="setDay('${day}')" id="btn-${day}" class="nav-item">
             <div class="char-frame" id="frame-${day}">
-                <div class="scar-container" id="scars-${day}"><div class="scar-line"></div><div class="scar-line"></div></div>
+                <div class="scar-container" id="scars-${day}"><div class="scar-line"></div><div class="scar-line"></div><div class="scar-line"></div></div>
                 <span style="font-size:1.8rem">${workoutData[day].icon}</span>
             </div>
             <span style="font-size:0.6rem; font-weight:900; color:#555">${day.toUpperCase()}</span></button>`;
@@ -191,13 +210,10 @@ function triggerHaki(day) {
 function renderWorkout() {
     const area = document.getElementById('workout-area');
     area.innerHTML = '';
-    
     workoutData[currentDay].ex.forEach((ex, idx) => area.appendChild(createCard(ex, idx)));
-    
     area.innerHTML += `<div style="text-align:center; color:#222; font-size:0.6rem; letter-spacing:5px; margin:20px 0; font-weight:900;">DAILY FINISHERS</div>`;
     area.appendChild(createCard(workoutData[currentDay].abs, 'abs'));
     area.appendChild(createCard(workoutData[currentDay].cardio, 'cardio'));
-    
     area.innerHTML += `<button class="add-ex-btn" onclick="openAddModal()">+ AGGIUNGI ESERCIZIO</button>`;
 }
 
@@ -205,7 +221,7 @@ function createCard(ex, idx) {
     const week = document.getElementById('weekSelector').value;
     const card = document.createElement('div'); card.className = 'card';
     card.innerHTML = `<div class="card-header">
-        <h3>${ex.n} <button class="action-btn" style="width:30px; height:30px; display:inline-flex; margin-left:10px; font-size:0.7rem;" onclick="openEditModal('${idx}')">✎</button></h3>
+        <h3 style="display:flex; align-items:center;">${ex.n} <div class="edit-trigger" onclick="openEditModal('${idx}')">✎</div></h3>
         <div class="timer-group">
             <button class="action-btn" style="width:32px; height:32px" onclick="resetTimer('${idx}', ${ex.r})">↺</button>
             <span class="timer-display" id="t-val-${idx}">${ex.r}s</span>
@@ -222,7 +238,7 @@ function createCard(ex, idx) {
             <div class="input-box"><input type="number" value="${val.r}" oninput="saveSet('${idx}', ${i}, 'r', this.value)"><span>REPS</span></div>
         </div>`;
     }
-    card.innerHTML += `<div style="height:100px; margin-top:20px; border-top:1px solid #1a1a1a; padding-top:10px;"><canvas id="chart-${idx}"></canvas></div>`;
+    card.innerHTML += `<div style="height:100px; margin-top:20px;"><canvas id="chart-${idx}"></canvas></div>`;
     setTimeout(() => drawChart(idx), 50);
     return card;
 }
@@ -249,11 +265,11 @@ function drawChart(idx) {
     });
 }
 
-// --- GESTIONE MODALE ---
 function openAddModal() {
     editingIdx = 'new';
-    document.getElementById('modalTitle').innerText = "AGGIUNGI ESERCIZIO";
+    document.getElementById('modalTitle').innerText = "NUOVO ESERCIZIO";
     document.getElementById('exNameInput').value = "";
+    document.getElementById('exSetsInput').value = "3";
     document.getElementById('exRestInput').value = "90";
     document.getElementById('modalDeleteBtn').style.display = "none";
     document.getElementById('editModal').classList.add('active');
@@ -262,8 +278,9 @@ function openAddModal() {
 function openEditModal(idx) {
     editingIdx = idx;
     const ex = (idx==='abs'||idx==='cardio') ? workoutData[currentDay][idx] : workoutData[currentDay].ex[idx];
-    document.getElementById('modalTitle').innerText = "MODIFICA";
-    document.getElementById('exNameInput').value = `${ex.n} ${ex.s}`;
+    document.getElementById('modalTitle').innerText = "MODIFICA ESERCIZIO";
+    document.getElementById('exNameInput').value = ex.n;
+    document.getElementById('exSetsInput').value = ex.s;
     document.getElementById('exRestInput').value = ex.r;
     document.getElementById('modalDeleteBtn').style.display = (idx==='abs'||idx==='cardio') ? "none" : "block";
     document.getElementById('editModal').classList.add('active');
@@ -272,11 +289,9 @@ function openEditModal(idx) {
 function closeModal() { document.getElementById('editModal').classList.remove('active'); }
 
 document.getElementById('modalActionBtn').onclick = () => {
-    const val = document.getElementById('exNameInput').value;
+    const name = document.getElementById('exNameInput').value || "Esercizio";
+    const sets = parseInt(document.getElementById('exSetsInput').value) || 3;
     const rest = parseInt(document.getElementById('exRestInput').value) || 90;
-    const parts = val.split(' ');
-    const sets = parseInt(parts.pop()) || 3;
-    const name = parts.join(' ') || "Esercizio";
 
     if(editingIdx === 'new') {
         workoutData[currentDay].ex.push({n: name, s: sets, r: rest});
@@ -289,13 +304,10 @@ document.getElementById('modalActionBtn').onclick = () => {
 };
 
 document.getElementById('modalDeleteBtn').onclick = () => {
-    if(confirm("Eliminare l'esercizio?")) {
-        workoutData[currentDay].ex.splice(editingIdx, 1);
-        saveData();
-    }
+    if(confirm("Eliminare?")) { workoutData[currentDay].ex.splice(editingIdx, 1); saveData(); }
 };
 
-function saveData() { localStorage.setItem('OP_Fit_Final', JSON.stringify(workoutData)); closeModal(); renderWorkout(); }
+function saveData() { localStorage.setItem('OP_Fit_Final_V2', JSON.stringify(workoutData)); closeModal(); renderWorkout(); }
 
 // --- TIMER ---
 function startTimer(idx, sec) {
@@ -327,7 +339,7 @@ function checkPersistentTimer() {
 }
 function resetTimer(idx, orig) { stopTimer(); const d = document.getElementById(`t-val-${idx}`); if(d) d.innerText = orig + "s"; }
 
-// --- BIO & MENU ---
+// --- BIO ---
 function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); document.getElementById('menuOverlay').classList.toggle('active'); }
 function switchPage(p) { document.getElementById('page-workout').style.display = (p==='workout'?'block':'none'); document.getElementById('page-bio').style.display = (p==='bio'?'block':'none'); toggleMenu(); }
 function loadBio() {
